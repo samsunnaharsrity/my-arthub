@@ -1,6 +1,6 @@
 "use client";
 
-import { authClient } from "@/lib/auth-client";
+import { authClient, signUp } from "@/lib/auth-client";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import Link from "next/link";
@@ -56,7 +56,7 @@ const RegisterPage = () => {
     try {
       setLoading(true);
 
-      const result = await authClient.signUp.email({
+      const result = await signUp.email({
         name,
         email,
         password: passwordValue,

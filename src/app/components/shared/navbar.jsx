@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { HiOutlineMenuAlt3, HiX } from "react-icons/hi";
 import { authClient, useSession } from "@/lib/auth-client";
 import { useRouter, usePathname } from "next/navigation";
+import ThemeToggle from "../themeToggle";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
@@ -33,6 +34,15 @@ export default function Navbar() {
     router.refresh();
     router.push("/");
   };
+
+  const getInitials = (name = "") => {
+  return name
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2);
+};
 
   return (
     <>
@@ -243,34 +253,40 @@ export default function Navbar() {
 
             {/* Auth */}
             <div className="hidden md:flex items-center gap-3">
-              {isPending ? (
-                <span className="text-[#16352E]/60 text-sm">Loading...</span>
-              ) : user ? (
-                <>
-                  <img
-                    src={user.image}
-                    className="h-8 w-8 rounded-full avatar-ring"
-                  />
-                  <span className="user-name">{user.name}</span>
-                  <button onClick={handleLogout} className="btn-logout">
-                    Sign out
-                  </button>
-                </>
-              ) : (
-                <>
-                  <Link href="/login">
+              <ThemeToggle></ThemeToggle>
+{isPending ? (
+  <span className="text-[#16352E]/60 text-sm">Loading...</span>
+) : user ? (
+  <>
+    {user.image ? (
+      <img
+        src={user.image}
+        alt="user"
+        className="h-8 w-8 rounded-full avatar-ring object-cover"
+      />
+    ) : (
+      <div className="h-8 w-8 rounded-full avatar-ring bg-[#16352E] text-white flex items-center justify-center text-xs font-semibold">
+        {getInitials(user.name)}
+      </div>
+    )}
 
-                  <button className="btn-login">Log in</button>
-                  
-                  </Link>
+    <span className="user-name">{user.name}</span>
 
-                  <Link href="/register">
-                  
-                  <button className="btn-signup">Get Started</button>
+    <button onClick={handleLogout} className="btn-logout cursor-pointer">
+      Sign out
+    </button>
+  </>
+) : (
+  <>
+    <Link href="/login">
+      <button className="btn-login cursor-pointer">Log in</button>
+    </Link>
 
-                  </Link>
-                </>
-              )}
+    <Link href="/register">
+      <button className="btn-signup cursor-pointer">Get Started</button>
+    </Link>
+  </>
+)}
             </div>
 
             {/* Mobile */}
@@ -298,42 +314,49 @@ export default function Navbar() {
   <div className="divider" />
 
   {/* Auth Section */}
-  {isPending ? (
-    <span className="text-[#16352E]/60 text-sm">Loading...</span>
-  ) : user ? (
-    <div className="flex items-center justify-between">
-      <div className="flex items-center gap-3">
+{isPending ? (
+  <span className="text-[#16352E]/60 text-sm">Loading...</span>
+) : user ? (
+  <div className="flex items-center justify-between cursor-pointer">
+    <div className="flex items-center gap-3">
+      {user.image ? (
         <img
           src={user.image}
-          className="h-8 w-8 rounded-full avatar-ring"
+          className="h-8 w-8 rounded-full avatar-ring object-cover"
           alt="user"
         />
-        <span className="text-[#16352E] text-sm font-medium">
-          {user.name}
-        </span>
-      </div>
+      ) : (
+        <div className="h-8 w-8 rounded-full avatar-ring bg-[#16352E] text-white flex items-center justify-center text-xs font-semibold">
+          {getInitials(user.name)}
+        </div>
+      )}
 
-      <button
-        onClick={() => {
-          handleLogout();
-          setOpen(false);
-        }}
-        className="btn-logout"
-      >
-        Sign out
-      </button>
+      <span className="text-[#16352E] text-sm font-medium">
+        {user.name}
+      </span>
     </div>
-  ) : (
-    <div className="flex flex-col gap-2">
-      <Link href="/login" onClick={() => setOpen(false)}>
-        <button className="btn-login w-full">Log in</button>
-      </Link>
 
-      <Link href="/register" onClick={() => setOpen(false)}>
-        <button className="btn-signup w-full">Get Started</button>
-      </Link>
-    </div>
-  )}
+    <button
+      onClick={() => {
+        handleLogout();
+        setOpen(false);
+      }}
+      className="btn-logout cursor-pointer"
+    >
+      Sign out
+    </button>
+  </div>
+) : (
+  <div className="flex flex-col gap-2">
+    <Link href="/login" onClick={() => setOpen(false)}>
+      <button className="btn-login w-full">Log in</button>
+    </Link>
+
+    <Link href="/register" onClick={() => setOpen(false)}>
+      <button className="btn-signup w-full">Get Started</button>
+    </Link>
+  </div>
+)}
 </div>
         </div>
       </header>
