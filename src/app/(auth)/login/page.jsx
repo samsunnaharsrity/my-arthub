@@ -23,6 +23,7 @@ const SigninPage = () => {
       const result = await authClient.signIn.email({
         email,
         password,
+        rememberMe:true,
         callbackURL: "/",
       });
 

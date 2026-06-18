@@ -36,8 +36,8 @@ export default function HeroSection() {
       <div className="absolute top-0 right-0 h-[500px] w-[500px] bg-green-500/10 blur-[150px]" />
       <div className="absolute bottom-0 left-0 h-[400px] w-[400px] bg-emerald-500/10 blur-[130px]" />
 
-      <div className="max-w-7xl mx-auto px-6 py-28">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
+      <div className="max-w-6xl mx-auto px-6 py-28">
+        <div className="grid lg:grid-cols-2 gap-10 items-center">
 
           {/* LEFT CONTENT */}
           <div>
@@ -46,7 +46,7 @@ export default function HeroSection() {
               🎨 Premium Art Marketplace
             </span>
 
-            <h1 className="mt-6 text-5xl lg:text-7xl font-extrabold leading-tight text-[#16352E] dark:text-white">
+            <h1 className="mt-6 text-5xl lg:text-7xl font-extrabold leading-tight text-[#235348] dark:text-white">
               Discover & <br />
               Buy Original{" "}
               <span className="text-green-600 dark:text-green-400">
@@ -124,7 +124,7 @@ export default function HeroSection() {
         </div>
 
         {/* FEATURES */}
-        <div className="grid md:grid-cols-4 gap-6 mt-16">
+        <div className="grid md:grid-cols-4 gap-6 mt-10">
 
           {[
             { icon: "🎨", text: "Original Artworks" },
