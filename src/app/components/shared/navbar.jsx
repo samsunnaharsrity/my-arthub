@@ -373,7 +373,7 @@ export default function Navbar() {
         handleLogout();
         setOpen(false);
       }}
-      className="btn-logout cursor-pointer"
+      className="btn-logout cursor-pointer dark:border border-white/70"
     >
       Sign out
     </button>
