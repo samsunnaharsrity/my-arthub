@@ -64,6 +64,15 @@ export default function Navbar() {
           padding-bottom: 2px;
         }
 
+        .dark .nav-link{
+          color: rgba(255,255,255,.7);
+        }
+
+        .dark .nav-link:hover,
+        .dark .nav-link.active{
+          color:#fff;
+        }
+
         .nav-link::after {
           content: '';
           position: absolute;
@@ -100,6 +109,11 @@ export default function Navbar() {
           border: 1px solid rgba(22, 53, 46, 0.15);
           backdrop-filter: blur(24px);
           transition: all 0.3s ease;
+        }
+
+        .dark .navbar-glass {
+          background: rgba(15,23,42,0.9);
+          border: 1px solid rgba(255,255,255,0.08);
         }
 
         .navbar-glass.scrolled {
@@ -172,6 +186,11 @@ export default function Navbar() {
           transition: 0.2s;
         }
 
+        .dark .btn-logout{
+          color:white;
+          border:1px solid rgba(255,255,255,.2);
+        }
+
         .btn-logout:hover {
           color: white;
           background: var(--green);
@@ -184,6 +203,10 @@ export default function Navbar() {
 
         .user-name {
           color: var(--green);
+        }
+
+        .dark .user-name{
+          color:white;
         }
 
         .mobile-drawer {
@@ -204,6 +227,15 @@ export default function Navbar() {
           display: block;
           border-bottom: 1px solid rgba(22, 53, 46, 0.1);
           text-transform: uppercase;
+        }
+
+        .dark .mobile-link{
+          color:rgba(255,255,255,.7);
+          border-bottom:1px solid rgba(255,255,255,.08);
+        }
+
+        .dark .mobile-link:hover{
+          color:white;
         }
 
         .mobile-link:hover,
@@ -290,13 +322,13 @@ export default function Navbar() {
             </div>
 
             {/* Mobile */}
-            <button onClick={() => setOpen(!open)} className="md:hidden text-[#16352E]">
+            <button onClick={() => setOpen(!open)} className="md:hidden text-[#16352E] dark:text-white">
               {open ? <HiX /> : <HiOutlineMenuAlt3 />}
             </button>
           </div>
 
 {/* Mobile */}
-<div className={`mobile-drawer md:hidden mt-2 px-5 py-4 bg-white ${open ? "open" : ""}`}>
+<div className={`mobile-drawer md:hidden mt-2 px-5 py-4 bg-white dark:bg-slate-900 border dark:border-slate-800 ${open ? "open" : ""}`}>
 
   {/* Links */}
   {links.map((item) => (
@@ -331,7 +363,7 @@ export default function Navbar() {
         </div>
       )}
 
-      <span className="text-[#16352E] text-sm font-medium">
+      <span className="text-[#16352E] dark:text-white text-sm font-medium">
         {user.name}
       </span>
     </div>
