@@ -71,7 +71,7 @@ const Footer = () => {
             <ul className="space-y-3 text-white/60">
               <li><Link href="/contact" className="hover:text-white">Contact</Link></li>
               <li><Link href="/help" className="hover:text-white">Help Center</Link></li>
-              <li><Link href="/privacy-policy" className="hover:text-white">Privacy Policy</Link></li>
+              <li><Link href="/privacy" className="hover:text-white">Privacy Policy</Link></li>
               <li><Link href="/terms" className="hover:text-white">Terms</Link></li>
             </ul>
           </div>
@@ -98,7 +98,7 @@ const Footer = () => {
           </p>
 
           <div className="flex gap-6 text-sm text-white/60">
-            <Link href="/privacy-policy" className="hover:text-white">Privacy</Link>
+            <Link href="/privacy" className="hover:text-white">Privacy</Link>
             <Link href="/terms" className="hover:text-white">Terms</Link>
             <Link href="/contact" className="hover:text-white">Support</Link>
           </div>

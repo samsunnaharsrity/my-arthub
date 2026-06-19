@@ -10,7 +10,7 @@ export default function DashboardStatCard({
   trend,
 }) {
   return (
-    <Card className="border border-default-200/50 bg-content1 p-6 shadow-none hover:shadow-md transition-all duration-300">
+    <Card className="border border-default-200/50 bg-content1 p-6 shadow-none hover:shadow-md transition-all duration-300 rounded-2xl mt-10">
       <div className="flex items-start justify-between">
         <div>
           <p className="text-sm text-default-500 font-medium">
