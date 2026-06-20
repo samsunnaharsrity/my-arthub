@@ -18,6 +18,7 @@ import {
   Users,
 } from "lucide-react";
 import { FaInstagram } from "react-icons/fa";
+import { createArtistProfile } from "@/lib/actions/artistProfile";
 
 const specializations = [
   "Painting",
@@ -75,7 +76,7 @@ export default function ArtistProfile({ user, artistProfile }) {
       imageData.append("image", file);
 
       const res = await fetch(
-        `https://api.imgbb.com/1/upload?key=${process.env.NEXT_PUBLIC_IMGBB_API_KEY}`,
+        `https://api.imgbb.com/1/upload?key=${process.env.NEXT_PUBLIC_IMGBB_KEY}`,
         {
           method: "POST",
           body: imageData,
@@ -110,16 +111,28 @@ export default function ArtistProfile({ user, artistProfile }) {
         photo: photoUrl,
       };
 
-      // await createArtistProfile(artistData)
+      console.log("[handleSubmit] sending to createArtistProfile:", artistData);
 
-      setProfile(artistData);
+      const result = await createArtistProfile(artistData);
+
+      console.log("[handleSubmit] server action result:", result);
+
+      if (result?.error) {
+        console.error("[handleSubmit] save failed:", result.error);
+        alert(result.error);
+        return;
+      }
+
+      setProfile(result?.data || artistData);
       setIsEditing(false);
     } catch (error) {
-      console.log(error);
+      console.error("[handleSubmit] caught error:", error);
+      alert(error.message || "Failed to save profile");
     } finally {
       setLoading(false);
     }
   };
+
 
   // UPDATE PROFILE VIEW MODE 
 

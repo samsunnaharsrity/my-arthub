@@ -5,25 +5,34 @@
 //   return serverMutation('/api/jobs' , newJobData)
 // }
 
+"use server"
 
+import { serverMutation } from "../core/server"
 
-const baseUrl =
-  process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:7000";
-
-export async function createArts(newArtWorksData) {
-  const res = await fetch(`${baseUrl}/api/artWorks`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(newArtWorksData),
-  });
-
-  const data = await res.json();
-
-  if (!res.ok) {
-    throw new Error(data?.message || "Failed to create artwork");
-  }
-
-  return data;
+export  const createArts = async (newCompanyData) =>{
+    return await serverMutation('/api/artWorks', newCompanyData)
 }
+
+
+
+
+// const baseUrl =
+//   process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:7000";
+
+// export async function createArts(newArtWorksData) {
+//   const res = await fetch(`${baseUrl}/api/artWorks`, {
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//     body: JSON.stringify(newArtWorksData),
+//   });
+
+//   const data = await res.json();
+
+//   if (!res.ok) {
+//     throw new Error(data?.message || "Failed to create artwork");
+//   }
+
+//   return data;
+// }
