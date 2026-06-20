@@ -12,6 +12,8 @@ import {
   Brush,
   Camera,
   Shapes,
+  ImagePlus,
+  FolderOpen,
   ArrowUpDown,
   SlidersHorizontal,
 } from "lucide-react";
@@ -34,6 +36,16 @@ export function DashboardSidebar() {
 
   const categories = [
     { label: "All Categories", href: "/dashboard/artist", icon: Shapes },
+    {
+    label: "All Art Works",
+    href: "/dashboard/artist/artWorks",
+    icon: FolderOpen,
+    },
+    {
+    label: "Add New Art Works",
+    href: "/dashboard/artist/artWorks/create",
+    icon: ImagePlus,
+    },
     { label: "Painting", href: "/dashboard/artist/painting", icon: Palette },
     { label: "Digital Art", href: "/dashboard/artist/digital-art", icon: ImageIcon },
     { label: "Sculpture", href: "/dashboard/artist/sculpture", icon: Brush },

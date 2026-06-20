@@ -5,7 +5,11 @@ const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 //     return serverFetch('/api/jobs')
 // }
 
-export const getArtWorks = async (artWorksId , status = 'active') => {
-    const res = await fetch(`${baseUrl}/api/artWorks?artWorksId=${artWorksId}&status=${status}`);
-    return res.json();
-}
+
+export const getArtWorks = async () => {
+  const res = await fetch(`${baseUrl}/api/artWorks`, {
+    cache: "no-store",
+  });
+
+  return res.json();
+};
