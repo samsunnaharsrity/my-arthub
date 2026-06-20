@@ -14,6 +14,7 @@ import {
   Check,
   Loader2,
 } from "lucide-react";
+import { createArts } from "@/lib/actions/artWorks";
 
 const categories = [
   { id: "painting", label: "Painting", icon: Palette },
@@ -129,24 +130,17 @@ export default function CreateANewPage() {
       const payload = { ...formData, status };
       console.log("[saveArtwork] payload:", payload);
 
-      const res = await fetch("/api/artworks", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+      const result = await createArts(payload);
+      console.log("[saveArtwork] server action result:", result);
 
-      console.log("[saveArtwork] response status:", res.status, res.statusText);
+      if (result?.error) {
+        console.error("[saveArtwork] server action returned an error:", result.error);
+        throw new Error(result.error);
+      }
 
-      const data = await res.json().catch((parseErr) => {
-        console.error("[saveArtwork] failed to parse JSON response:", parseErr);
-        return null;
-      });
-
-      console.log("[saveArtwork] response body:", data);
-
-      if (!res.ok) {
-        console.error("[saveArtwork] request failed:", data?.message || "no message in response");
-        throw new Error(data?.message || `Request failed with status ${res.status}`);
+      if (result?.success === false) {
+        console.error("[saveArtwork] server action reported failure:", result.message);
+        throw new Error(result.message || "Failed to save artwork");
       }
 
       console.log("[saveArtwork] success!");

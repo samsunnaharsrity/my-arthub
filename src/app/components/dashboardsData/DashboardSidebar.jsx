@@ -19,7 +19,8 @@ import {
 import {
   Button,
   Drawer,
-  Input,
+  TextField,
+  InputGroup,
   Slider,
   Select,
   Label,
@@ -73,17 +74,20 @@ export function DashboardSidebar() {
       </div>
 
       {/* Search */}
-      <div>
-        <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500">
+      <TextField>
+        <Label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500">
           Search
-        </label>
-        <Input
-          placeholder="Search artwork..."
-          variant="bordered"
-          startContent={<Search size={16} className="text-slate-400" />}
-          classNames={{ inputWrapper: "h-10 rounded-xl" }}
-        />
-      </div>
+        </Label>
+        <InputGroup>
+          <InputGroup.Prefix>
+            <Search size={16} className="text-slate-400" />
+          </InputGroup.Prefix>
+          <InputGroup.Input
+            placeholder="Search artwork..."
+            className="h-10 rounded-xl"
+          />
+        </InputGroup>
+      </TextField>
 
       {/* Categories */}
       <div>
@@ -233,10 +237,8 @@ export function DashboardSidebar() {
 
       {/* Mobile / Tablet Trigger + Drawer */}
       <Drawer>
-        <Button
-          className="fixed bottom-5 right-5 z-40 h-12 rounded-full bg-green-900 px-5 text-sm font-semibold text-white shadow-lg shadow-green-900/30 lg:hidden"
-          startContent={<Menu size={17} />}
-        >
+        <Button className="fixed bottom-5 right-5 z-40 h-12 rounded-full bg-green-900 px-5 text-sm font-semibold text-white shadow-lg shadow-green-900/30 lg:hidden">
+          <Menu size={17} />
           Filters
         </Button>
 

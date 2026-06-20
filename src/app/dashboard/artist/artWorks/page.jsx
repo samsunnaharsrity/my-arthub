@@ -1,23 +1,14 @@
 "use client";
 
+import { getArtWorks } from "@/lib/api/artWorks";
 import { Button } from "@heroui/react";
 
-const artworks = [
-  {
-    id: 1,
-    title: "Sunset Painting",
-    category: "Painting",
-    price: 120,
-  },
-  {
-    id: 2,
-    title: "Digital Portrait",
-    category: "Digital Art",
-    price: 250,
-  },
-];
 
-export default function ManageArtworks() {
+export default async function ManageArtworks() {
+
+  const artWorksId = 'artWorks_112233'
+  const artworks = await getArtWorks(artWorksId)
+
   return (
     <div className="mt-30">
       <div className="flex justify-between mb-6">

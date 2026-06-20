@@ -18,7 +18,7 @@ export default function Navbar() {
 
   const links = [
     { name: "Browse Art", href: "/artworks" },
-    { name: "Artists", href: "/artists" },
+    { name: "Artists", href: "/artist" },
     { name: "Categories", href: "/categories" },
     { name: "Dashboard", href: "/dashboard" },
   ];
