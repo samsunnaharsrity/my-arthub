@@ -31,7 +31,7 @@ const ArtDetailsPage = async ({ params }) => {
         <p style={pageStyles.notFoundSub}>
           The artwork you're looking for may have been sold, removed, or never existed.
         </p>
-        <Link href="/artworks" style={pageStyles.notFoundLink}>
+        <Link href="/browseArtwork" style={pageStyles.notFoundLink}>
           <ArrowLeft size={15} />
           Back to the gallery
         </Link>
@@ -65,7 +65,6 @@ const ArtDetailsPage = async ({ params }) => {
           .ad-grid { grid-template-columns: 1.05fr 0.95fr; gap: 4rem; }
         }
 
-        /* Image frame */
         .ad-frame {
           background: #fff; padding: 14px; border-radius: 4px;
           box-shadow: 0 1px 2px rgba(28,25,23,0.06), 0 20px 48px -16px rgba(28,25,23,0.18);
@@ -79,7 +78,6 @@ const ArtDetailsPage = async ({ params }) => {
           text-transform: uppercase; padding: 6px 13px; border-radius: 2px;
         }
 
-        /* Right column */
         .ad-category {
           display: inline-block; font-size: 0.72rem; font-weight: 700;
           letter-spacing: 0.12em; text-transform: uppercase; color: #13382e;
@@ -103,9 +101,7 @@ const ArtDetailsPage = async ({ params }) => {
 
         .ad-price-block { margin-bottom: 2.25rem; padding-bottom: 2rem; border-bottom: 1px solid #e8e4dc; }
         .ad-price-row { display: flex; align-items: center; gap: 10px; }
-        .ad-price {
-          font-size: 2.2rem; font-weight: 600; color: #1C1917; letter-spacing: -0.01em;
-        }
+        .ad-price { font-size: 2.2rem; font-weight: 600; color: #1C1917; letter-spacing: -0.01em; }
         .ad-sold-price { color: #b0a99c; text-decoration: line-through; }
         .ad-verified {
           display: inline-flex; align-items: center; gap: 5px;
@@ -116,9 +112,7 @@ const ArtDetailsPage = async ({ params }) => {
           font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em;
           text-transform: uppercase; color: #8a8377; margin-bottom: 0.7rem;
         }
-        .ad-description {
-          font-size: 0.96rem; line-height: 1.75; color: #44403c; margin-bottom: 2.1rem;
-        }
+        .ad-description { font-size: 0.96rem; line-height: 1.75; color: #44403c; margin-bottom: 2.1rem; }
 
         .ad-meta-list { margin-bottom: 2.25rem; }
         .ad-meta-row {
@@ -161,7 +155,6 @@ const ArtDetailsPage = async ({ params }) => {
           </Link>
 
           <div className="ad-grid">
-            {/* Image */}
             <div>
               <div className="ad-frame">
                 <div className="ad-frame-inner">
@@ -178,7 +171,6 @@ const ArtDetailsPage = async ({ params }) => {
               </div>
             </div>
 
-            {/* Details */}
             <div>
               <span className="ad-category">{artwork.category}</span>
               <h1 className="ad-title">{artwork.title}</h1>
@@ -238,10 +230,16 @@ const ArtDetailsPage = async ({ params }) => {
                   This piece has sold
                 </button>
               ) : (
-                <button className="btn-primary" disabled={!canPurchase}>
+                <Link
+                  href={`/browseArtwork/${id}/purchase`}
+                  className={`btn-primary ${
+                    !canPurchase ? "opacity-50 pointer-events-none" : ""
+                  }`}
+                  aria-disabled={!canPurchase}
+                >
                   <ShoppingCart size={17} />
                   {canPurchase ? "Purchase artwork" : "You own this artwork"}
-                </button>
+                </Link>
               )}
 
               {/* Owner controls */}

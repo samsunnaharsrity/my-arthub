@@ -32,11 +32,11 @@ export default function HeroSection() {
   return (
     <section className="relative overflow-hidden bg-gradient-to-br from-[#f6f8f7] via-white to-[#eef5f2] dark:from-[#07130F] dark:via-[#0B1B15] dark:to-[#07130F]">
 
-      {/* Glow background */}
-      <div className="absolute top-0 right-0 h-[500px] w-[500px] bg-green-500/10 blur-[150px]" />
-      <div className="absolute bottom-0 left-0 h-[400px] w-[400px] bg-emerald-500/10 blur-[130px]" />
+      {/* Glow background — pointer-events-none so it never blocks clicks on content above it */}
+      <div className="absolute top-0 right-0 h-[500px] w-[500px] bg-green-500/10 blur-[150px] pointer-events-none z-0" />
+      <div className="absolute bottom-0 left-0 h-[400px] w-[400px] bg-emerald-500/10 blur-[130px] pointer-events-none z-0" />
 
-      <div className="max-w-6xl mx-auto px-6 py-28">
+      <div className="relative z-10 max-w-6xl mx-auto px-6 py-28">
         <div className="grid lg:grid-cols-2 gap-10 items-center">
 
           {/* LEFT CONTENT */}
@@ -60,15 +60,21 @@ export default function HeroSection() {
             </p>
 
             {/* CTA */}
-            <div className="mt-10 flex flex-wrap gap-4">
-              <Link href="/artworks">
-                <button className="px-8 py-4 rounded-xl bg-gradient-to-r from-[#16352E] to-[#1F4A40] text-white font-semibold shadow-lg hover:scale-105 transition cursor-pointer">
+            <div className="mt-10 flex flex-wrap gap-4 relative z-20">
+              <Link href="/browseArtwork">
+                <button
+                  type="button"
+                  className="px-8 py-4 rounded-xl bg-gradient-to-r from-[#16352E] to-[#1F4A40] text-white font-semibold shadow-lg hover:scale-105 transition cursor-pointer"
+                >
                   Browse Artworks
                 </button>
               </Link>
 
               <Link href="/register?role=artist">
-                <button className="px-8 py-4 rounded-xl border border-[#16352E]/20 dark:border-white/10 text-[#16352E] dark:text-white hover:bg-white/10 transition cursor-pointer">
+                <button
+                  type="button"
+                  className="px-8 py-4 rounded-xl border border-[#16352E]/20 dark:border-white/10 text-[#16352E] dark:text-white hover:bg-green-600 hover:text-white transition cursor-pointer"
+                >
                   Become an Artist
                 </button>
               </Link>
@@ -78,7 +84,7 @@ export default function HeroSection() {
 
           {/* RIGHT CAROUSEL */}
           <div
-            className="relative h-[550px] hidden lg:flex items-center justify-center"
+            className="relative z-20 h-[550px] hidden lg:flex items-center justify-center"
             onMouseEnter={() => setPaused(true)}
             onMouseLeave={() => setPaused(false)}
           >
@@ -86,35 +92,37 @@ export default function HeroSection() {
             {/* LEFT CARD */}
             <img
               src={images[(current + images.length - 1) % images.length]}
-              className="absolute left-0 w-56 rounded-3xl rotate-[-14deg] opacity-60 scale-90 border border-green-500/20 shadow-2xl transition-all duration-700"
+              className="absolute left-0 w-56 rounded-3xl rotate-[-14deg] opacity-60 scale-90 border border-green-500/20 shadow-2xl transition-all duration-700 pointer-events-none"
               alt=""
             />
 
             {/* CENTER CARD (ACTIVE) */}
             <img
               src={images[current]}
-              className="relative z-20 w-80 rounded-3xl border-4 border-green-500 shadow-[0_0_70px_rgba(34,197,94,.45)] scale-105 transition-all duration-700"
+              className="relative z-20 w-80 rounded-3xl border-4 border-green-500 shadow-[0_0_70px_rgba(34,197,94,.45)] scale-105 transition-all duration-700 pointer-events-none"
               alt=""
             />
 
             {/* RIGHT CARD */}
             <img
               src={images[(current + 1) % images.length]}
-              className="absolute right-0 w-56 rounded-3xl rotate-[14deg] opacity-60 scale-90 border border-green-500/20 shadow-2xl transition-all duration-700"
+              className="absolute right-0 w-56 rounded-3xl rotate-[14deg] opacity-60 scale-90 border border-green-500/20 shadow-2xl transition-all duration-700 pointer-events-none"
               alt=""
             />
 
             {/* NAV BUTTONS */}
             <button
+              type="button"
               onClick={prev}
-              className="absolute left-6 bg-green-600 hover:bg-green-700 text-white p-3 rounded-full shadow-xl z-30 active:scale-90 transition"
+              className="absolute left-6 bg-green-600 hover:bg-green-700 text-white p-3 rounded-full shadow-xl z-30 active:scale-90 transition cursor-pointer"
             >
               <ChevronLeft />
             </button>
 
             <button
+              type="button"
               onClick={next}
-              className="absolute right-6 bg-green-600 hover:bg-green-700 text-white p-3 rounded-full shadow-xl z-30 active:scale-90 transition"
+              className="absolute right-6 bg-green-600 hover:bg-green-700 text-white p-3 rounded-full shadow-xl z-30 active:scale-90 transition cursor-pointer"
             >
               <ChevronRight />
             </button>
@@ -124,7 +132,7 @@ export default function HeroSection() {
         </div>
 
         {/* FEATURES */}
-        <div className="grid md:grid-cols-4 gap-6 mt-10">
+        <div className="grid md:grid-cols-4 gap-6 mt-10 relative z-10">
 
           {[
             { icon: "🎨", text: "Original Artworks" },
