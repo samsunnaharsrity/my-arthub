@@ -134,8 +134,22 @@ export default function PricingPage() {
                   </li>
                 ))}
               </ul>
+                <form action="/api/checkout_sessions" method="POST">
+                <section>
+                    <button type="submit" role="link"
+                    className={`block text-center rounded-xl py-3 font-semibold transition
+                ${
+                  plan.popular
+                    ? "bg-green-700 text-white hover:bg-green-800"
+                    : "bg-stone-900 text-white hover:bg-stone-700"
+                }`}
+                    >
+                    Checkout
+                    </button>
+                </section>
+                </form>
 
-              <Link
+              {/* <Link
                 href="/dashboard/user"
                 className={`block text-center rounded-xl py-3 font-semibold transition
                 ${
@@ -145,7 +159,7 @@ export default function PricingPage() {
                 }`}
               >
                 {plan.buttonText}
-              </Link>
+              </Link> */}
             </div>
           ))}
         </div>

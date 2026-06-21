@@ -20,6 +20,7 @@ export default function Navbar() {
     { name: "Browse Art", href: "/browseArtwork" },
     { name: "Artists", href: "/artist" },
     { name: "Categories", href: "/categories" },
+    { name: "Pricing", href: "/pricing" },
     { name: "Dashboard", href: "/dashboard" },
   ];
 
