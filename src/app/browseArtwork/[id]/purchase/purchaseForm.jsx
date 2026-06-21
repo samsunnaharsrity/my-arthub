@@ -1,7 +1,8 @@
-"use client";
+"use client"
 
+import { createPurchase } from "@/lib/actions/purchase";
 import { useState } from "react";
-// import { createCheckoutSession } from "./actions";
+import toast from "react-hot-toast";
 
 export default function PurchaseForm({ artworkId, userName }) {
   const [shipping, setShipping] = useState({
@@ -10,44 +11,56 @@ export default function PurchaseForm({ artworkId, userName }) {
     city: "",
     postalCode: "",
   });
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const updateField = (field, value) => {
-    setShipping((prev) => ({ ...prev, [field]: value }));
+    setShipping((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+
     if (error) setError(null);
   };
 
   const handleConfirm = async () => {
-    if (!shipping.name.trim() || !shipping.address.trim() || !shipping.city.trim()) {
-      setError("Please fill in your name, address, and city before continuing.");
+    if (
+      !shipping.name.trim() ||
+      !shipping.address.trim() ||
+      !shipping.city.trim()
+    ) {
+      setError(
+        "Please fill in your name, address, and city before continuing."
+      );
       return;
     }
 
-    setLoading(true);
-    setError(null);
-
     try {
-      const result = await createCheckoutSession(artworkId, shipping);
+      setLoading(true);
+      setError(null);
 
-      if (result?.error) {
-        setError(result.error);
-        return;
-      }
+      const result = await createPurchase({
+        artworkId,
+        shipping,
+      });
 
-      if (result?.url) {
-        // Redirect to Stripe's hosted checkout page
-        window.location.href = result.url;
+      if (result?.success) {
+        toast.success("Purchase completed");
+
+        // success page e redirect
+        window.location.href = "/dashboard/my-purchases";
       } else {
-        setError("Something went wrong starting checkout. Please try again.");
+        setError(result?.message || "Purchase failed");
       }
     } catch (err) {
-      console.error("[PurchaseForm] checkout error:", err);
-      setError("Something went wrong. Please try again.");
+      console.log(err);
+      setError("Something went wrong");
     } finally {
       setLoading(false);
     }
   };
+
 
   return (
     <>

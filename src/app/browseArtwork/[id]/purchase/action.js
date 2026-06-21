@@ -30,6 +30,10 @@ export async function createCheckoutSession(artworkId, shippingDetails) {
     return { error: "This artwork has already sold." };
   }
 
+  if (user.role !== "user") {
+    return { error: "Only buyer accounts can purchase artwork." };
+  }
+
   if (user.email === artwork.artistEmail) {
     return { error: "You can't purchase your own artwork." };
   }

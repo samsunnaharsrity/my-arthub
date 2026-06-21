@@ -5,10 +5,16 @@ import Link from "next/link";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { Eye, EyeOff } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const SigninPage = () => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+
+    const searchParams = useSearchParams();
+    const router = useRouter();
+
+    const redirectTo = searchParams.get("redirect") || "/";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -17,6 +23,7 @@ const SigninPage = () => {
     const email = form.get("email");
     const password = form.get("password");
 
+
     try {
       setLoading(true);
 
@@ -24,7 +31,7 @@ const SigninPage = () => {
         email,
         password,
         rememberMe:true,
-        callbackURL: "/",
+        callbackURL: redirectTo,
       });
 
       if (result?.error) {
@@ -35,8 +42,8 @@ const SigninPage = () => {
       toast.success("Login successful");
 
       setTimeout(() => {
-        window.location.href = "/";
-      }, 500);
+      router.push(redirectTo);
+    }, 500);
     } catch {
       toast.error("Invalid credentials");
     } finally {
@@ -47,9 +54,9 @@ const SigninPage = () => {
   const handleGoogleLogin = async () => {
     try {
       await authClient.signIn.social({
-        provider: "google",
-        callbackURL: "/",
-      });
+      provider: "google",
+      callbackURL: redirectTo,
+    });
     } catch {
       toast.error("Google login failed");
     }

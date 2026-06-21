@@ -222,7 +222,7 @@ const ArtDetailsPage = async ({ params }) => {
 
               {/* Purchase */}
               {!user ? (
-                <Link href={`/login?redirect=/artworks/${id}`} className="btn-primary">
+                <Link href={`/login?redirect=/browseArtwork/${id}`} className="btn-primary">
                   Log in to purchase
                 </Link>
               ) : isSold ? (

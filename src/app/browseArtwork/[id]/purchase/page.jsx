@@ -5,6 +5,8 @@ import { ArrowLeft, BadgeCheck, Truck } from "lucide-react";
 import { getArtworkById } from "@/lib/api/artWorks";
 import { getUserSession } from "@/lib/core/session";
 import PurchaseForm from "./purchaseForm";
+import { getPurchaseArt } from "@/lib/api/purchase";
+import { createPurchase } from "@/lib/actions/purchase";
 
 const currencySymbols = { USD: "$", BDT: "৳" };
 
@@ -54,6 +56,36 @@ const PurchasePage = async ({ params }) => {
       </div>
     );
   }
+
+  // Only buyer accounts (role "user") can purchase. Artists and admins
+const totalPurchase = await getPurchaseArt(user.id);
+
+if (totalPurchase?.length >= 3) {
+  return (
+    <div style={pageStyles.notFoundWrap}>
+      <p style={pageStyles.notFoundEyebrow}>
+        Purchase limit reached
+      </p>
+
+      <h2 style={pageStyles.notFoundTitle}>
+        You already purchased 3 artworks
+      </h2>
+
+      <p style={pageStyles.notFoundSub}>
+        A user can purchase a maximum of 3 artworks.
+      </p>
+
+      <Link
+        href="/browseArtwork"
+        style={pageStyles.notFoundLink}
+      >
+        <ArrowLeft size={15} />
+        Back to Gallery
+      </Link>
+    </div>
+  );
+}
+
 
   if (isSold || isOwner) {
     return (
