@@ -6,7 +6,7 @@ import { getArtworkById } from "@/lib/api/artWorks";
 import { getUserSession } from "@/lib/core/session";
 import PurchaseForm from "./purchaseForm";
 import { getPurchaseArt } from "@/lib/api/purchase";
-import { createPurchase } from "@/lib/actions/purchase";
+
 
 const currencySymbols = { USD: "$", BDT: "৳" };
 
@@ -17,6 +17,13 @@ const PurchasePage = async ({ params }) => {
     getArtworkById(id),
     getUserSession(),
   ]);
+  // User er previous purchases
+const purchases = user?.email
+  ? await getPurchaseArt(user.email)
+  : [];
+
+const purchaseCount = purchases?.length || 0;
+const hasReachedLimit = purchaseCount >= 3;
 
   if (!artwork) {
     return (
@@ -58,9 +65,25 @@ const PurchasePage = async ({ params }) => {
   }
 
   // Only buyer accounts (role "user") can purchase. Artists and admins
-const totalPurchase = await getPurchaseArt(user.id);
+  if (user.role !== "user") {
+    return (
+      <div style={pageStyles.notFoundWrap}>
+        <p style={pageStyles.notFoundEyebrow}>Not available for this account</p>
+        <h2 style={pageStyles.notFoundTitle}>Only buyer accounts can purchase artwork</h2>
+        <p style={pageStyles.notFoundSub}>
+          You're signed in as {user.role === "artist" ? "an artist" : "an admin"}. Switch to a
+          buyer account to purchase "{artwork.title}".
+        </p>
+        <Link href={`/browseArtwork/${id}`} style={pageStyles.notFoundLink}>
+          <ArrowLeft size={15} />
+          Back to artwork
+        </Link>
+      </div>
+    );
+  }
 
-if (totalPurchase?.length >= 3) {
+  // Free purchase limit: max 3 artworks
+if (hasReachedLimit) {
   return (
     <div style={pageStyles.notFoundWrap}>
       <p style={pageStyles.notFoundEyebrow}>
@@ -68,24 +91,24 @@ if (totalPurchase?.length >= 3) {
       </p>
 
       <h2 style={pageStyles.notFoundTitle}>
-        You already purchased 3 artworks
+        You have reached the free purchase limit
       </h2>
 
       <p style={pageStyles.notFoundSub}>
-        A user can purchase a maximum of 3 artworks.
+        A buyer account can purchase up to 3 artworks for free.
+        Please upgrade your account to continue purchasing artworks.
       </p>
 
       <Link
-        href="/browseArtwork"
+        href="/pricing"
         style={pageStyles.notFoundLink}
       >
         <ArrowLeft size={15} />
-        Back to Gallery
+        View pricing plans
       </Link>
     </div>
   );
 }
-
 
   if (isSold || isOwner) {
     return (
