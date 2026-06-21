@@ -19,7 +19,10 @@ export const auth = betterAuth({
     additionalFields:{
       role: {
         default: "user(buyer)"
-      }
+      },
+      role: {
+        default: "user_free"
+      },
     }
   }
 });

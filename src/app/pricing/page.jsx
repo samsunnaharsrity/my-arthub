@@ -4,6 +4,7 @@ import { Check, Crown, Gem } from "lucide-react";
 const plans = [
   {
     name: "Free",
+    id: 'user_free',
     price: "$0",
     description: "Perfect for new collectors.",
     purchases: "3 paintings / month",
@@ -18,6 +19,7 @@ const plans = [
   },
   {
     name: "Pro",
+    id: 'user_pro',
     price: "$9.99",
     description: "Best for active collectors.",
     purchases: "9 paintings / month",
@@ -32,6 +34,7 @@ const plans = [
   },
   {
     name: "Premium",
+    id: 'user_premium',
     price: "$19.99",
     description: "Unlimited collecting experience.",
     purchases: "Unlimited purchases",
@@ -71,7 +74,7 @@ export default function PricingPage() {
           {plans.map((plan) => (
             <div
               key={plan.name}
-              className={`relative rounded-3xl border bg-white p-8 shadow-sm transition hover:-translate-y-2 hover:shadow-xl
+              className={`relative rounded-3xl border bg-white p-6 shadow-sm transition hover:-translate-y-2 hover:shadow-xl
               ${
                 plan.popular
                   ? "border-green-600 ring-2 ring-green-600"
@@ -135,9 +138,10 @@ export default function PricingPage() {
                 ))}
               </ul>
                 <form action="/api/checkout_sessions" method="POST">
+                <input type="hidden" name="plan_id" value={plan.id} />
                 <section>
                     <button type="submit" role="link"
-                    className={`block text-center rounded-xl py-3 font-semibold transition
+                    className={`block text-center rounded-xl py-3 w-full font-semibold transition
                 ${
                   plan.popular
                     ? "bg-green-700 text-white hover:bg-green-800"
