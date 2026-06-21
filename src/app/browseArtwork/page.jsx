@@ -160,10 +160,10 @@ export default function BrowseArtworkPage() {
                 </h3>
 
                 {/* Search Bar Input */}
-                <div className="relative">
+                <div className="relative p-2">
                   <Magnifier
-                    width={16}
-                    height={16}
+                    width={14}
+                    height={14}
                     className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 z-10"
                   />
                   <Input
@@ -283,7 +283,7 @@ export default function BrowseArtworkPage() {
                       whileHover={{ y: -6 }}
                       className="h-full"
                     >
-                      <Link href={`/artworks/${art._id}`}>
+                      <Link href={`/browseArtwork/${art._id}`}>
                         <Card className="overflow-hidden rounded-3xl border border-slate-200/60 bg-white shadow-sm hover:shadow-xl hover:border-emerald-500/20 transition-all cursor-pointer h-full flex flex-col justify-between">
                           
                           {/* Top Image Box */}
@@ -307,12 +307,12 @@ export default function BrowseArtworkPage() {
                               isIconOnly
                               radius="full"
                               size="sm"
-                              className="absolute top-2.5 right-2.5 bg-white/80 backdrop-blur-sm min-w-8 w-8 h-8 text-slate-400 hover:text-amber-500 shadow-sm transition-colors"
+                              className="absolute top-2.5 right-2.5 bg-white/80 backdrop-blur-sm rounded-md text-slate-400 hover:text-amber-500 shadow-sm transition-colors"
                               onClick={(e) => {
                                 e.preventDefault();
                               }}
                             >
-                              <StarFill width={14} height={14} />
+                              <StarFill width={16} height={16} />
                             </Button>
                           </div>
 

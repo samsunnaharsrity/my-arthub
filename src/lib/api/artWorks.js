@@ -6,6 +6,9 @@ export const getBrowseArtwork = async () =>{
     return serverFetch('/api/artWorks')
 }
 
+export const getArtworkById = async (id) => {
+ return serverFetch(`/api/artworks/${id}`)
+};
 
 export const getArtWorks = async () => {
   const res = await fetch(`${baseUrl}/api/artWorks`, {
@@ -14,3 +17,4 @@ export const getArtWorks = async () => {
 
   return res.json();
 };
+
