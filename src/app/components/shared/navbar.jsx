@@ -17,7 +17,7 @@ export default function Navbar() {
   const user = session?.user;
 
   const links = [
-    { name: "Browse Art", href: "/artworks" },
+    { name: "Browse Art", href: "/browseArtwork" },
     { name: "Artists", href: "/artist" },
     { name: "Categories", href: "/categories" },
     { name: "Dashboard", href: "/dashboard" },

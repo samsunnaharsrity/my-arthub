@@ -1,15 +1,32 @@
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:5000";
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
+export const serverFetch = async (path) => {
+  const res = await fetch(`${baseUrl}${path}`, {
+    cache: "no-store",
+  });
 
+  const text = await res.text();
 
-// export const serverFetch = async (path) =>{
-//     const res = await fetch(`${baseUrl}${path}`)
+  let result;
 
-//     return res.json();
-// }
+  try {
+    result = text ? JSON.parse(text) : {};
+  } catch (error) {
+    console.error(
+      `[serverFetch] Invalid JSON response from ${path}:`,
+      text.slice(0, 200)
+    );
+    throw new Error(
+      `Server returned invalid JSON response (status ${res.status}) for ${path}`
+    );
+  }
 
+  if (!res.ok) {
+    throw new Error(result?.message || `Request failed with status ${res.status}`);
+  }
 
-
+  return result;
+};
 
 export const serverMutation = async (path, data) => {
   const res = await fetch(`${baseUrl}${path}`, {
@@ -27,20 +44,18 @@ export const serverMutation = async (path, data) => {
   try {
     result = text ? JSON.parse(text) : {};
   } catch (error) {
-    console.error("Invalid JSON Response:", text);
-
+    console.error(
+      `[serverMutation] Invalid JSON response from ${path}:`,
+      text.slice(0, 200)
+    );
     throw new Error(
-      "Server returned invalid JSON response"
+      `Server returned invalid JSON response (status ${res.status}) for ${path}`
     );
   }
 
   if (!res.ok) {
-    throw new Error(
-      result?.message || "Request failed"
-    );
+    throw new Error(result?.message || `Request failed with status ${res.status}`);
   }
 
   return result;
 };
-
-
