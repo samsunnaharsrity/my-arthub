@@ -2,7 +2,7 @@
 
 import { createPurchase } from "@/lib/actions/purchase";
 import { useState } from "react";
-import { createCheckoutSession } from "./action";
+// import { createCheckoutSession } from "./action";
 
 
 export default function PurchaseForm({ artworkId, userName }) {
