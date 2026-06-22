@@ -1,46 +1,57 @@
 "use client";
 
 import { useState } from "react";
-import { getSocket } from "@/lib/socket";
+import { useRouter } from "next/navigation";
 
-export default function CommentBox({ user, artworkId }) {
+export default function CommentBox({ artworkId, user }) {
   const [text, setText] = useState("");
-  const socket = getSocket();
+  const router = useRouter();
 
   const sendComment = async () => {
-    if (!text.trim()) return;
-
-    const comment = {
-      artworkId,
-      text,
-      userId: user._id,
-      userName: user.name,
-      parentId: null,
-    };
-
-    await fetch("/api/comments", {
+    const res = await fetch("http://localhost:7000/api/comments", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(comment),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        artworkId,
+        text,
+        userId: user?._id,
+        userName: user?.name,
+      }),
     });
 
-    socket.emit("newComment", comment);
-
-    setText("");
+    if (res.ok) {
+      setText("");
+      router.refresh();
+    }
   };
 
   return (
     <div style={{ marginBottom: "1rem" }}>
+
+
+
       <textarea
+
         value={text}
+
         onChange={(e) => setText(e.target.value)}
+
         placeholder="Write a comment..."
+
         style={{ width: "100%", padding: "10px" }}
+
       />
 
       <button className="btn-primary" onClick={sendComment}>
+
         Post Comment
+
       </button>
+
+
+
     </div>
   );
 }

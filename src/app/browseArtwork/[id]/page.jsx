@@ -262,7 +262,7 @@ const ArtDetailsPage = async ({ params }) => {
                 <p className="ad-section-label">Comments</p>
 
                 <CommentSection
-                  artworkId={id}
+                  artworkId={artwork?._id}
                   user={user}
                 />
               </div>

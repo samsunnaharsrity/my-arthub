@@ -1,29 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { getSocket } from "@/lib/socket";
-import CommentThread from "./commentThread";
+import { useState } from "react";
 
-export default function CommentFeed({ initialComments, artworkId }) {
+export default function CommentFeed({ initialComments }) {
   const [comments, setComments] = useState(initialComments);
-  const socket = getSocket();
-
-  useEffect(() => {
-    socket.emit("joinArtwork", artworkId);
-
-    socket.on("commentAdded", (data) => {
-      setComments((prev) => [data, ...prev]);
-    });
-
-    return () => {
-      socket.off("commentAdded");
-    };
-  }, []);
 
   return (
-    <div style={{ marginTop: "2rem" }}>
-      {comments.map((c) => (
-        <CommentThread key={c._id} comment={c} />
+    <div>
+      {comments.map((comment) => (
+        <div key={comment._id}>
+          <h4>{comment.userName}</h4>
+          <p>{comment.text}</p>
+        </div>
       ))}
     </div>
   );

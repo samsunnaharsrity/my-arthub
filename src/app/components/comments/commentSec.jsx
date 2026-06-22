@@ -3,7 +3,7 @@ import { getCommentsByArtwork } from "@/lib/api/comments";
 import CommentBox from "./commentBox";
 import CommentFeed from "./commentFeed";
 
-export default async function CommentSection({ artworkId, user }) {
+export default async function CommentSec({ artworkId, user }) {
   const initialComments = await getCommentsByArtwork(artworkId);
 
   return (
