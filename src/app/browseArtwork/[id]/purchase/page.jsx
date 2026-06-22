@@ -46,19 +46,19 @@ const plan = await getPlanById(
   }
 
 
-const purchases = await getPurchaseArt(user.email);
-const purchaseCount = purchases?.length || 0;
-let maxPurchases = MAX_FREE_PURCHASES;
+// const purchases = await getPurchaseArt(user.email);
+// const purchaseCount = purchases?.length || 0;
+// const maxPurchases = plan?.maxPurchases || 3;
 
-if (user?.plan === "user_pro") {
-  maxPurchases = 9;
-}
+// if (user?.plan === "user_pro") {
+//   maxPurchases = 9;
+// }
 
-if (user?.plan === "user_premium") {
-  maxPurchases = Infinity;
-}
+// if (user?.plan === "user_premium") {
+//   maxPurchases = Infinity;
+// }
 
-const hasReachedLimit = purchaseCount >= maxPurchases;
+// const hasReachedLimit = purchaseCount >= maxPurchases;
 
   const isSold = artwork.status === "closed";
   const isOwner = Boolean(user && user?.email === artwork?.artistEmail);
@@ -67,21 +67,69 @@ const hasReachedLimit = purchaseCount >= maxPurchases;
   const serviceFee = Math.round(priceNumber * 0.03 * 100) / 100;
   const total = priceNumber + serviceFee;
 
-  if (!user) {
-    return (
-      <div style={pageStyles.notFoundWrap}>
-        <p style={pageStyles.notFoundEyebrow}>Sign in required</p>
-        <h2 style={pageStyles.notFoundTitle}>Log in to complete this purchase</h2>
-        <p style={pageStyles.notFoundSub}>
-          You'll need an ArtHub account to buy "{artwork.title}".
-        </p>
-        <Link href={`/login?redirect=/browseArtwork/${id}/purchase`} style={pageStyles.notFoundLink}>
-          <ArrowLeft size={15} />
-          Go to login
-        </Link>
-      </div>
-    );
-  }
+//   if (!user) {
+//     return (
+//       <div style={pageStyles.notFoundWrap}>
+//         <p style={pageStyles.notFoundEyebrow}>Sign in required</p>
+//         <h2 style={pageStyles.notFoundTitle}>Log in to complete this purchase</h2>
+//         <p style={pageStyles.notFoundSub}>
+//           You'll need an ArtHub account to buy "{artwork.title}".
+//         </p>
+//         <Link href={`/login?redirect=/browseArtwork/${id}/purchase`} style={pageStyles.notFoundLink}>
+//           <ArrowLeft size={15} />
+//           Go to login
+//         </Link>
+//       </div>
+//     );
+//   }
+
+
+// USER LOGIN CHECK FIRST
+if (!user) {
+  return (
+    <div style={pageStyles.notFoundWrap}>
+      <p style={pageStyles.notFoundEyebrow}>Sign in required</p>
+      <h2 style={pageStyles.notFoundTitle}>
+        Log in to complete this purchase
+      </h2>
+      <Link
+        href={`/login?redirect=/browseArtwork/${id}/purchase`}
+        style={pageStyles.notFoundLink}
+      >
+        Login
+      </Link>
+    </div>
+  );
+}
+
+// GET USER PURCHASES
+const purchases = await getPurchaseArt(user.email);
+const purchaseCount = purchases?.length || 0;
+
+// DETERMINE LIMIT
+let maxPurchases = 3;
+
+if (user?.planId === "user_pro") {
+  maxPurchases = 9;
+}
+
+if (user?.planId === "user_premium") {
+  maxPurchases = Infinity;
+}
+
+// OR DATABASE PLAN
+if (plan?.maxPurchases) {
+  maxPurchases = plan.maxPurchases;
+}
+
+const hasReachedLimit = purchaseCount >= maxPurchases;
+
+console.log({
+  userPlan: user?.planId,
+  purchaseCount,
+  maxPurchases,
+  hasReachedLimit,
+});
 
   if (user.role !== "user") {
     return (
@@ -109,22 +157,28 @@ const hasReachedLimit = purchaseCount >= maxPurchases;
 
 // const hasReachedLimit = purchaseCount >= limit;
 
-  if (hasReachedLimit) {
-    return (
-      <div style={pageStyles.notFoundWrap}>
-        <p style={pageStyles.notFoundEyebrow}>Purchase limit reached</p>
-        <h2 style={pageStyles.notFoundTitle}>You've reached the free purchase limit</h2>
-        <p style={pageStyles.notFoundSub}>
-          A buyer account can purchase up to {MAX_FREE_PURCHASES} artworks for free. Upgrade
-          your account to continue purchasing artworks.
-        </p>
-        <Link href="/pricing" style={pageStyles.notFoundLink}>
-          <ArrowLeft size={15} />
-          View pricing plans
-        </Link>
-      </div>
-    );
-  }
+if (hasReachedLimit) {
+  return (
+    <div style={pageStyles.notFoundWrap}>
+      <p style={pageStyles.notFoundEyebrow}>
+        Purchase limit reached
+      </p>
+
+      <h2 style={pageStyles.notFoundTitle}>
+        You've reached your purchase limit
+      </h2>
+
+      <p style={pageStyles.notFoundSub}>
+        Your current plan allows {maxPurchases} purchases.
+        Please upgrade your account to continue.
+      </p>
+
+      <Link href="/pricing" style={pageStyles.notFoundLink}>
+        View pricing plans
+      </Link>
+    </div>
+  );
+}
 
   if (isSold || isOwner) {
     return (
@@ -146,11 +200,14 @@ const hasReachedLimit = purchaseCount >= maxPurchases;
     );
   }
 
+  const remaining = Math.max(maxPurchases - purchaseCount, 0);
+const isUnlimited = maxPurchases === Infinity;
+
   return (
     <>
       <style>{`
         .pp-wrap { background: #FAF8F4; min-height: 100vh; width: 100%; }
-        .pp-inner { max-width: 1040px; width: 100%; margin: 0 auto; padding: 7rem 1.5rem 5rem; }
+        .pp-inner { max-width: 1040px; width: 100%; margin: 0 auto; padding: 2rem 1.5rem 5rem; }
 
         .pp-breadcrumb {
           display: inline-flex; align-items: center; gap: 6px;
@@ -254,6 +311,89 @@ const hasReachedLimit = purchaseCount >= maxPurchases;
         .btn-confirm:hover:not(:disabled) { background: #288734; transform: translateY(-1px); }
         .btn-confirm:disabled { opacity: 0.6; cursor: not-allowed; }
       `}</style>
+
+
+<div className="max-w-4xl mx-auto mt-28 rounded-2xl border border-emerald-500/20 bg-gradient-to-r from-emerald-500/10 to-green-500/5 p-6">
+
+  <div className="flex items-center justify-between">
+    <div>
+      <p className="text-xs uppercase tracking-wider text-emerald-400 font-semibold">
+        Subscription Status
+      </p>
+
+      {/* PLAN TITLE */}
+      <h2 className="mt-2 text-2xl font-bold text-white">
+        {user?.planId === "user_premium"
+          ? "Premium Plan Active 👑"
+          : user?.planId === "user_pro"
+          ? "Pro Plan Active 🎉"
+          : "Free Plan Active"}
+      </h2>
+
+      {/* SUB TEXT */}
+      <p className="mt-1 text-gray-400">
+        {user?.planId === "user_premium"
+          ? `You’ve purchased ${purchaseCount} artworks`
+          : user?.planId === "user_pro"
+          ? "Unlimited purchases unlocked."
+          : `You’ve used ${purchaseCount} of 3 free purchases`}
+      </p>
+    </div>
+
+    <div className="rounded-xl bg-emerald-500 px-4 py-2 text-white font-semibold">
+      Active
+    </div>
+  </div>
+
+  {/* PROGRESS SECTION */}
+  <div className="mt-6">
+    <div className="flex justify-between text-sm text-gray-400 mb-2">
+      <span>
+        {user?.planId === "user_premium"
+          ? "Total Purchases"
+          : "Purchase Limit"}
+      </span>
+
+      <span>
+        {isUnlimited
+          ? "Unlimited"
+          : `${purchaseCount}/${maxPurchases}`}
+      </span>
+    </div>
+
+    <div className="h-3 w-full overflow-hidden rounded-full bg-gray-800">
+      <div
+        className="h-full rounded-full bg-emerald-500"
+        style={{
+          width: isUnlimited
+            ? "100%"
+            : `${Math.min((purchaseCount / maxPurchases) * 100, 100)}%`,
+        }}
+      />
+    </div>
+  </div>
+
+  {/* FOOTER MESSAGE */}
+  <div className="mt-5 rounded-xl border border-emerald-500/20 bg-emerald-500/10 p-4">
+    {user?.planId === "user_premium" ? (
+      <p className="text-sm text-emerald-300">
+        👑 Premium user — unlimited purchases enabled. You own {purchaseCount} artworks.
+      </p>
+    ) : user?.planId === "user_pro" ? (
+      <p className="text-sm text-emerald-300">
+        🎉 Pro subscription active — You can purchase up to 9 artworks.
+      </p>
+    ) : (
+      <p className="text-sm text-emerald-300">
+        {remaining > 0
+          ? `⚡ You can still purchase ${remaining} artworks for free.`
+          : `🚫 Free limit reached. Upgrade to continue.`}
+      </p>
+    )}
+  </div>
+</div>
+
+{/* FORM */}
 
       <div className="pp-wrap">
         <div className="pp-inner">

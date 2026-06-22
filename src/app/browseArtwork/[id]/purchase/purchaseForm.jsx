@@ -12,7 +12,7 @@ export default function PurchaseForm({ artworkId, userName }) {
     postalCode: "",
   });
 
-  const [paymentMethod, setPaymentMethod] = useState("stripe");
+  const [paymentMethod, setPaymentMethod] = useState("free");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -164,7 +164,7 @@ export default function PurchaseForm({ artworkId, userName }) {
         <p className="pp-section-label">Payment method</p>
 
         <div
-          className={`pay-option ${
+          className={`pay-option mb-3 ${
             paymentMethod === "free" ? "selected" : ""
           }`}
           onClick={() => setPaymentMethod("free")}
@@ -172,7 +172,7 @@ export default function PurchaseForm({ artworkId, userName }) {
           <span className="pay-radio" />
           <div>
             <p className="pay-label">Free Purchase</p>
-            <p className="pay-desc">Use 3 free limit</p>
+            <p className="pay-desc">Use your 3 free purchases (if available) </p>
           </div>
         </div>
 
@@ -184,8 +184,8 @@ export default function PurchaseForm({ artworkId, userName }) {
         >
           <span className="pay-radio" />
           <div>
-            <p className="pay-label">Card via Stripe</p>
-            <p className="pay-desc">Secure checkout</p>
+            <p className="pay-label">Pay with Card (Stripe)</p>
+            <p className="pay-desc">Secure checkout with Stripe</p>
           </div>
         </div>
       </div>
