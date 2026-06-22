@@ -12,6 +12,7 @@ import {
 
 import { getArtworkById } from "@/lib/api/artWorks";
 import { getUserSession } from "@/lib/core/session";
+import CommentSection from "@/app/components/comments/commentSec";
 
 const currencySymbols = { USD: "$", BDT: "৳" };
 
@@ -255,6 +256,16 @@ const ArtDetailsPage = async ({ params }) => {
                   </button>
                 </div>
               )}
+
+              {/*  COMMENTS SECTION START */}
+              <div style={{ marginTop: "3rem" }}>
+                <p className="ad-section-label">Comments</p>
+
+                <CommentSection
+                  artworkId={id}
+                  user={user}
+                />
+              </div>
             </div>
           </div>
         </div>
