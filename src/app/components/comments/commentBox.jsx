@@ -33,21 +33,13 @@ export default function CommentBox({ artworkId, user }) {
 
 
       <textarea
-
         value={text}
-
         onChange={(e) => setText(e.target.value)}
-
         placeholder="Write a comment..."
-
-        style={{ width: "100%", padding: "10px" }}
-
+        style={{ width: "100%", padding: "5px" }}
       />
-
       <button className="btn-primary" onClick={sendComment}>
-
         Post Comment
-
       </button>
 
 

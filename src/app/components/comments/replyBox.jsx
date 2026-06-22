@@ -1,73 +1,90 @@
 "use client";
 
 import { useState } from "react";
-import { getSocket } from "@/lib/socket";
 
-export default function ReplyBox({ parentId, artworkId, user }) {
+export default function ReplyBox({
+  parentId,
+  artworkId,
+  user,
+  onClose,
+}) {
   const [text, setText] = useState("");
-  const socket = getSocket();
 
   const sendReply = async () => {
     if (!text.trim()) return;
 
-    const reply = {
-      artworkId,
-      parentId, // 👈 IMPORTANT (thread connection)
-      text,
-      userId: user?._id,
-      userName: user?.name,
-      userAvatar: user?.avatar || "",
-    };
-
     try {
-      await fetch("/api/comments", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(reply),
-      });
+      const res = await fetch(
+        "http://localhost:7000/api/comments",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            artworkId,
+            parentId,
+            text,
+            userId: user?._id,
+            userName: user?.name,
+            userAvatar: user?.avatar,
+          }),
+        }
+      );
 
-      // 🔥 real-time update
-      socket.emit("newComment", reply);
+      const data = await res.json();
 
-      setText("");
+      if (data.success) {
+        setText("");
+        onClose?.(); 
+      }
     } catch (err) {
       console.error("Reply failed:", err);
     }
   };
 
   return (
-    <div style={{ marginTop: "8px" }}>
-      
+    <div>
       <textarea
         value={text}
         onChange={(e) => setText(e.target.value)}
         placeholder="Write a reply..."
         style={{
           width: "100%",
-          padding: "8px",
+          padding: 8,
           border: "1px solid #ddd",
-          borderRadius: "4px",
-          fontSize: "0.9rem",
+          borderRadius: 6,
         }}
       />
 
-      <div style={{ marginTop: "6px", display: "flex", gap: "8px" }}>
+      <div
+        style={{
+          display: "flex",
+          gap: 8,
+          marginTop: 6,
+        }}
+      >
         <button
           onClick={sendReply}
-          className="btn-primary"
-          style={{ height: "36px", fontSize: "0.8rem" }}
+          style={{
+            background: "#047857",
+            color: "#fff",
+            border: "none",
+            padding: "6px 12px",
+            cursor: "pointer",
+            borderRadius: 4,
+          }}
         >
           Reply
         </button>
 
         <button
-          onClick={() => setText("")}
+          onClick={() => {
+            setText("");
+            onClose?.(); 
+          }}
           style={{
-            height: "36px",
-            fontSize: "0.8rem",
             background: "transparent",
             border: "1px solid #ccc",
-            padding: "0 10px",
+            padding: "6px 12px",
             cursor: "pointer",
           }}
         >

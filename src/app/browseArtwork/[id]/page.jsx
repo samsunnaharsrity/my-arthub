@@ -170,8 +170,19 @@ const ArtDetailsPage = async ({ params }) => {
                   {isSold && <span className="sold-overlay">Sold</span>}
                 </div>
               </div>
+
+      {/*  COMMENTS SECTION START */}
+              <div style={{ marginTop: "3rem" }}>
+                <p className="ad-section-label">Comments</p>
+
+                <CommentSection
+                  artworkId={artwork?._id}
+                  user={user}
+                />
+              </div>
             </div>
 
+{/* OTHER DESCRIPTIONS */}
             <div>
               <span className="ad-category">{artwork.category}</span>
               <h1 className="ad-title">{artwork.title}</h1>
@@ -257,15 +268,7 @@ const ArtDetailsPage = async ({ params }) => {
                 </div>
               )}
 
-              {/*  COMMENTS SECTION START */}
-              <div style={{ marginTop: "3rem" }}>
-                <p className="ad-section-label">Comments</p>
 
-                <CommentSection
-                  artworkId={artwork?._id}
-                  user={user}
-                />
-              </div>
             </div>
           </div>
         </div>

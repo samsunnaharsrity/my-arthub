@@ -6,7 +6,7 @@ export default function LikeButton({ comment }) {
   const socket = getSocket();
 
   const like = async () => {
-    const res = await fetch("/api/comments/like", {
+    const res = await fetch("http://localhost:7000/api/comments/like", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
