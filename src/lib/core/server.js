@@ -29,33 +29,27 @@ export const serverFetch = async (path) => {
 };
 
 export const serverMutation = async (path, data) => {
-  const res = await fetch(`${baseUrl}${path}`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  });
-
-  const text = await res.text();
-
-  let result;
+  const url = `${baseUrl}${path}`;
 
   try {
-    result = text ? JSON.parse(text) : {};
-  } catch (error) {
-    console.error(
-      `[serverMutation] Invalid JSON response from ${path}:`,
-      text.slice(0, 200)
-    );
-    throw new Error(
-      `Server returned invalid JSON response (status ${res.status}) for ${path}`
-    );
-  }
+    const res = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
 
-  if (!res.ok) {
-    throw new Error(result?.message || `Request failed with status ${res.status}`);
-  }
+    const text = await res.text();
+    const result = text ? JSON.parse(text) : {};
 
-  return result;
+    if (!res.ok) {
+      throw new Error(result?.message || `Request failed ${res.status}`);
+    }
+
+    return result;
+  } catch (err) {
+    console.error("Fetch error:", url, err.message);
+    throw err;
+  }
 };

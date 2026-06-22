@@ -8,8 +8,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 const stripeCurrencyMap = {
   USD: "usd",
-  BDT: "bdt", // Note: confirm BDT is supported on your Stripe account/region.
-              // If not, convert to USD server-side before creating the session.
+  BDT: "bdt", 
 };
 
 export async function createCheckoutSession(artworkId, shippingDetails) {

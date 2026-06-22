@@ -6,25 +6,29 @@ import { getArtworkById } from "@/lib/api/artWorks";
 import { getUserSession } from "@/lib/core/session";
 import PurchaseForm from "./purchaseForm";
 import { getPurchaseArt } from "@/lib/api/purchase";
-
+import { getPlanById } from "@/lib/api/plans";
 
 const currencySymbols = { USD: "$", BDT: "৳" };
+const MAX_FREE_PURCHASES = 3;
 
 const PurchasePage = async ({ params }) => {
   const { id } = await params;
-
+  
+  
   const [artwork, user] = await Promise.all([
     getArtworkById(id),
     getUserSession(),
   ]);
-  // User er previous purchases
-const purchases = user?.email
-  ? await getPurchaseArt(user.email)
-  : [];
 
-const purchaseCount = purchases?.length || 0;
-const hasReachedLimit = purchaseCount >= 3;
+console.log("USER SESSION:", user);
 
+const plan = await getPlanById(
+  user?.plan || user?.planId || "user_free"
+);
+
+
+  
+  
   if (!artwork) {
     return (
       <div style={pageStyles.notFoundWrap}>
@@ -40,6 +44,21 @@ const hasReachedLimit = purchaseCount >= 3;
       </div>
     );
   }
+
+
+const purchases = await getPurchaseArt(user.email);
+const purchaseCount = purchases?.length || 0;
+let maxPurchases = MAX_FREE_PURCHASES;
+
+if (user?.plan === "user_pro") {
+  maxPurchases = 9;
+}
+
+if (user?.plan === "user_premium") {
+  maxPurchases = Infinity;
+}
+
+const hasReachedLimit = purchaseCount >= maxPurchases;
 
   const isSold = artwork.status === "closed";
   const isOwner = Boolean(user && user?.email === artwork?.artistEmail);
@@ -64,15 +83,14 @@ const hasReachedLimit = purchaseCount >= 3;
     );
   }
 
-  // Only buyer accounts (role "user") can purchase. Artists and admins
   if (user.role !== "user") {
     return (
       <div style={pageStyles.notFoundWrap}>
         <p style={pageStyles.notFoundEyebrow}>Not available for this account</p>
         <h2 style={pageStyles.notFoundTitle}>Only buyer accounts can purchase artwork</h2>
         <p style={pageStyles.notFoundSub}>
-          You're signed in as {user.role === "artist" ? "an artist" : "an admin"}. Switch to a
-          buyer account to purchase "{artwork.title}".
+          You're signed in as {user.role === "artist" ? "an artist" : "an admin"}. Only user
+          (buyer) accounts can purchase artwork on ArtHub.
         </p>
         <Link href={`/browseArtwork/${id}`} style={pageStyles.notFoundLink}>
           <ArrowLeft size={15} />
@@ -82,33 +100,31 @@ const hasReachedLimit = purchaseCount >= 3;
     );
   }
 
-  // Free purchase limit: max 3 artworks
-if (hasReachedLimit) {
-  return (
-    <div style={pageStyles.notFoundWrap}>
-      <p style={pageStyles.notFoundEyebrow}>
-        Purchase limit reached
-      </p>
+  // Free purchase limit: max 3 artworks per buyer account 
+  // const purchases = await getPurchaseArt(user.email);
+  // const purchaseCount = purchases?.length || 0;
+  // const hasReachedLimit = purchaseCount >= MAX_FREE_PURCHASES;
 
-      <h2 style={pageStyles.notFoundTitle}>
-        You have reached the free purchase limit
-      </h2>
+//   const limit = plan?.MAX_FREE_PURCHASES ?? 3;
 
-      <p style={pageStyles.notFoundSub}>
-        A buyer account can purchase up to 3 artworks for free.
-        Please upgrade your account to continue purchasing artworks.
-      </p>
+// const hasReachedLimit = purchaseCount >= limit;
 
-      <Link
-        href="/pricing"
-        style={pageStyles.notFoundLink}
-      >
-        <ArrowLeft size={15} />
-        View pricing plans
-      </Link>
-    </div>
-  );
-}
+  if (hasReachedLimit) {
+    return (
+      <div style={pageStyles.notFoundWrap}>
+        <p style={pageStyles.notFoundEyebrow}>Purchase limit reached</p>
+        <h2 style={pageStyles.notFoundTitle}>You've reached the free purchase limit</h2>
+        <p style={pageStyles.notFoundSub}>
+          A buyer account can purchase up to {MAX_FREE_PURCHASES} artworks for free. Upgrade
+          your account to continue purchasing artworks.
+        </p>
+        <Link href="/pricing" style={pageStyles.notFoundLink}>
+          <ArrowLeft size={15} />
+          View pricing plans
+        </Link>
+      </div>
+    );
+  }
 
   if (isSold || isOwner) {
     return (
@@ -250,12 +266,10 @@ if (hasReachedLimit) {
           <p className="pp-sub">You're one step from owning "{artwork.title}".</p>
 
           <div className="pp-grid">
-            {/* Left: shipping + payment form, with the Confirm button inside it */}
             <div>
               <PurchaseForm artworkId={id} userName={user?.name} />
             </div>
 
-            {/* Right: summary */}
             <div className="summary-card">
               <div className="summary-art">
                 <div className="summary-thumb-frame">
@@ -319,6 +333,7 @@ const pageStyles = {
     letterSpacing: "0.12em",
     color: "#13382e",
     marginBottom: "0.6rem",
+    marginTop: "5rem",
   },
   notFoundTitle: {
     fontFamily: "Georgia, 'Times New Roman', serif",
