@@ -172,6 +172,7 @@ const categories = categoriesMap[user?.role || userCategories]
         </h3>
 
         <Slider
+          aria-label="Artwork price range"
           value={priceRange}
           onChange={setPriceRange}
           minValue={0}
@@ -271,34 +272,39 @@ const categories = categoriesMap[user?.role || userCategories]
     <>
       {/* Desktop Sidebar */}
       <aside className="hidden lg:sticky lg:top-21 lg:block lg:h-[calc(100vh-5.5rem)] lg:w-[260px] lg:shrink-0 xl:w-[300px]">
-        <div className="h-full overflow-y-auto border border-slate-200 bg-white p-5 shadow-sm pt-24">
+        <div className="h-full overflow-y-auto border border-slate-200 bg-white p-5 shadow-sm pt-6">
           <SidebarContent />
         </div>
       </aside>
 
-      {/* Mobile / Tablet Trigger + Drawer */}
-      <Drawer>
-        <Button className="fixed bottom-5 right-5 z-40 h-12 rounded-full bg-green-900 px-5 text-sm font-semibold text-white shadow-lg shadow-green-900/30 lg:hidden">
-          <Menu size={17} />
-          Filters
-        </Button>
+{/* Mobile / Tablet Trigger + Drawer */}
+<Drawer>
+  <Button className="fixed bottom-5 right-5 z-40 flex h-12 items-center gap-2 rounded-full bg-green-900 px-5 text-sm font-semibold text-white shadow-lg shadow-green-900/30 lg:hidden">
+    <Menu size={17} />
+    Filters
+  </Button>
 
-        <Drawer.Backdrop className="lg:hidden">
-          <Drawer.Content placement="left" className="w-[88vw] max-w-sm sm:w-[380px]">
-            <Drawer.Dialog className="flex h-full flex-col bg-white">
-              <Drawer.CloseTrigger />
-              <Drawer.Header className="border-b border-slate-100">
-                <Drawer.Heading className="text-base font-bold text-slate-900">
-                  Artwork Filters
-                </Drawer.Heading>
-              </Drawer.Header>
-              <Drawer.Body className="flex-1 overflow-y-auto px-5 py-5">
-                <SidebarContent />
-              </Drawer.Body>
-            </Drawer.Dialog>
-          </Drawer.Content>
-        </Drawer.Backdrop>
-      </Drawer>
+  <Drawer.Backdrop className="lg:hidden">
+    <Drawer.Content
+      placement="left"
+      className="w-[88vw] max-w-sm sm:w-[380px]"
+    >
+      <Drawer.Dialog className="flex h-full flex-col bg-white">
+        <Drawer.CloseTrigger />
+
+        <Drawer.Header className="border-b border-slate-100">
+          <Drawer.Heading className="text-base font-bold text-slate-900">
+            Artwork Filters
+          </Drawer.Heading>
+        </Drawer.Header>
+
+        <Drawer.Body className="flex-1 overflow-y-auto px-5 py-5">
+          <SidebarContent />
+        </Drawer.Body>
+      </Drawer.Dialog>
+    </Drawer.Content>
+  </Drawer.Backdrop>
+</Drawer>
     </>
   );
 }

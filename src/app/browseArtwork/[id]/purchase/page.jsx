@@ -148,14 +148,6 @@ console.log({
     );
   }
 
-  // Free purchase limit: max 3 artworks per buyer account 
-  // const purchases = await getPurchaseArt(user.email);
-  // const purchaseCount = purchases?.length || 0;
-  // const hasReachedLimit = purchaseCount >= MAX_FREE_PURCHASES;
-
-//   const limit = plan?.MAX_FREE_PURCHASES ?? 3;
-
-// const hasReachedLimit = purchaseCount >= limit;
 
 if (hasReachedLimit) {
   return (
