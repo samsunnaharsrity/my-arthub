@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { getUserSession } from "@/lib/core/session";
 import EditProfileModal from "@/components/EditProfileModal";
+import ProfileClient from "@/app/components/profileClient";
 
 export default async function ProfilePage() {
   const user = await getUserSession();

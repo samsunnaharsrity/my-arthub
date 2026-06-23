@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import EditProfileModal from "./EditProfileModal";
+import EditProfileModal from "./editProfileModal";
 
 export default function ProfileClient({ user }) {
   const [data, setData] = useState(user);
