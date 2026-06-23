@@ -1,11 +1,11 @@
 import React from 'react';
 
-const Page = () => {
+const UserMainPage = () => {
     return (
         <div className='py-30'>
-            user data
+            User Main Page
         </div>
     );
 }
 
-export default Page;
+export default UserMainPage;
