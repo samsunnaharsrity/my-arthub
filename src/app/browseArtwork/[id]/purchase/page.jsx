@@ -9,7 +9,6 @@ import { getPurchaseArt } from "@/lib/api/purchase";
 import { getPlanById } from "@/lib/api/plans";
 
 const currencySymbols = { USD: "$", BDT: "৳" };
-const MAX_FREE_PURCHASES = 3;
 
 const PurchasePage = async ({ params }) => {
   const { id } = await params;
@@ -104,10 +103,17 @@ if (!user) {
 
 // GET USER PURCHASES
 const purchases = await getPurchaseArt(user.email);
-const purchaseCount = purchases?.length || 0;
+
+console.log(purchases);
+
+const purchaseItems = purchases?.items || [];
+
+const purchaseCount = purchaseItems?.length
+
 
 // DETERMINE LIMIT
 let maxPurchases = 3;
+const hasReachedLimit = purchaseCount >= maxPurchases;
 
 if (user?.planId === "user_pro") {
   maxPurchases = 9;
@@ -122,10 +128,9 @@ if (plan?.maxPurchases) {
   maxPurchases = plan.maxPurchases;
 }
 
-const hasReachedLimit = purchaseCount >= maxPurchases;
 
 console.log({
-  userPlan: user?.planId,
+  userPlan: user?.plan,
   purchaseCount,
   maxPurchases,
   hasReachedLimit,

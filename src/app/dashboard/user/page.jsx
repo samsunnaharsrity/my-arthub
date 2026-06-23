@@ -9,6 +9,7 @@ import { getPurchaseArt } from "@/lib/api/purchase";
 import { getUserCommentsCount } from "@/lib/api/comments";
 import { getUserByEmail } from "@/lib/api/user";
 import Link from "next/link";
+import { getPlanById } from "@/lib/api/plans";
 
 export default async function UserDashboard() {
   const user = await getUserSession();
@@ -37,12 +38,13 @@ export default async function UserDashboard() {
     user.email
   );
 
+  console.log("this is user plan",currentUser);
+
   const purchasedCount = purchaseData?.total || 0;
   const commentCount = commentsData?.total || 0;
-  const currentPlan =
-    currentUser?.planId ||
-    currentUser?.plan ||
-    "Free";
+const planData = currentUser?.planId
+  ? await getPlanById(currentUser.planId)
+  : null;
 
   return (
     <div className="min-h-screen bg-gray-50 p-6 pt-28">
@@ -97,7 +99,7 @@ export default async function UserDashboard() {
           <Crown className="mb-3 h-8 w-8 text-yellow-500" />
 
           <h3 className="text-3xl font-bold capitalize">
-            {currentPlan}
+            {planData}
           </h3>
 
           <p className="text-gray-500">

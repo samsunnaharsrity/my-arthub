@@ -2,22 +2,32 @@ import { headers } from "next/headers"
 import { auth } from "../auth"
 import { redirect } from "next/navigation"
 
+export const getUserSession = async () => {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+    query: { disableCookieCache: true },
+  });
 
-export const getUserSession = async() =>{
-    const session = await auth.api.getSession({
-        headers: await headers()
-    })
+  if (!session?.user?.email) return null;
 
-    return session?.user || null
-}
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/users?email=${session.user.email}`
+  );
 
+  const dbUser = await res.json();
 
-export const requireRole = async(role) =>{
-    const user  = await getUserSession();
-    if(!user){
-        redirect('login')
+  return {
+    ...session.user,
+    ...dbUser, 
+  };
+};
+
+export const requireRole = async (role) => {
+    const user = await getUserSession();
+    if (!user) {
+        redirect('/login')
     }
-    if(user?.role !== role){
+    if (user?.role !== role) {
         return redirect('/unauthorized')
     }
     return user;

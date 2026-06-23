@@ -37,7 +37,7 @@ export default function PurchaseForm({ artworkId, userName }) {
         return;
       }
 
-      window.location.href = "/dashboard";
+      window.location.href = "/dashboard/user";
     } catch (err) {
       setError("Free purchase failed");
     } finally {
