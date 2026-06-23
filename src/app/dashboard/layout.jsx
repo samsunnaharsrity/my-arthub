@@ -1,13 +1,14 @@
-import React from 'react';
-import { DashboardSidebar } from '../components/dashboardsData/DashboardSidebar';
+import { getUserSession } from "@/lib/core/session";
+import { DashboardSidebar } from "../components/dashboardsData/DashboardSidebar";
 
-const DashboardLayout = ({children}) => {
-    return (
-        <div className='flex min-h-screen'>
-            <DashboardSidebar></DashboardSidebar>
-            <div>{children}</div>
-        </div>
-    );
+
+export default async function Layout({ children }) {
+  const user = await getUserSession();
+
+  return (
+    <div className="flex">
+      <DashboardSidebar user={user} />
+      <div className="flex-1">{children}</div>
+    </div>
+  );
 }
-
-export default DashboardLayout;

@@ -21,8 +21,22 @@ export default function Navbar() {
     { name: "Artists", href: "/artist" },
     { name: "Categories", href: "/categories" },
     { name: "Pricing", href: "/pricing" },
-    { name: "Dashboard", href: "/dashboard" },
+    // { name: "Dashboard", href: "/dashboard" },
   ];
+
+  const dashboardLinks = {
+    user: "/dashboard/user",
+    artist: "dashboard/artist"
+  }
+
+  if(user?.email){
+    links.push((
+      {
+        name: "Dashboard",
+        href: dashboardLinks[user?.role || 'user']
+      }
+    ))
+  }
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);

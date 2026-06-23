@@ -9,7 +9,7 @@ import {
   Search,
   Palette,
   PenTool,
-  Image as ImageIcon,
+  Image ,
   Cuboid,
   Camera,
   Shapes,
@@ -19,6 +19,7 @@ import {
   ArrowUpDown,
   ShoppingBag,
   SlidersHorizontal,
+  User,
 } from "lucide-react";
 
 import {
@@ -32,12 +33,13 @@ import {
   ListBox,
 } from "@heroui/react";
 
-export function DashboardSidebar() {
+export function DashboardSidebar({user}) {
   const pathname = usePathname();
   const [priceRange, setPriceRange] = useState([0, 5000]);
   const [sortValue, setSortValue] = useState("newest");
 
-  const categories = [
+
+  const artistCategories = [
     { label: "All Categories", href: "/dashboard/artist", icon: Shapes },
     {
     label: "All Art Works",
@@ -65,6 +67,20 @@ export function DashboardSidebar() {
     icon: ShoppingBag,
     },
   ];
+
+
+  const userCategories = [
+  { label: "My Profile", href: "/dashboard/user/profile", icon: User },
+  { label: "Purchased Art", href: "/dashboard/user/purchases", icon: ShoppingBag },
+  { label: "Favorites", href: "/dashboard/user/favorites", icon: Images },
+];
+
+const categoriesMap = {
+  user: userCategories,
+  artist : artistCategories
+}
+
+const categories = categoriesMap[user?.role || userCategories]
 
   const sortOptions = [
     { id: "newest", label: "Newest First" },
@@ -255,7 +271,7 @@ export function DashboardSidebar() {
     <>
       {/* Desktop Sidebar */}
       <aside className="hidden lg:sticky lg:top-21 lg:block lg:h-[calc(100vh-5.5rem)] lg:w-[260px] lg:shrink-0 xl:w-[300px]">
-        <div className="h-full overflow-y-auto border border-slate-200 bg-white p-5 shadow-sm">
+        <div className="h-full overflow-y-auto border border-slate-200 bg-white p-5 shadow-sm pt-24">
           <SidebarContent />
         </div>
       </aside>
