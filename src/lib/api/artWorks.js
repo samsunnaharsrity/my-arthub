@@ -18,3 +18,34 @@ export const getArtWorks = async () => {
   return res.json();
 };
 
+
+// delete btn
+export const deleteArtwork = async (id) => {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/artworks/${id}`,
+    {
+      method: "DELETE",
+    }
+  );
+
+  return await res.json();
+};
+
+
+// edit btn
+
+
+export const editArtwork = async (id, data) => {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/artWorks/${id}`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    }
+  );
+
+  return res.json();
+};

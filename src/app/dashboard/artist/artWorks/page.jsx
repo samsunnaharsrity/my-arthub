@@ -1,10 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getArtWorks } from "@/lib/api/artWorks";
+import { deleteArtwork, getArtWorks } from "@/lib/api/artWorks";
 import { Button } from "@heroui/react";
 import { ImageOff, Plus, Pencil, Trash2 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 const currencySymbols = { USD: "$", BDT: "৳" };
 
@@ -17,6 +19,9 @@ export default function ManageArtworks() {
   const [artworks, setArtworks] = useState([]);
   const [loading, setLoading] = useState(true);
 
+
+  const router = useRouter();
+
   useEffect(() => {
     const artWorksId = "artWorks_112233";
 
@@ -25,6 +30,31 @@ export default function ManageArtworks() {
       .catch(() => setArtworks([]))
       .finally(() => setLoading(false));
   }, []);
+
+
+    // DELETE FUNCTION
+  const handleDelete = async (id) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this artwork?"
+    );
+
+    if (!confirmDelete) return;
+
+    try {
+      await deleteArtwork(id);
+
+      // UI update without refresh
+      setArtworks((prev) => prev.filter((art) => {
+        const artId = art._id?.$oid || art._id || art.id;
+        return artId !== id;
+      }));
+
+      toast.success("Artwork deleted successfully");
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to delete artwork");
+    }
+  };
 
   return (
     <>
@@ -220,10 +250,21 @@ export default function ManageArtworks() {
                         </td>
                         <td>
                           <div className="row-actions">
-                            <button className="icon-btn" aria-label="Edit artwork">
-                              <Pencil size={14} />
-                            </button>
-                            <button className="icon-btn danger" aria-label="Delete artwork">
+                            {/* EDIT BUTTON */}
+                            <Link href={`/dashboard/artist/artWorks/edit/${id}`}>
+                              <button
+                                className="icon-btn"
+                                aria-label="Edit artwork"
+                              >
+                                <Pencil size={14} />
+                              </button>
+                            </Link>
+                            {/* DELETE BUTTON */}
+                            <button
+                              className="icon-btn danger"
+                              aria-label="Delete artwork"
+                              onClick={() => handleDelete(id)}
+                            >
                               <Trash2 size={14} />
                             </button>
                           </div>

@@ -5,6 +5,7 @@ import { StarFill } from "@gravity-ui/icons";
 import Link from "next/link";
 
 export default function ArtworkCard({ art }) {
+  if (!art) return null;
   return (
 
     
@@ -63,7 +64,7 @@ export default function ArtworkCard({ art }) {
             {art.price}
           </span>
 
-        <Link href={`/browseArtwork/${art._id}`}>
+        <Link href={art?._id ? `/browseArtwork/${art._id}` : "#"}>
             <Button
                 size="sm"
                 className="bg-[#16352E] text-white text-xs font-semibold px-3 rounded-lg h-8 cursor-pointer hover:bg-green-700"

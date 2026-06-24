@@ -20,6 +20,12 @@ import {
   ShoppingBag,
   SlidersHorizontal,
   User,
+  LayoutDashboard,
+  Users,
+  BarChart3,
+  FileText,
+  Shield,
+  Settings
 } from "lucide-react";
 
 import {
@@ -68,6 +74,53 @@ export function DashboardSidebar({user}) {
     },
   ];
 
+  const adminCategories = [
+  {
+    label: "Dashboard",
+    href: "/dashboard/admin",
+    icon: LayoutDashboard,
+  },
+  {
+    label: "Users Management",
+    href: "/dashboard/admin/users",
+    icon: Users,
+  },
+  {
+    label: "All Artworks",
+    href: "/dashboard/admin/artworks",
+    icon: Images,
+  },
+  {
+    label: "Add Artwork",
+    href: "/dashboard/admin/artworks/create",
+    icon: ImagePlus,
+  },
+  {
+    label: "Orders / Sales",
+    href: "/dashboard/admin/sales",
+    icon: ShoppingBag,
+  },
+  {
+    label: "Analytics",
+    href: "/dashboard/admin/analytics",
+    icon: BarChart3,
+  },
+  {
+    label: "Reports",
+    href: "/dashboard/admin/reports",
+    icon: FileText,
+  },
+  {
+    label: "Roles & Permissions",
+    href: "/dashboard/admin/roles",
+    icon: Shield,
+  },
+  {
+    label: "Settings",
+    href: "/dashboard/admin/settings",
+    icon: Settings,
+  },
+];
 
   const userCategories = [
   { label: "My Profile", href: "/dashboard/user/profile", icon: User },
@@ -77,7 +130,8 @@ export function DashboardSidebar({user}) {
 
 const categoriesMap = {
   user: userCategories,
-  artist : artistCategories
+  artist : artistCategories,
+  admin : adminCategories,
 }
 
 const categories = categoriesMap[user?.role || userCategories]
@@ -100,7 +154,7 @@ const categories = categoriesMap[user?.role || userCategories]
   };
 
   const SidebarContent = () => (
-    <div className="space-y-7">
+    <div className="space-y-7 mt-20">
       {/* Heading */}
       <div className="flex items-center gap-2.5">
         <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-green-900/10">

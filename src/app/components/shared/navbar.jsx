@@ -26,7 +26,8 @@ export default function Navbar() {
 
   const dashboardLinks = {
     user: "/dashboard/user",
-    artist: "dashboard/artist"
+    artist: "dashboard/artist",
+    admin: "dashboard/admin"
   }
 
   if(user?.email){
