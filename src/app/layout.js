@@ -20,7 +20,19 @@ export const metadata = {
   description: "Online Art Marketplace",
 };
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
+
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/settings`,
+    {
+      cache: "no-store",
+    }
+  );
+
+  const settings = await res.json();
+
+
+
   return (
     <html
       lang="en"
@@ -30,9 +42,9 @@ export default function RootLayout({ children }) {
       <body className="min-h-full flex flex-col bg-background text-foreground">
         {/* <Providers> */}
           <Toaster></Toaster>
-          <Navbar />
+          <Navbar settings={settings}/>
           <main className="flex-1">{children}</main>
-          <Footer />
+          <Footer settings={settings}/>
         {/* </Providers> */}
       </body>
     </html>

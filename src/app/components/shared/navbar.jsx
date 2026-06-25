@@ -7,7 +7,7 @@ import { authClient, useSession } from "@/lib/auth-client";
 import { useRouter, usePathname } from "next/navigation";
 import ThemeToggle from "../themeToggle";
 
-export default function Navbar() {
+export default function Navbar({settings}) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const router = useRouter();
@@ -44,6 +44,7 @@ export default function Navbar() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
 
   const handleLogout = async () => {
     await authClient.signOut();
@@ -281,7 +282,7 @@ export default function Navbar() {
                 <img className="rounded-md" src="/logoImg.jpeg" alt="logo image" />
               </div>
               <div className="flex flex-col leading-none">
-                <span className="brand-text text-[#16352E] font-bold">ArtHub</span>
+                <span className="brand-text text-[#16352E] font-bold">{settings?.siteName || "ArtHub"}</span>
                 <span className="brand-subtext text-xs brand-text text-[#16352E]/60">Gallery</span>
               </div>
             </Link>

@@ -6,6 +6,7 @@ const CreateArtsPage = async() => {
 
 
 const arts = await getLoggedInArtistData();
+console.log(arts);
 
     return (
         <div>

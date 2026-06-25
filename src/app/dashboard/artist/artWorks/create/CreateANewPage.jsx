@@ -28,6 +28,10 @@ const categories = [
 
 
 export default function CreateANewPage({arts}) {
+
+console.log("ARTS PROP:", arts);
+
+
   const fileInputRef = useRef(null);
 
   const [preview, setPreview] = useState(null);
@@ -44,7 +48,7 @@ export default function CreateANewPage({arts}) {
   category: "painting",
   image: "",
   status: "pending",
-  artist: arts?.name || "", 
+  artist: "", 
   createdAt: new Date(),
   });
 
@@ -396,7 +400,7 @@ const handlePublish = async () => {
                   <Input
                     value={formData.title}
                     onChange={(e) => updateField("title", e.target.value)}
-                    placeholder="Sunset Over the Bay"
+                    placeholder="Enter Your Artwork Title"
                     className={`styled-input ${errors.title ? "has-error" : ""}`}
                   />
                 </TextField>

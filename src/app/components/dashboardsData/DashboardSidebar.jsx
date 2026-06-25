@@ -25,7 +25,10 @@ import {
   BarChart3,
   FileText,
   Shield,
-  Settings
+  Settings,
+  MessageSquare,
+  CreditCard,
+  Bell
 } from "lucide-react";
 
 import {
@@ -80,14 +83,14 @@ export function DashboardSidebar({user}) {
     href: "/dashboard/admin",
     icon: LayoutDashboard,
   },
-  {
-    label: "Users Management",
-    href: "/dashboard/admin/users",
-    icon: Users,
-  },
+  // {
+  //   label: "Users Management",
+  //   href: "/dashboard/admin/users",
+  //   icon: Users,
+  // },
   {
     label: "All Artworks",
-    href: "/browseArtworks",
+    href: "/browseArtwork",
     icon: Images,
   },
   {
@@ -110,6 +113,23 @@ export function DashboardSidebar({user}) {
     href: "/dashboard/admin/rolesAndPermission",
     icon: Shield,
   },
+{
+  label: "Comments Moderation",
+  href: "/dashboard/admin/comments",
+  icon: MessageSquare,
+},
+
+{
+  label: "Subscriptions",
+  href: "/dashboard/admin/subscriptions",
+  icon: CreditCard,
+},
+
+{
+  label: "Notifications",
+  href: "/dashboard/admin/notifications",
+  icon: Bell,
+},
   {
     label: "Settings",
     href: "/dashboard/admin/settings",

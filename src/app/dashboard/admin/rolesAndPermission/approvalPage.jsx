@@ -173,7 +173,7 @@ const handleReject = async (id) => {
                       </td>
 
                       <td className="p-5 text-slate-700">
-                        {art.artistName || "Unknown"}
+                        {art.artist || "Unknown"}
                       </td>
 
                       <td className="p-5">

@@ -6,7 +6,7 @@ import {
   FaGithub,
 } from "react-icons/fa";
 
-const Footer = () => {
+const Footer = ({settings}) => {
   return (
     <footer className="bg-[#16352E] text-white/80 rounded-md">
       <div className="max-w-7xl mx-auto px-4 lg:px-8 py-10">
@@ -22,7 +22,7 @@ const Footer = () => {
 
               <div>
                 <h2 className="text-2xl font-bold text-white">
-                  ArtHub
+                  {settings?.siteName || "ArtHub"}
                 </h2>
                 <p className="text-sm text-white/60">
                   Gallery Platform

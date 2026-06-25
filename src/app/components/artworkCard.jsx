@@ -51,7 +51,7 @@ export default function ArtworkCard({ art }) {
           <p className="text-slate-400 text-xs mt-1">
             by{" "}
             <span className="text-slate-600 font-semibold">
-              {art.artistName || "Unknown Artist"}
+              {art.artist || "Unknown Artist"}
             </span>
           </p>
         </div>
