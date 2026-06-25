@@ -83,14 +83,14 @@ export function DashboardSidebar({user}) {
     href: "/dashboard/admin",
     icon: LayoutDashboard,
   },
-  // {
-  //   label: "Users Management",
-  //   href: "/dashboard/admin/users",
-  //   icon: Users,
-  // },
+  {
+    label: "Users Management",
+    href: "/dashboard/admin/user-management",
+    icon: Users,
+  },
   {
     label: "All Artworks",
-    href: "/browseArtwork",
+    href: "/dashboard/admin/all-artworks",
     icon: Images,
   },
   {

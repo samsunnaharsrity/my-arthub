@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import {
   LineChart,
   Line,
@@ -9,37 +10,50 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-const data = [
-  { month: "Jan", sales: 200 },
-  { month: "Feb", sales: 450 },
-  { month: "Mar", sales: 700 },
-  { month: "Apr", sales: 550 },
-];
-
 export default function AnalyticsPage() {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    const loadAnalytics = async () => {
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/analytics`,
+          {
+            cache: "no-store",
+          }
+        );
+
+        const result = await res.json();
+        setData(result);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    loadAnalytics();
+  }, []);
+
   return (
     <section className="p-8">
-
       <h1 className="text-3xl font-bold mb-8">
         Analytics
       </h1>
 
       <div className="bg-white rounded-3xl p-6 shadow h-[400px]">
-
-        <ResponsiveContainer>
+        <ResponsiveContainer width="100%" height="100%">
           <LineChart data={data}>
-            <XAxis dataKey="month" />
+            <XAxis dataKey="day" />
             <YAxis />
             <Tooltip />
             <Line
+              type="monotone"
               dataKey="sales"
               stroke="#16a34a"
+              strokeWidth={3}
             />
           </LineChart>
         </ResponsiveContainer>
-
       </div>
-
     </section>
   );
 }

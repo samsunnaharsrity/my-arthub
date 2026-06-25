@@ -4,6 +4,7 @@ import Navbar from "./components/shared/navbar";
 import Footer from "./components/shared/footer";
 // import Providers from "./providers";
 import { Toaster } from "react-hot-toast";
+import { getSettings } from "@/lib/api/settings";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -22,14 +23,8 @@ export const metadata = {
 
 export default async function RootLayout({ children }) {
 
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/settings`,
-    {
-      cache: "no-store",
-    }
-  );
 
-  const settings = await res.json();
+  const settings = await getSettings();
 
 
 

@@ -11,6 +11,8 @@ import {
   Save,
 } from "lucide-react";
 import { createSettings } from "@/lib/actions/settings";
+import { getSettings } from "@/lib/api/settings";
+import { useRouter } from "next/navigation";
 
 export default function SettingsPage() {
   const [settings, setSettings] = useState({
@@ -21,37 +23,24 @@ export default function SettingsPage() {
     autoApproveArtwork: false,
   });
 
-  const loadSettings = async () => {
-    try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/settings`,
-        {
-          cache: "no-store",
-        }
-      );
+const loadSettings = async () => {
+  try {
+    const data = await getSettings();
 
-      if (!res.ok) {
-        throw new Error("Failed to load settings");
-      }
-
-      const data = await res.json();
-
-      console.log("Settings from API:", data);
-      if (data) {
-        setSettings({
-          siteName: data.siteName || "ArtHub",
-          contactEmail: data.contactEmail || "admin@arthub.com",
-          currency: data.currency || "USD",
-          maintenanceMode: data.maintenanceMode || false,
-          autoApproveArtwork:
-            data.autoApproveArtwork || false,
-        });
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error("Failed to load settings");
-    }
-  };
+    setSettings({
+      siteName: data.siteName || "ArtHub",
+      contactEmail:
+        data.contactEmail || "admin@arthub.com",
+      currency: data.currency || "USD",
+      maintenanceMode: data.maintenanceMode || false,
+      autoApproveArtwork:
+        data.autoApproveArtwork || false,
+    });
+  } catch (error) {
+    console.log(error);
+    toast.error("Failed to load settings");
+  }
+};
 
   useEffect(() => {
     loadSettings();
@@ -64,10 +53,13 @@ export default function SettingsPage() {
     }));
   };
 
+  const router = useRouter();
+
 const handleSave = async () => {
   try {
     await createSettings(settings);
     await loadSettings();
+        router.refresh();
 
     toast.success("Settings updated successfully");
   } catch (error) {
