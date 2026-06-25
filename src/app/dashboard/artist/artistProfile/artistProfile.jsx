@@ -294,7 +294,7 @@ export default function ArtistProfile({ user, artistProfile }) {
   return (
     <section className="min-h-screen w-full bg-slate-50 p-6 mt-20">
 
-      <div className="w-full bg-white rounded-3xl border border-slate-200 p-8 shadow-sm">
+      <div className="w-full bg-white rounded-3xl border border-slate-200 p-4 shadow-sm">
 
         {/* Header */}
         <div className="flex justify-between items-center border-b pb-6 mb-8">

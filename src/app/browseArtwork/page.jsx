@@ -14,10 +14,11 @@ import { getBrowseArtwork } from "@/lib/api/artWorks";
 const categories = [
   "All",
   "Painting",
-  "Digital Art",
+  "Digital",
   "Photography",
   "Illustration",
   "Sculpture",
+  "Abstract"
 ];
 
 export default function BrowseArtworkPage() {
@@ -29,21 +30,31 @@ export default function BrowseArtworkPage() {
   const [maxPrice, setMaxPrice] = useState(1000);
   const [sortBy, setSortBy] = useState("newest");
 
-  useEffect(() => {
-    const fetchArtworks = async () => {
-      try {
-        setLoading(true);
-        const data = await getBrowseArtwork();
-        setArtworks(data?.data || data || []);
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setLoading(false);
-      }
-    };
+useEffect(() => {
+  const fetchArtworks = async () => {
+    try {
+      setLoading(true);
+      const data = await getBrowseArtwork();
 
-    fetchArtworks();
-  }, []);
+      const arts = data?.data || data || [];
+
+      console.log(
+        arts.map((a) => ({
+          title: a.title,
+          category: a.category,
+        }))
+      );
+
+      setArtworks(arts);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchArtworks();
+}, []);
 
   const filteredArtworks = useMemo(() => {
     let filtered = [...artworks];
@@ -57,10 +68,12 @@ export default function BrowseArtworkPage() {
 
     // Category Filter
     if (selectedCategory !== "All") {
-      filtered = filtered.filter(
-        (art) => art?.category?.toLowerCase() === selectedCategory.toLowerCase()
-      );
-    }
+  filtered = filtered.filter(
+    (art) =>
+      art?.category?.trim().toLowerCase() ===
+      selectedCategory.trim().toLowerCase()
+  );
+}
 
     // Price Filter
     filtered = filtered.filter(
@@ -116,9 +129,14 @@ export default function BrowseArtworkPage() {
             {categories.map((item) => {
               const isActive = selectedCategory === item;
              
-              const count = item === "All" 
-                ? artworks.length 
-                : artworks.filter(a => a?.category?.toLowerCase() === item.toLowerCase()).length;
+              const count =
+                    item === "All"
+                      ? artworks.length
+                      : artworks.filter(
+                          (a) =>
+                            a?.category?.trim().toLowerCase() ===
+                            item.trim().toLowerCase()
+                        ).length;
 
               return (
                 <button

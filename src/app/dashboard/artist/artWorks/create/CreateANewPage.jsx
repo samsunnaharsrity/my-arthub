@@ -37,12 +37,15 @@ export default function CreateANewPage({arts}) {
   const [errors, setErrors] = useState({});
 
   const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    price: "",
-    currency: "USD",
-    category: "painting",
-    image: "",
+  title: "",
+  description: "",
+  price: "",
+  currency: "USD",
+  category: "painting",
+  image: "",
+  status: "pending",
+  artist: arts?.name || "", 
+  createdAt: new Date(),
   });
 
   const currencySymbols = { USD: "$", BDT: "৳" };
@@ -159,10 +162,15 @@ export default function CreateANewPage({arts}) {
 
   const router = useRouter();
 
-  const handlePublish = async () => {
-  await saveArtwork("published");
+const handlePublish = async () => {
+  await saveArtwork("pending");
+
+  toast.success(
+    "Artwork submitted successfully. Waiting for admin approval."
+  );
+
   router.push("/dashboard/artist/artWorks");
-  };
+};
 
   return (
     <>

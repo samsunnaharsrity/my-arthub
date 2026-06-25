@@ -3,7 +3,7 @@ import { serverFetch } from "../core/server";
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
 export const getBrowseArtwork = async () =>{
-    return serverFetch('/api/artWorks')
+    return serverFetch('/api/artWorks?status=approved')
 }
 
 export const getArtworkById = async (id) => {
@@ -49,3 +49,9 @@ export const editArtwork = async (id, data) => {
 
   return res.json();
 };
+
+// get admin approval
+
+export const getApproval = async() =>{
+  return serverFetch(`/api/artWorks`)
+}

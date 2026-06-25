@@ -28,12 +28,12 @@ export const serverFetch = async (path) => {
   return result;
 };
 
-export const serverMutation = async (path, data) => {
+export const serverMutation = async (path, data , method ='POST') => {
   const url = `${baseUrl}${path}`;
 
   try {
     const res = await fetch(url, {
-      method: "POST",
+      method: method ,
       headers: {
         "Content-Type": "application/json",
       },

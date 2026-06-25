@@ -87,13 +87,8 @@ export function DashboardSidebar({user}) {
   },
   {
     label: "All Artworks",
-    href: "/dashboard/admin/artworks",
+    href: "/browseArtworks",
     icon: Images,
-  },
-  {
-    label: "Add Artwork",
-    href: "/dashboard/admin/artworks/create",
-    icon: ImagePlus,
   },
   {
     label: "Orders / Sales",
@@ -112,7 +107,7 @@ export function DashboardSidebar({user}) {
   },
   {
     label: "Roles & Permissions",
-    href: "/dashboard/admin/roles",
+    href: "/dashboard/admin/rolesAndPermission",
     icon: Shield,
   },
   {
@@ -154,7 +149,7 @@ const categories = categoriesMap[user?.role || userCategories]
   };
 
   const SidebarContent = () => (
-    <div className="space-y-7 mt-20">
+    <div className="space-y-7 ">
       {/* Heading */}
       <div className="flex items-center gap-2.5">
         <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-green-900/10">

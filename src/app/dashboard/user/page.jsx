@@ -46,6 +46,8 @@ const planData = currentUser?.planId
   ? await getPlanById(currentUser.planId)
   : null;
 
+console.log("Plan Data:", planData);
+
   return (
     <div className="min-h-screen bg-gray-50 p-6 pt-28">
       {/* Hero */}
@@ -99,7 +101,7 @@ const planData = currentUser?.planId
           <Crown className="mb-3 h-8 w-8 text-yellow-500" />
 
           <h3 className="text-3xl font-bold capitalize">
-            {planData}
+            {planData?.name}
           </h3>
 
           <p className="text-gray-500">
