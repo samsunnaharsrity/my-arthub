@@ -104,8 +104,8 @@ export function DashboardSidebar({user}) {
     icon: BarChart3,
   },
   {
-    label: "Reports",
-    href: "/dashboard/admin/reports",
+    label: "View All Transactions",
+    href: "/dashboard/admin/transactions",
     icon: FileText,
   },
   {
