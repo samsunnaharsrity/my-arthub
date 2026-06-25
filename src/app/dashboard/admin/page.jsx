@@ -1,66 +1,47 @@
-import {
-  Users,
-  Images,
-  ShoppingBag,
-  DollarSign,
-} from "lucide-react";
+"use client";
 
-const stats = [
-  {
-    title: "Total Users",
-    value: 120,
-    icon: Users,
-  },
-  {
-    title: "Total Artworks",
-    value: 85,
-    icon: Images,
-  },
-  {
-    title: "Total Orders",
-    value: 42,
-    icon: ShoppingBag,
-  },
-  {
-    title: "Revenue",
-    value: "$5,200",
-    icon: DollarSign,
-  },
-];
+import { useEffect, useState } from "react";
+import CategoryChart from "@/app/components/CategoryChart";
+import SalesChart from "./salesChart/page";
+// import SalesChart from "./salesChart/page";
 
 export default function AdminDashboard() {
+  const [salesData, setSalesData] = useState([]);
+  const [categoryData, setCategoryData] = useState([]);
+
+  useEffect(() => {
+    const fetchAnalytics = async () => {
+      try {
+        // Sales Data
+        const salesRes = await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/analytics/sales`
+        );
+        const sales = await salesRes.json();
+        setSalesData(sales);
+
+        // Category Data
+        const categoryRes = await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/analytics/categories`
+        );
+        const categories = await categoryRes.json();
+        setCategoryData(categories);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchAnalytics();
+  }, []);
+
   return (
-    <section className="p-8">
-      <h1 className="text-3xl font-bold mb-8">
-        Admin Dashboard
-      </h1>
+    <div className="space-y-8">
+      {/* Analytics Cards */}
 
-      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {stats.map((item) => {
-          const Icon = item.icon;
+      <div className="grid md:grid-cols-2 gap-6">
+        <SalesChart salesData={salesData} />
 
-          return (
-            <div
-              key={item.title}
-              className="bg-white p-6 rounded-3xl shadow"
-            >
-              <div className="flex justify-between">
-                <div>
-                  <p className="text-gray-500">
-                    {item.title}
-                  </p>
-
-                  <h2 className="text-3xl font-bold mt-2">
-                    {item.value}
-                  </h2>
-                </div>
-
-                <Icon className="text-green-600" />
-              </div>
-            </div>
-          );
-        })}
+        <CategoryChart categoryData={categoryData} />
       </div>
-    </section>
+    </div>
   );
 }

@@ -95,7 +95,7 @@ export function DashboardSidebar({user}) {
   },
   {
     label: "Orders / Sales",
-    href: "/dashboard/admin/sales",
+    href: "/dashboard/admin/salesChart",
     icon: ShoppingBag,
   },
   {
@@ -126,8 +126,8 @@ export function DashboardSidebar({user}) {
 },
 
 {
-  label: "Notifications",
-  href: "/dashboard/admin/notifications",
+  label: "Category Chart",
+  href: "/dashboard/admin/categoryChart",
   icon: Bell,
 },
   {

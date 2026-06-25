@@ -7,7 +7,7 @@ export default function TransactionsPage() {
   const [transactions, setTransactions] = useState([]);
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/transactions`)
+    fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/transactions`)
       .then((res) => res.json())
       .then((data) => setTransactions(data));
   }, []);
