@@ -36,7 +36,7 @@ export default function HeroSection() {
       <div className="absolute top-0 right-0 h-[500px] w-[500px] bg-green-500/10 blur-[150px] pointer-events-none z-0" />
       <div className="absolute bottom-0 left-0 h-[400px] w-[400px] bg-emerald-500/10 blur-[130px] pointer-events-none z-0" />
 
-      <div className="relative z-10 max-w-6xl mx-auto px-6 py-28">
+      <div className="relative z-10 max-w-6xl mx-auto px-6 pb-10 pt-28">
         <div className="grid lg:grid-cols-2 gap-10 items-center">
 
           {/* LEFT CONTENT */}
