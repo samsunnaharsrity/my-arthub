@@ -15,15 +15,25 @@ export async function POST(request) {
     const priceId = PRICING_ID[planId]
 
     const user = await getUserSession();
+    if (!session) {
+  return {
+      error: "Please login first",
+    };
+    }
 
-    // Create Checkout Sessions from body params.
+    if (session.role !== "user") {
+    return {
+      error:
+        "Only users can purchase artworks",
+    };
+    }
+
     const session = await stripe.checkout.sessions.create({
 
 
       customer_email: user?.email,
       line_items: [
         {
-          // Provide the exact Price ID (for example, price_1234) of the product you want to sell
           price: priceId,
           quantity: 1,
         },

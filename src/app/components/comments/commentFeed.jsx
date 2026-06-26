@@ -4,8 +4,17 @@ import { useEffect, useState } from "react";
 import { getSocket } from "@/lib/socket";
 import CommentThread from "./commentThread";
 
-export default function CommentFeed({ initialComments, artworkId }) {
-  const [comments, setComments] = useState(initialComments);
+export default function CommentFeed({
+  initialComments,
+  artworkId,
+}) {
+  const [comments, setComments] =
+    useState(initialComments);
+
+  // NEW
+  useEffect(() => {
+    setComments(initialComments);
+  }, [initialComments]);
 
   useEffect(() => {
     const socket = getSocket();
@@ -24,7 +33,10 @@ export default function CommentFeed({ initialComments, artworkId }) {
   return (
     <div style={{ marginTop: "2rem" }}>
       {comments.map((c) => (
-        <CommentThread key={c._id} comment={c} />
+        <CommentThread
+          key={c._id}
+          comment={c}
+        />
       ))}
     </div>
   );

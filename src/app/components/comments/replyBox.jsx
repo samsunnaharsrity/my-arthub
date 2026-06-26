@@ -15,7 +15,7 @@ export default function ReplyBox({
 
     try {
       const res = await fetch(
-        "http://localhost:7000/api/comments",
+        "NEXT_PUBLIC_BASE_URL/api/comments",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

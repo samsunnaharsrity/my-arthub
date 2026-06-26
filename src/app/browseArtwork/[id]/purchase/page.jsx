@@ -21,10 +21,19 @@ const PurchasePage = async ({ params }) => {
 
 console.log("USER SESSION:", user);
 
-const plan = await getPlanById(
-  user?.plan || user?.planId || "user_free"
-);
+let plan = null;
 
+try {
+  plan = await getPlanById(
+    user?.plan || user?.planId || "user_free"
+  );
+} catch (error) {
+  console.log("Plan fetch failed:", error.message);
+
+  plan = {
+    maxPurchases: 3,
+  };
+}
 
   
   

@@ -39,9 +39,7 @@ export async function createCheckoutSession(artworkId, shippingDetails) {
     return { error: "You can't purchase your own artwork." };
   }
 
-  // ===============================
-  // 🔥 ADD THIS (LIMIT CHECK FIX)
-  // ===============================
+  // (LIMIT CHECK FIX)
   const [purchases, plan] = await Promise.all([
     getPurchaseArt(user.email),
     getPlanById(user.planId || "user_free"),
@@ -56,9 +54,7 @@ export async function createCheckoutSession(artworkId, shippingDetails) {
     };
   }
 
-  // ===============================
   // Stripe calculation
-  // ===============================
   const priceNumber = Number(artwork.price) || 0;
   const serviceFee = Math.round(priceNumber * 0.03 * 100) / 100;
   const total = priceNumber + serviceFee;
