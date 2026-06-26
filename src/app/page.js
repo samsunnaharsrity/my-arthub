@@ -6,6 +6,7 @@ import { getBrowseArtwork } from "@/lib/api/artWorks";
 import Link from "next/link";
 import { Button } from "@heroui/react";
 import FeaturedCategories from "./components/FeaturedCategories";
+import WhyChooseUs from "./components/why-choose-us";
 
 export default async function Home() {
   const data = await getBrowseArtwork();
@@ -43,7 +44,11 @@ export default async function Home() {
 
       <FeaturedArtists />
       <FeaturedCategories></FeaturedCategories>
+      <WhyChooseUs></WhyChooseUs>
+      <StatsSection />
+      <TestimonialSection />
       <PricingPage />
+      <NewsletterSection />
     </div>
   );
 }
