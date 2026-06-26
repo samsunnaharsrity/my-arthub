@@ -118,12 +118,6 @@ export function DashboardSidebar({user}) {
   href: "/dashboard/admin/comments",
   icon: MessageSquare,
 },
-
-{
-  label: "Subscriptions",
-  href: "/dashboard/admin/subscriptions",
-  icon: CreditCard,
-},
   {
     label: "Settings",
     href: "/dashboard/admin/settings",
