@@ -124,12 +124,6 @@ export function DashboardSidebar({user}) {
   href: "/dashboard/admin/subscriptions",
   icon: CreditCard,
 },
-
-{
-  label: "Category Chart",
-  href: "/dashboard/admin/categoryChart",
-  icon: Bell,
-},
   {
     label: "Settings",
     href: "/dashboard/admin/settings",
