@@ -2,7 +2,6 @@
 
 import SalesChart from "@/app/components/salesChart";
 import { useEffect, useState } from "react";
-// import SalesChart from "@/components/SalesChart";
 
 export default function SalesChartPage() {
   const [salesData, setSalesData] = useState([]);
@@ -19,5 +18,9 @@ export default function SalesChartPage() {
     fetchData();
   }, []);
 
-  return <SalesChart salesData={salesData} />;
+  return (
+    <div className="py-28">
+      <SalesChart salesData={salesData} />
+    </div>
+  )
 }

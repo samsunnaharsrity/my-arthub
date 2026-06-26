@@ -13,7 +13,7 @@ import {
 export default function SalesChart({ salesData = [] }) {
   return (
     <div className="bg-base-100 p-5 mt-28 rounded-xl shadow">
-      <h2 className="text-xl font-bold mb-5">Daily Sales</h2>
+      <h2 className="text-xl font-bold mb-10">Daily Sales</h2>
 
       <ResponsiveContainer width="100%" height={300}>
         <LineChart data={salesData}>
