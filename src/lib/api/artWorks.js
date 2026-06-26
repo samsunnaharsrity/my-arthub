@@ -2,9 +2,16 @@ import { serverFetch } from "../core/server";
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
-export const getBrowseArtwork = async () =>{
-    return serverFetch('/api/artWorks?status=approved')
-}
+
+export const getBrowseArtwork = async (category) => {
+  let url = "/api/artWorks?status=approved";
+
+  if (category && category !== "All") {
+    url += `&category=${encodeURIComponent(category)}`;
+  }
+
+  return serverFetch(url);
+};
 
 export const getArtworkById = async (id) => {
  return serverFetch(`/api/artworks/${id}`)

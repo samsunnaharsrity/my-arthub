@@ -19,7 +19,7 @@ export default function Navbar({settings}) {
   const links = [
     { name: "Browse Art", href: "/browseArtwork" },
     { name: "Artists", href: "/artist" },
-    { name: "Categories", href: "/categories" },
+    { name: "Categories", href: "/all-categories" },
     { name: "Pricing", href: "/pricing" },
     // { name: "Dashboard", href: "/dashboard" },
   ];
