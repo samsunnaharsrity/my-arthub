@@ -39,7 +39,7 @@ export const editArtwork = async (id, data) => {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_BASE_URL}/api/artWorks/${id}`,
     {
-      method: "PUT",
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },

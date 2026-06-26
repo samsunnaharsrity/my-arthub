@@ -3,12 +3,14 @@
 import Stripe from "stripe";
 import { getArtworkById } from "@/lib/api/artWorks";
 import { getUserSession } from "@/lib/core/session";
+import { getPurchaseArt } from "@/lib/api/purchase";
+import { getPlanById } from "@/lib/api/plans";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 const stripeCurrencyMap = {
   USD: "usd",
-  BDT: "bdt", 
+  BDT: "bdt",
 };
 
 export async function createCheckoutSession(artworkId, shippingDetails) {
@@ -37,6 +39,26 @@ export async function createCheckoutSession(artworkId, shippingDetails) {
     return { error: "You can't purchase your own artwork." };
   }
 
+  // ===============================
+  // 🔥 ADD THIS (LIMIT CHECK FIX)
+  // ===============================
+  const [purchases, plan] = await Promise.all([
+    getPurchaseArt(user.email),
+    getPlanById(user.planId || "user_free"),
+  ]);
+
+  const purchaseCount = purchases?.items?.length || 0;
+  const maxPurchases = plan?.maxPurchases ?? 3;
+
+  if (maxPurchases !== Infinity && purchaseCount >= maxPurchases) {
+    return {
+      error: "You have reached your purchase limit. Upgrade your plan.",
+    };
+  }
+
+  // ===============================
+  // Stripe calculation
+  // ===============================
   const priceNumber = Number(artwork.price) || 0;
   const serviceFee = Math.round(priceNumber * 0.03 * 100) / 100;
   const total = priceNumber + serviceFee;
@@ -47,6 +69,7 @@ export async function createCheckoutSession(artworkId, shippingDetails) {
       mode: "payment",
       payment_method_types: ["card"],
       customer_email: user.email,
+
       line_items: [
         {
           price_data: {
@@ -56,12 +79,12 @@ export async function createCheckoutSession(artworkId, shippingDetails) {
               description: `Original artwork by ${artwork.artistName || "Unknown artist"}`,
               images: artwork.image ? [artwork.image] : [],
             },
-            // Stripe expects the smallest currency unit (cents)
             unit_amount: Math.round(total * 100),
           },
           quantity: 1,
         },
       ],
+
       metadata: {
         artworkId,
         buyerEmail: user.email,
@@ -70,6 +93,7 @@ export async function createCheckoutSession(artworkId, shippingDetails) {
         shippingCity: shippingDetails?.city || "",
         shippingPostalCode: shippingDetails?.postalCode || "",
       },
+
       success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/browseArtwork/${artworkId}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/browseArtwork/${artworkId}/purchase`,
     });

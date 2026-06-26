@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 
 import {
@@ -9,7 +9,6 @@ import {
   Search,
   Palette,
   PenTool,
-  Image ,
   Cuboid,
   Camera,
   Shapes,
@@ -27,8 +26,6 @@ import {
   Shield,
   Settings,
   MessageSquare,
-  CreditCard,
-  Bell
 } from "lucide-react";
 
 import {
@@ -42,28 +39,39 @@ import {
   ListBox,
 } from "@heroui/react";
 
-export function DashboardSidebar({user}) {
-  const pathname = usePathname();
-  const [priceRange, setPriceRange] = useState([0, 5000]);
-  const [sortValue, setSortValue] = useState("newest");
+const DEFAULT_PRICE_RANGE = [0, 5000];
+const DEFAULT_SORT = "newest";
 
+export function DashboardSidebar({ user }) {
+  const pathname = usePathname();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const [searchTerm, setSearchTerm] = useState(searchParams.get("q") || "");
+  const [priceRange, setPriceRange] = useState([
+    Number(searchParams.get("minPrice")) || DEFAULT_PRICE_RANGE[0],
+    Number(searchParams.get("maxPrice")) || DEFAULT_PRICE_RANGE[1],
+  ]);
+  const [sortValue, setSortValue] = useState(
+    searchParams.get("sort") || DEFAULT_SORT
+  );
 
   const artistCategories = [
     { label: "All Categories", href: "/dashboard/artist", icon: Shapes },
     {
-    label: "All Art Works",
-    href: "/dashboard/artist/artWorks",
-    icon: Images,
+      label: "All Art Works",
+      href: "/dashboard/artist/artWorks",
+      icon: Images,
     },
     {
-    label: "Add New Art Works",
-    href: "/dashboard/artist/artWorks/create",
-    icon: ImagePlus,
+      label: "Add New Art Works",
+      href: "/dashboard/artist/artWorks/create",
+      icon: ImagePlus,
     },
     {
-    label: "Artist Profile",
-    href: "/dashboard/artist/artistProfile",
-    icon: ImagePlus,
+      label: "Artist Profile",
+      href: "/dashboard/artist/artistProfile",
+      icon: ImagePlus,
     },
     { label: "Painting", href: "/dashboard/artist/painting", icon: Palette },
     { label: "Digital Art", href: "/dashboard/artist/digital-art", icon: Monitor },
@@ -71,73 +79,76 @@ export function DashboardSidebar({user}) {
     { label: "Photography", href: "/dashboard/artist/photography", icon: Camera },
     { label: "Illustration", href: "/dashboard/artist/illustration", icon: PenTool },
     {
-    label: "Sales History",
-    href: "/dashboard/artist/sales-history",
-    icon: ShoppingBag,
+      label: "Sales History",
+      href: "/dashboard/artist/sales-history",
+      icon: ShoppingBag,
     },
   ];
 
   const adminCategories = [
-  {
-    label: "Dashboard",
-    href: "/dashboard/admin",
-    icon: LayoutDashboard,
-  },
-  {
-    label: "Users Management",
-    href: "/dashboard/admin/user-management",
-    icon: Users,
-  },
-  {
-    label: "All Artworks",
-    href: "/dashboard/admin/all-artworks",
-    icon: Images,
-  },
-  {
-    label: "Orders / Sales",
-    href: "/dashboard/admin/salesChart",
-    icon: ShoppingBag,
-  },
-  {
-    label: "Analytics",
-    href: "/dashboard/admin/analytics",
-    icon: BarChart3,
-  },
-  {
-    label: "View All Transactions",
-    href: "/dashboard/admin/transactions",
-    icon: FileText,
-  },
-  {
-    label: "Roles & Permissions",
-    href: "/dashboard/admin/rolesAndPermission",
-    icon: Shield,
-  },
-{
-  label: "Comments Moderation",
-  href: "/dashboard/admin/comments",
-  icon: MessageSquare,
-},
-  {
-    label: "Settings",
-    href: "/dashboard/admin/settings",
-    icon: Settings,
-  },
-];
+    {
+      label: "Dashboard",
+      href: "/dashboard/admin",
+      icon: LayoutDashboard,
+    },
+    {
+      label: "Users Management",
+      href: "/dashboard/admin/user-management",
+      icon: Users,
+    },
+    {
+      label: "All Artworks",
+      href: "/dashboard/admin/all-artworks",
+      icon: Images,
+    },
+    {
+      label: "Orders / Sales",
+      href: "/dashboard/admin/salesChart",
+      icon: ShoppingBag,
+    },
+    {
+      label: "Analytics",
+      href: "/dashboard/admin/analytics",
+      icon: BarChart3,
+    },
+    {
+      label: "View All Transactions",
+      href: "/dashboard/admin/transactions",
+      icon: FileText,
+    },
+    {
+      label: "Roles & Permissions",
+      href: "/dashboard/admin/rolesAndPermission",
+      icon: Shield,
+    },
+    {
+      label: "Comments Moderation",
+      href: "/dashboard/admin/comments",
+      icon: MessageSquare,
+    },
+    {
+      label: "Settings",
+      href: "/dashboard/admin/settings",
+      icon: Settings,
+    },
+  ];
 
   const userCategories = [
-  { label: "My Profile", href: "/dashboard/user/profile", icon: User },
-  { label: "Purchased Art", href: "/dashboard/user/purchases", icon: ShoppingBag },
-  { label: "Drafted Arts", href: "/dashboard/user/saveDraft", icon: Images },
-];
+    { label: "My Profile", href: "/dashboard/user/profile", icon: User },
+    { label: "Purchased Art", href: "/dashboard/user/purchases", icon: ShoppingBag },
+    { label: "Drafted Arts", href: "/dashboard/user/saveDraft", icon: Images },
+  ];
 
-const categoriesMap = {
-  user: userCategories,
-  artist : artistCategories,
-  admin : adminCategories,
-}
+  const categoriesMap = {
+    user: userCategories,
+    artist: artistCategories,
+    admin: adminCategories,
+  };
 
-const categories = categoriesMap[user?.role || userCategories]
+  // Bug fix: previously `categoriesMap[user?.role || userCategories]` used the
+  // array itself as a fallback object key, which always resolved to `undefined`
+  // and crashed the component on `categories.map(...)`.
+  const categories = categoriesMap[user?.role] || userCategories;
 
   const sortOptions = [
     { id: "newest", label: "Newest First" },
@@ -154,6 +165,27 @@ const categories = categoriesMap[user?.role || userCategories]
   const handleMaxChange = (e) => {
     const val = Math.max(Number(e.target.value) || 0, priceRange[0]);
     setPriceRange([priceRange[0], val]);
+  };
+
+  // Bug fix: Apply Filters button previously had no onClick at all.
+  // This pushes the current filter state into the URL as query params so
+  // the artwork listing page can read them via useSearchParams and filter.
+  const handleApplyFilters = () => {
+    const params = new URLSearchParams();
+
+    if (searchTerm.trim()) params.set("q", searchTerm.trim());
+    params.set("minPrice", String(priceRange[0]));
+    params.set("maxPrice", String(priceRange[1]));
+    params.set("sort", sortValue);
+
+    router.push(`${pathname}?${params.toString()}`);
+  };
+
+  const handleResetFilters = () => {
+    setSearchTerm("");
+    setPriceRange(DEFAULT_PRICE_RANGE);
+    setSortValue(DEFAULT_SORT);
+    router.push(pathname);
   };
 
   const SidebarContent = () => (
@@ -182,6 +214,8 @@ const categories = categoriesMap[user?.role || userCategories]
           </InputGroup.Prefix>
           <InputGroup.Input
             placeholder="Search artwork..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
             className="h-10 rounded-xl"
           />
         </InputGroup>
@@ -308,15 +342,16 @@ const categories = categoriesMap[user?.role || userCategories]
 
       {/* Apply Button */}
       <div className="space-y-2 pt-1">
-        <Button className="h-11 w-full rounded-xl bg-green-900 font-semibold text-white shadow-sm transition-colors hover:bg-green-800">
+        <Button
+          slot="close"
+          onClick={handleApplyFilters}
+          className="h-11 w-full rounded-xl bg-green-900 font-semibold text-white shadow-sm transition-colors hover:bg-green-800"
+        >
           Apply Filters
         </Button>
         <button
           type="button"
-          onClick={() => {
-            setPriceRange([0, 5000]);
-            setSortValue("newest");
-          }}
+          onClick={handleResetFilters}
           className="w-full text-center text-xs font-medium text-slate-400 transition-colors hover:text-slate-600"
         >
           Reset all filters
@@ -334,34 +369,34 @@ const categories = categoriesMap[user?.role || userCategories]
         </div>
       </aside>
 
-{/* Mobile / Tablet Trigger + Drawer */}
-<Drawer>
-  <Button className="fixed bottom-5 right-5 z-40 flex h-12 items-center gap-2 rounded-full bg-green-900 px-5 text-sm font-semibold text-white shadow-lg shadow-green-900/30 lg:hidden">
-    <Menu size={17} />
-    Filters
-  </Button>
+      {/* Mobile / Tablet Trigger + Drawer */}
+      <Drawer>
+        <Button className="fixed bottom-5 right-5 z-40 flex h-12 items-center gap-2 rounded-full bg-green-900 px-5 text-sm font-semibold text-white shadow-lg shadow-green-900/30 lg:hidden">
+          <Menu size={17} />
+          Filters
+        </Button>
 
-  <Drawer.Backdrop className="lg:hidden">
-    <Drawer.Content
-      placement="left"
-      className="w-[88vw] max-w-sm sm:w-[380px]"
-    >
-      <Drawer.Dialog className="flex h-full flex-col bg-white">
-        <Drawer.CloseTrigger />
+        <Drawer.Backdrop className="lg:hidden">
+          <Drawer.Content
+            placement="left"
+            className="w-[88vw] max-w-sm sm:w-[380px]"
+          >
+            <Drawer.Dialog className="flex h-full flex-col bg-white">
+              <Drawer.CloseTrigger />
 
-        <Drawer.Header className="border-b border-slate-100">
-          <Drawer.Heading className="text-base font-bold text-slate-900">
-            Artwork Filters
-          </Drawer.Heading>
-        </Drawer.Header>
+              <Drawer.Header className="border-b border-slate-100">
+                <Drawer.Heading className="text-base font-bold text-slate-900">
+                  Artwork Filters
+                </Drawer.Heading>
+              </Drawer.Header>
 
-        <Drawer.Body className="flex-1 overflow-y-auto px-5 py-5">
-          <SidebarContent />
-        </Drawer.Body>
-      </Drawer.Dialog>
-    </Drawer.Content>
-  </Drawer.Backdrop>
-</Drawer>
+              <Drawer.Body className="flex-1 overflow-y-auto px-5 py-5">
+                <SidebarContent />
+              </Drawer.Body>
+            </Drawer.Dialog>
+          </Drawer.Content>
+        </Drawer.Backdrop>
+      </Drawer>
     </>
   );
 }

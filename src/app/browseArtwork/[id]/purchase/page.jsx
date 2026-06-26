@@ -45,20 +45,6 @@ const plan = await getPlanById(
   }
 
 
-// const purchases = await getPurchaseArt(user.email);
-// const purchaseCount = purchases?.length || 0;
-// const maxPurchases = plan?.maxPurchases || 3;
-
-// if (user?.plan === "user_pro") {
-//   maxPurchases = 9;
-// }
-
-// if (user?.plan === "user_premium") {
-//   maxPurchases = Infinity;
-// }
-
-// const hasReachedLimit = purchaseCount >= maxPurchases;
-
   const isSold = artwork.status === "closed";
   const isOwner = Boolean(user && user?.email === artwork?.artistEmail);
   const currencySymbol = currencySymbols[artwork.currency] || artwork.currency || "$";
@@ -66,21 +52,6 @@ const plan = await getPlanById(
   const serviceFee = Math.round(priceNumber * 0.03 * 100) / 100;
   const total = priceNumber + serviceFee;
 
-//   if (!user) {
-//     return (
-//       <div style={pageStyles.notFoundWrap}>
-//         <p style={pageStyles.notFoundEyebrow}>Sign in required</p>
-//         <h2 style={pageStyles.notFoundTitle}>Log in to complete this purchase</h2>
-//         <p style={pageStyles.notFoundSub}>
-//           You'll need an ArtHub account to buy "{artwork.title}".
-//         </p>
-//         <Link href={`/login?redirect=/browseArtwork/${id}/purchase`} style={pageStyles.notFoundLink}>
-//           <ArrowLeft size={15} />
-//           Go to login
-//         </Link>
-//       </div>
-//     );
-//   }
 
 
 // USER LOGIN CHECK FIRST
@@ -404,7 +375,9 @@ const isUnlimited = maxPurchases === Infinity;
 
           <div className="pp-grid">
             <div>
-              <PurchaseForm artworkId={id} userName={user?.name} />
+              <PurchaseForm artwork={artwork}
+              user={user}
+              userName={user?.name} />
             </div>
 
             <div className="summary-card">

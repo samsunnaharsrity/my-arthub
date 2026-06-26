@@ -19,7 +19,7 @@ export default function SalesChartPage() {
   }, []);
 
   return (
-    <div className="py-28">
+    <div className="pt-28">
       <SalesChart salesData={salesData} />
     </div>
   )

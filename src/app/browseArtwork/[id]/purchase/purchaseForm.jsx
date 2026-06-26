@@ -4,7 +4,9 @@ import { createPurchase } from "@/lib/actions/purchase";
 import { useState } from "react";
 import { createCheckoutSession } from "./action";
 
-export default function PurchaseForm({ artworkId, userName }) {
+export default function PurchaseForm({  artwork,
+  user,
+  userName, }) {
   const [shipping, setShipping] = useState({
     name: userName || "",
     address: "",
@@ -21,15 +23,21 @@ export default function PurchaseForm({ artworkId, userName }) {
     if (error) setError(null);
   };
 
-  // 🆓 FREE PURCHASE
+  // FREE PURCHASE
   const handleFreePurchase = async () => {
     try {
       setLoading(true);
       setError(null);
 
       const res = await createPurchase({
-        artworkId,
-        shipping,
+          artworkId: artwork._id,
+          title: artwork.title,
+          price: artwork.price,
+
+          buyerId: user.id,
+          buyerEmail: user.email,
+
+          shipping,
       });
 
       if (res?.error) {
@@ -45,7 +53,7 @@ export default function PurchaseForm({ artworkId, userName }) {
     }
   };
 
-  // 💳 STRIPE PURCHASE
+  // STRIPE PURCHASE
   const handleStripePurchase = async () => {
     if (
       !shipping.name.trim() ||
@@ -60,7 +68,7 @@ export default function PurchaseForm({ artworkId, userName }) {
       setLoading(true);
       setError(null);
 
-      const result = await createCheckoutSession(artworkId, shipping);
+      const result = await createCheckoutSession(artwork._id, shipping);
 
       if (result?.url) {
         window.location.href = result.url;
