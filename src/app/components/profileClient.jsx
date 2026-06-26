@@ -20,9 +20,9 @@ export default function ProfileClient({ user }) {
 
   return (
     <>
-      <div className="w-full max-w-xl pt-20">
+      <div className="w-full max-w-3xl pt-20">
         {/* Header */}
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 p-4 text-white shadow-xl">
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-green-600 via-green-600 to-green-500 p-4 text-white shadow-xl">
           <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/10"></div>
           <div className="absolute -bottom-12 -left-12 h-32 w-32 rounded-full bg-white/10"></div>
 

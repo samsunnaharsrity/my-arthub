@@ -1,10 +1,7 @@
-import Image from "next/image";
-import Link from "next/link";
-
 import { getUserSession } from "@/lib/core/session";
-import { getDrafts } from "@/lib/api/draftData";
+import { getPurchaseArt } from "@/lib/api/purchase";
 
-export default async function DraftsPage() {
+export default async function UserTransactionsPage() {
   const user = await getUserSession();
 
   if (!user) {
@@ -17,39 +14,35 @@ export default async function DraftsPage() {
     );
   }
 
-  const drafts = await getDrafts(user.email);
+  const { items: transactions = [] } =
+    await getPurchaseArt(user.email);
 
   return (
-    <section className="min-h-screen px-6 py-28">
-      <div className="mb-10">
+    <section className="min-h-screen px-6 py-28 md:px-10">
+      {/* Header */}
+      <div className="mb-8">
         <h1 className="text-3xl font-bold">
-          Drafted Arts
+          Transaction History
         </h1>
 
         <p className="mt-2 text-gray-500">
-          Total Drafts:
-          <span className="ml-2 font-semibold">
-            {drafts.length}
+          Total Transactions:{" "}
+          <span className="font-semibold text-green-600">
+            {transactions.length}
           </span>
         </p>
       </div>
 
-      {drafts.length === 0 ? (
+      {/* Empty State */}
+      {transactions.length === 0 ? (
         <div className="rounded-2xl border border-dashed py-20 text-center">
           <h2 className="text-2xl font-semibold">
-            No Drafts Found
+            No Transactions Found
           </h2>
 
           <p className="mt-2 text-gray-500">
-            You don't have any draft artworks.
+            You haven't purchased any artwork yet.
           </p>
-
-          <Link
-            href="/dashboard/artist/addArtwork"
-            className="mt-6 inline-block rounded-lg bg-black px-6 py-3 text-white"
-          >
-            Create Artwork
-          </Link>
         </div>
       ) : (
         <div className="overflow-x-auto rounded-2xl bg-white shadow">
@@ -57,72 +50,63 @@ export default async function DraftsPage() {
             <thead className="bg-gray-100">
               <tr>
                 <th className="p-4 text-left">
-                  Image
+                  Transaction ID
                 </th>
 
                 <th className="p-4 text-left">
-                  Title
+                  Artwork
                 </th>
 
                 <th className="p-4 text-left">
-                  Category
+                  Amount
                 </th>
 
                 <th className="p-4 text-left">
-                  Price
+                  Payment Method
                 </th>
 
                 <th className="p-4 text-left">
-                  Created
+                  Date
                 </th>
 
                 <th className="p-4 text-left">
-                  Action
+                  Status
                 </th>
               </tr>
             </thead>
 
             <tbody>
-              {drafts.map((draft) => (
+              {transactions.map((tx) => (
                 <tr
-                  key={draft._id}
+                  key={tx._id}
                   className="border-t hover:bg-gray-50"
                 >
-                  <td className="p-4">
-                    <Image
-                      src={draft.image}
-                      alt={draft.title}
-                      width={80}
-                      height={80}
-                      className="h-16 w-16 rounded-lg object-cover"
-                    />
-                  </td>
-
-                  <td className="p-4 font-medium">
-                    {draft.title}
+                  <td className="p-4 text-sm">
+                    {tx.transactionId || tx._id}
                   </td>
 
                   <td className="p-4">
-                    {draft.category}
+                    {tx.title || "Artwork"}
                   </td>
 
-                  <td className="p-4 text-green-600">
-                    ${draft.price}
+                  <td className="p-4 font-semibold text-green-600">
+                    ${tx.price}
+                  </td>
+
+                  <td className="p-4">
+                    {tx.paymentMethod || "Stripe"}
                   </td>
 
                   <td className="p-4">
                     {new Date(
-                      draft.createdAt
+                      tx.createdAt
                     ).toLocaleDateString()}
                   </td>
 
                   <td className="p-4">
-                    <Link
-                      href={`/dashboard/artist/edit/${draft._id}`}
-                      className="rounded-lg bg-black px-4 py-2 text-white"
-                    >
-                      Edit
-                    </Link>
+                    <span className="rounded-full bg-green-100 px-3 py-1 text-sm text-green-700">
+                      Completed
+                    </span>
                   </td>
                 </tr>
               ))}

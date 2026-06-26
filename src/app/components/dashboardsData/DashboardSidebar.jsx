@@ -136,7 +136,8 @@ export function DashboardSidebar({ user }) {
   const userCategories = [
     { label: "My Profile", href: "/dashboard/user/profile", icon: User },
     { label: "Purchased Art", href: "/dashboard/user/purchases", icon: ShoppingBag },
-    { label: "Drafted Arts", href: "/dashboard/user/saveDraft", icon: Images },
+    { label: "Transaction History", href: "/dashboard/user/transactions", icon: Images },
+  
   ];
 
   const categoriesMap = {

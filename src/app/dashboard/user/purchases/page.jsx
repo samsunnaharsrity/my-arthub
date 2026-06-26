@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 import { getUserSession } from "@/lib/core/session";
 import { getPurchaseArt } from "@/lib/api/purchase";
@@ -6,105 +7,211 @@ import { getArtworkById } from "@/lib/api/artWorks";
 
 const LIMIT = 6;
 
-export default async function PurchasesPage({ searchParams }) {
-  const params = await searchParams; 
-
+export default async function PurchasesPage({
+  searchParams,
+}) {
+  const params = await searchParams;
   const page = Number(params?.page || 1);
+
   const user = await getUserSession();
 
   if (!user) {
     return (
-      <div className="flex h-screen items-center justify-center text-lg font-medium">
-        Please login first
+      <div className="flex h-screen items-center justify-center">
+        <h2 className="text-xl font-semibold">
+          Please login first
+        </h2>
       </div>
     );
   }
 
-const { items: purchases, total } = await getPurchaseArt(user.email, {
-  page,
-  limit: LIMIT,
-});
+  const { items: purchases = [], total = 0 } =
+    await getPurchaseArt(user.email, {
+      page,
+      limit: LIMIT,
+    });
 
-const purchasedArts = await Promise.all(
-  (purchases || []).map(async (purchase) => {
-    const artwork = await getArtworkById(purchase.artworkId);
-    return { ...purchase, artwork };
-  })
-);
+  const purchasedArts = await Promise.all(
+    purchases.map(async (purchase) => {
+      try {
+        const artwork = await getArtworkById(
+          purchase.artworkId?._id ||
+            purchase.artworkId?.$oid ||
+            purchase.artworkId
+        );
+
+        return {
+          ...purchase,
+          artwork,
+        };
+      } catch (error) {
+        return {
+          ...purchase,
+          artwork: null,
+        };
+      }
+    })
+  );
 
   const totalPages = Math.ceil(total / LIMIT);
 
   return (
-    <div className="px-6 py-28 md:px-10">
+    <section className="min-h-screen px-6 py-28">
       {/* Header */}
-     <div className="">
-       <div className="mb-3 flex justify-between">
-        <h1 className="text-3xl font-bold">Purchased Artworks</h1>
-        <span className="text-sm text-gray-500">
-          Page {page} of {totalPages}
-        </span>
-      </div>
-      <div className="mb-6 text-left text-md text-gray-500">
-        Total Purchases:{" "}
-        <span className="font-semibold text-green-900">
-          {total}
-        </span>
-      </div>
-     </div>
+      <div className="mb-8 flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold">
+            Purchased Artworks
+          </h1>
 
-
-      {/* Grid */}
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {purchasedArts.map((item) => (
-
-          
-          <div
-            key={item._id}
-            className="overflow-hidden rounded-2xl bg-white shadow-md"
-          >
-            <Image
-              src={item.artwork?.image}
-              alt={item.artwork?.title}
-              width={500}
-              height={300}
-              className="h-60 w-full object-cover"
-            />
-
-            <div className="p-5">
-              <h2 className="text-xl font-semibold">
-                {item.artwork?.title}
-              </h2>
-
-              <p className="text-gray-500">
-                Artist: {item.artwork?.artistName}
-              </p>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Pagination Numbers */}
-      {totalPages > 1 && (
-        <div className="mt-10 flex justify-center gap-2">
-          {Array.from({ length: totalPages }).map((_, idx) => {
-            const pageNum = idx + 1;
-
-            return (
-              <a
-                key={pageNum}
-                href={`?page=${pageNum}`}
-                className={`rounded-lg border px-4 py-2 text-sm transition ${
-                  pageNum === page
-                    ? "bg-black text-white"
-                    : "hover:bg-gray-100"
-                }`}
-              >
-                {pageNum}
-              </a>
-            );
-          })}
+          <p className="mt-2 text-gray-500">
+            Total Purchases :
+            <span className="ml-2 font-semibold text-green-600">
+              {total}
+            </span>
+          </p>
         </div>
+
+        <div className="rounded-lg bg-gray-100 px-4 py-2">
+          Page {page} of {totalPages || 1}
+        </div>
+      </div>
+
+      {/* Empty State */}
+      {purchasedArts.length === 0 ? (
+        <div className="rounded-xl border border-dashed py-20 text-center">
+          <h2 className="text-2xl font-semibold">
+            No Purchases Yet
+          </h2>
+
+          <p className="mt-2 text-gray-500">
+            You haven't purchased any artwork.
+          </p>
+
+          <Link
+            href="/gallery"
+            className="mt-6 inline-block rounded-lg bg-black px-6 py-3 text-white"
+          >
+            Explore Artworks
+          </Link>
+        </div>
+      ) : (
+        <>
+          {/* Table */}
+          <div className="overflow-x-auto rounded-2xl border bg-white shadow">
+            <table className="w-full">
+              <thead className="bg-gray-100">
+                <tr>
+                  <th className="px-5 py-4 text-left">
+                    Artwork
+                  </th>
+
+                  <th className="px-5 py-4 text-left">
+                    Title
+                  </th>
+
+                  <th className="px-5 py-4 text-left">
+                    Artist
+                  </th>
+
+                  <th className="px-5 py-4 text-left">
+                    Price
+                  </th>
+
+                  <th className="px-5 py-4 text-left">
+                    Purchase Date
+                  </th>
+
+                  <th className="px-5 py-4 text-left">
+                    Status
+                  </th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {purchasedArts.map((item) => (
+                  <tr
+                    key={item._id}
+                    className="border-t hover:bg-gray-50"
+                  >
+                    {/* Image */}
+                    <td className="px-5 py-4">
+                      {item.artwork ? (
+                        <Image
+                          src={item.artwork.image}
+                          alt={item.artwork.title}
+                          width={70}
+                          height={70}
+                          className="rounded-lg object-cover"
+                        />
+                      ) : (
+                        <div className="text-sm text-red-500">
+                          Not Found
+                        </div>
+                      )}
+                    </td>
+
+                    {/* Title */}
+                    <td className="px-5 py-4 font-medium">
+                      {item.artwork?.title ||
+                        "Artwork Deleted"}
+                    </td>
+
+                    {/* Artist */}
+                    <td className="px-5 py-4 text-gray-600">
+                      {item.artwork?.artist || "N/A"}
+                    </td>
+
+                    {/* Price */}
+                    <td className="px-5 py-4 font-semibold text-green-600">
+                      ${item.price}
+                    </td>
+
+                    {/* Date */}
+                    <td className="px-5 py-4 text-gray-500">
+                      {new Date(
+                        item.createdAt
+                      ).toLocaleDateString()}
+                    </td>
+
+                    {/* Status */}
+                    <td className="px-5 py-4">
+                      <span className="rounded-full bg-green-100 px-3 py-1 text-sm text-green-700">
+                        Purchased
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="mt-8 flex justify-center gap-2">
+              {Array.from({
+                length: totalPages,
+              }).map((_, idx) => {
+                const pageNum = idx + 1;
+
+                return (
+                  <Link
+                    key={pageNum}
+                    href={`?page=${pageNum}`}
+                    className={`rounded-lg border px-4 py-2 ${
+                      pageNum === page
+                        ? "bg-black text-white"
+                        : "hover:bg-gray-100"
+                    }`}
+                  >
+                    {pageNum}
+                  </Link>
+                );
+              })}
+            </div>
+          )}
+        </>
       )}
-    </div>
+    </section>
   );
 }

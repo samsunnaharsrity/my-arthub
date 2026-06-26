@@ -8,7 +8,7 @@ import {
 
 const Footer = ({settings}) => {
   return (
-    <footer className="bg-[#16352E] text-white/80 rounded-md">
+    <footer className="w-full bg-[#16352E] text-white/80 rounded-md">
       <div className="max-w-7xl mx-auto px-4 lg:px-8 py-10">
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-10">

@@ -33,7 +33,7 @@ export default function PurchaseForm({  artwork,
           artworkId: artwork._id,
           title: artwork.title,
           price: artwork.price,
-
+          artistName: artwork.artist,
           buyerId: user.id,
           buyerEmail: user.email,
 

@@ -84,7 +84,6 @@ const purchaseCount = purchaseItems?.length
 
 // DETERMINE LIMIT
 let maxPurchases = 3;
-const hasReachedLimit = purchaseCount >= maxPurchases;
 
 if (user?.planId === "user_pro") {
   maxPurchases = 9;
@@ -94,10 +93,16 @@ if (user?.planId === "user_premium") {
   maxPurchases = Infinity;
 }
 
-// OR DATABASE PLAN
 if (plan?.maxPurchases) {
-  maxPurchases = plan.maxPurchases;
+  maxPurchases =
+    plan.maxPurchases === "unlimited"
+      ? Infinity
+      : Number(plan.maxPurchases);
 }
+
+const hasReachedLimit =
+  maxPurchases !== Infinity &&
+  purchaseCount >= maxPurchases;
 
 
 console.log({
