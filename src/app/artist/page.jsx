@@ -2,7 +2,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { getAllArtistProfiles } from "@/lib/api/artistProfile";
-// import { getAllArtistProfiles } from "@/lib/api/artistProfile";
 
 const LIMIT = 6;
 

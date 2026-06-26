@@ -30,7 +30,6 @@ import {
 
 import {
   Button,
-  Drawer,
   TextField,
   InputGroup,
   Slider,
@@ -38,6 +37,8 @@ import {
   Label,
   ListBox,
 } from "@heroui/react";
+import { X } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
 
 const DEFAULT_PRICE_RANGE = [0, 5000];
 const DEFAULT_SORT = "newest";
@@ -55,6 +56,10 @@ export function DashboardSidebar({ user }) {
   const [sortValue, setSortValue] = useState(
     searchParams.get("sort") || DEFAULT_SORT
   );
+
+
+const [showMobileSidebar, setShowMobileSidebar] = useState(false);
+
 
   const artistCategories = [
     { label: "All Categories", href: "/dashboard/artist", icon: Shapes },
@@ -146,9 +151,7 @@ export function DashboardSidebar({ user }) {
     admin: adminCategories,
   };
 
-  // Bug fix: previously `categoriesMap[user?.role || userCategories]` used the
-  // array itself as a fallback object key, which always resolved to `undefined`
-  // and crashed the component on `categories.map(...)`.
+
   const categories = categoriesMap[user?.role] || userCategories;
 
   const sortOptions = [
@@ -168,9 +171,7 @@ export function DashboardSidebar({ user }) {
     setPriceRange([priceRange[0], val]);
   };
 
-  // Bug fix: Apply Filters button previously had no onClick at all.
-  // This pushes the current filter state into the URL as query params so
-  // the artwork listing page can read them via useSearchParams and filter.
+
   const handleApplyFilters = () => {
     const params = new URLSearchParams();
 
@@ -362,42 +363,71 @@ export function DashboardSidebar({ user }) {
   );
 
   return (
-    <>
-      {/* Desktop Sidebar */}
-      <aside className="hidden lg:sticky lg:top-21 lg:block lg:h-[calc(100vh-5.5rem)] lg:w-[260px] lg:shrink-0 xl:w-[300px]">
-        <div className="h-full overflow-y-auto border border-slate-200 bg-white p-5 shadow-sm pt-6">
-          <SidebarContent />
-        </div>
-      </aside>
+<>
+  {/* Desktop Sidebar */}
+  <aside className="hidden lg:sticky lg:top-21 lg:block lg:h-[calc(100vh-5.5rem)] lg:w-[260px] lg:shrink-0 xl:w-[300px]">
+    <div className="h-full overflow-y-auto border border-slate-200 bg-white p-5 shadow-sm pt-6">
+      <SidebarContent />
+    </div>
+  </aside>
 
-      {/* Mobile / Tablet Trigger + Drawer */}
-      <Drawer>
-        <Button className="fixed bottom-5 right-5 z-40 flex h-12 items-center gap-2 rounded-full bg-green-900 px-5 text-sm font-semibold text-white shadow-lg shadow-green-900/30 lg:hidden">
-          <Menu size={17} />
-          Filters
-        </Button>
+  {/* Mobile Filter Button */}
+  <Button
+    onPress={() => setShowMobileSidebar(true)}
+    className="fixed bottom-5 right-5 z-50 flex h-12 items-center gap-2 rounded-full bg-green-900 px-5 text-sm font-semibold text-white shadow-lg lg:hidden"
+  >
+    <Menu size={17} />
+    Filters
+  </Button>
 
-        <Drawer.Backdrop className="lg:hidden">
-          <Drawer.Content
-            placement="left"
-            className="w-[88vw] max-w-sm sm:w-[380px]"
-          >
-            <Drawer.Dialog className="flex h-full flex-col bg-white">
-              <Drawer.CloseTrigger />
+  {/* Mobile Sidebar */}
+  <AnimatePresence>
+    {showMobileSidebar && (
+      <>
+        {/* Backdrop */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          onClick={() => setShowMobileSidebar(false)}
+          className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm lg:hidden"
+        />
 
-              <Drawer.Header className="border-b border-slate-100">
-                <Drawer.Heading className="text-base font-bold text-slate-900">
-                  Artwork Filters
-                </Drawer.Heading>
-              </Drawer.Header>
+        {/* Sidebar */}
+        <motion.div
+          initial={{ x: "-100%" }}
+          animate={{ x: 0 }}
+          exit={{ x: "-100%" }}
+          transition={{ duration: 0.3 }}
+          className="fixed left-0 top-0 z-50 h-screen w-[88vw] max-w-sm overflow-y-auto bg-white shadow-2xl lg:hidden"
+        >
+          {/* Header */}
+          <div className="flex items-center justify-between border-b border-slate-200 p-5">
+            <div>
+              <h2 className="text-lg font-bold text-slate-900">
+                Artwork Filters
+              </h2>
+              <p className="text-xs text-slate-500">
+                Find your perfect artwork
+              </p>
+            </div>
 
-              <Drawer.Body className="flex-1 overflow-y-auto px-5 py-5">
-                <SidebarContent />
-              </Drawer.Body>
-            </Drawer.Dialog>
-          </Drawer.Content>
-        </Drawer.Backdrop>
-      </Drawer>
-    </>
+            <button
+              onClick={() => setShowMobileSidebar(false)}
+              className="rounded-full p-2 hover:bg-slate-100"
+            >
+              <X size={20} />
+            </button>
+          </div>
+
+          {/* Content */}
+          <div className="p-5">
+            <SidebarContent />
+          </div>
+        </motion.div>
+      </>
+    )}
+  </AnimatePresence>
+</>
   );
 }
