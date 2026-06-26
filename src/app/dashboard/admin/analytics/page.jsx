@@ -8,26 +8,26 @@ export default function AnalyticsChartPage() {
   const [categoryData, setCategoryData] = useState([]);
   const [loading, setLoading] = useState(true);
 
-useEffect(() => {
-  const loadData = async () => {
-    try {
-      setLoading(true);
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        setLoading(true);
 
-      const res = await getCategoryAnalytics();
+        const data = await getCategoryAnalytics();
 
-      const data = res?.data ?? res ?? [];
+        setCategoryData(
+          Array.isArray(data) ? data : []
+        );
+      } catch (error) {
+        console.log("CATEGORY ERROR:", error);
+        setCategoryData([]);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-      setCategoryData(Array.isArray(data) ? data : []);
-    } catch (error) {
-      console.log("CATEGORY ERROR:", error);
-      setCategoryData([]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  loadData();
-}, []);
+    loadData();
+  }, []);
 
   return (
     <div className="p-6 mt-28">

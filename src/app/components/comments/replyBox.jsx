@@ -7,6 +7,7 @@ export default function ReplyBox({
   artworkId,
   user,
   onClose,
+  onReplyAdded,
 }) {
   const [text, setText] = useState("");
 
@@ -15,10 +16,12 @@ export default function ReplyBox({
 
     try {
       const res = await fetch(
-        "NEXT_PUBLIC_BASE_URL/api/comments",
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/comments`,
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+          },
           body: JSON.stringify({
             artworkId,
             parentId,
@@ -33,11 +36,13 @@ export default function ReplyBox({
       const data = await res.json();
 
       if (data.success) {
+        onReplyAdded?.(data.comment);
+
         setText("");
-        onClose?.(); 
+        onClose?.();
       }
     } catch (err) {
-      console.error("Reply failed:", err);
+      console.log(err);
     }
   };
 
@@ -47,31 +52,13 @@ export default function ReplyBox({
         value={text}
         onChange={(e) => setText(e.target.value)}
         placeholder="Write a reply..."
-        style={{
-          width: "100%",
-          padding: 8,
-          border: "1px solid #ddd",
-          borderRadius: 6,
-        }}
+        className="w-full border rounded p-2"
       />
 
-      <div
-        style={{
-          display: "flex",
-          gap: 8,
-          marginTop: 6,
-        }}
-      >
+      <div className="flex gap-2 mt-2">
         <button
           onClick={sendReply}
-          style={{
-            background: "#047857",
-            color: "#fff",
-            border: "none",
-            padding: "6px 12px",
-            cursor: "pointer",
-            borderRadius: 4,
-          }}
+          className="bg-green-700 text-white px-4 py-2 rounded"
         >
           Reply
         </button>
@@ -79,14 +66,9 @@ export default function ReplyBox({
         <button
           onClick={() => {
             setText("");
-            onClose?.(); 
+            onClose?.();
           }}
-          style={{
-            background: "transparent",
-            border: "1px solid #ccc",
-            padding: "6px 12px",
-            cursor: "pointer",
-          }}
+          className="border px-4 py-2 rounded"
         >
           Cancel
         </button>

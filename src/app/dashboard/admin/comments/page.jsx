@@ -6,7 +6,6 @@ import toast from "react-hot-toast";
 
 export default function CommentsModerationPage() {
   const [comments, setComments] = useState([]);
-  const [filteredComments, setFilteredComments] = useState([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
 
@@ -14,46 +13,42 @@ export default function CommentsModerationPage() {
     fetchComments();
   }, []);
 
-  useEffect(() => {
-    const result = comments.filter(
-      (comment) =>
-        comment.userName
-          ?.toLowerCase()
-          .includes(search.toLowerCase()) ||
-        comment.text
-          ?.toLowerCase()
-          .includes(search.toLowerCase())
+const fetchComments = async () => {
+  try {
+    setLoading(true);
+
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/comments`
     );
 
-    setFilteredComments(result);
-  }, [search, comments]);
+    const data = await res.json();
 
-  const fetchComments = async () => {
-    try {
-      setLoading(true);
-
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/comments`
-      );
-
-      const data = await res.json();
-
-      setComments(data || []);
-      setFilteredComments(data || []);
-    } catch (error) {
-      console.log(error);
-      toast.error("Failed to load comments");
-    } finally {
-      setLoading(false);
+    if (Array.isArray(data)) {
+      setComments(data);
+    } else {
+      setComments([]);
+      toast.error(data.message || "Failed to load comments");
     }
-  };
+  } catch (error) {
+    console.log(error);
+    toast.error("Failed to load comments");
+  } finally {
+    setLoading(false);
+  }
+};
 
-const handleDelete = async (id) => {
-  const confirmDelete = confirm(
-    "Are you sure you want to delete this comment?"
+  const filteredComments = comments.filter(
+    (comment) =>
+      comment?.userName
+        ?.toLowerCase()
+        .includes(search.toLowerCase()) ||
+      comment?.text
+        ?.toLowerCase()
+        .includes(search.toLowerCase())
   );
 
-  if (!confirmDelete) return;
+const handleDelete = async (id) => {
+  if (!confirm("Delete this comment?")) return;
 
   try {
     const res = await fetch(
@@ -68,24 +63,20 @@ const handleDelete = async (id) => {
     if (data.success) {
       setComments((prev) =>
         prev.filter(
-          (comment) =>
-            (comment._id?.$oid || comment._id) !== id
+          (c) => (c._id?.$oid || c._id) !== id
         )
       );
 
-      toast.error("Comment deleted successfully");
-    } else {
-      toast.error(data.message || "Failed to delete comment");
+      toast.success("Comment deleted");
     }
   } catch (error) {
     console.log(error);
-    toast.error("Something went wrong");
+    toast.error("Delete failed");
   }
 };
 
   return (
     <section className="p-6 mt-28 py-20">
-      {/* Header */}
       <div className="flex flex-col md:flex-row justify-between gap-4 mb-8">
         <div>
           <h1 className="text-3xl font-bold text-[#16352E]">
@@ -113,7 +104,6 @@ const handleDelete = async (id) => {
         </div>
       </div>
 
-      {/* Table */}
       <div className="bg-white rounded-3xl shadow border overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
@@ -130,13 +120,14 @@ const handleDelete = async (id) => {
 
             <tbody>
               {loading ? (
-                [...Array(5)].map((_, i) => (
-                  <tr key={i}>
-                    <td colSpan={4} className="p-4">
-                      <div className="skeleton h-10 w-full" />
-                    </td>
-                  </tr>
-                ))
+                <tr>
+                  <td
+                    colSpan={4}
+                    className="text-center py-10"
+                  >
+                    Loading...
+                  </td>
+                </tr>
               ) : filteredComments.length === 0 ? (
                 <tr>
                   <td colSpan={4}>
@@ -155,7 +146,7 @@ const handleDelete = async (id) => {
               ) : (
                 filteredComments.map((comment) => (
                   <tr
-                    key={comment._id}
+                    key={comment._id?.$oid || comment._id}
                     className="border-t hover:bg-slate-50"
                   >
                     <td className="px-6 py-5">
@@ -166,7 +157,7 @@ const handleDelete = async (id) => {
                         </h3>
 
                         <p className="text-sm text-slate-500">
-                          {comment.userId}
+                          {comment.userId || "N/A"}
                         </p>
                       </div>
                     </td>
@@ -176,15 +167,20 @@ const handleDelete = async (id) => {
                     </td>
 
                     <td className="px-6 py-5 text-slate-500">
-                      {new Date(
-                        comment.createdAt
-                      ).toLocaleDateString()}
+                      {comment.createdAt
+                        ? new Date(
+                            comment.createdAt
+                          ).toLocaleDateString()
+                        : "N/A"}
                     </td>
 
                     <td className="px-6 py-5 text-center">
                       <button
                         onClick={() =>
-                          handleDelete(comment._id)
+                          handleDelete(
+                            comment._id?.$oid ||
+                              comment._id
+                          )
                         }
                         className="btn btn-error btn-sm"
                       >

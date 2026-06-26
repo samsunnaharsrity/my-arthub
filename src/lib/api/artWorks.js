@@ -1,64 +1,85 @@
-import { serverFetch } from "../core/server";
-
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
-
+// Browse page (Client Component থেকেও ব্যবহার করা যাবে)
 export const getBrowseArtwork = async (category) => {
-  let url = "/api/artWorks?status=approved";
+  let url = `${baseUrl}/api/artWorks?status=approved`;
 
   if (category && category !== "All") {
     url += `&category=${encodeURIComponent(category)}`;
   }
 
-  return serverFetch(url);
+  const res = await fetch(url, {
+    cache: "no-store",
+  });
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch artworks");
+  }
+
+  return res.json();
 };
 
+// Single artwork
 export const getArtworkById = async (id) => {
- return serverFetch(`/api/artworks/${id}`)
+  const res = await fetch(`${baseUrl}/api/artworks/${id}`, {
+    cache: "no-store",
+  });
+
+  if (!res.ok) {
+    throw new Error("Artwork not found");
+  }
+
+  return res.json();
 };
 
+// All artworks (Protected)
 export const getArtWorks = async () => {
   const res = await fetch(`${baseUrl}/api/artWorks`, {
+    credentials: "include",
     cache: "no-store",
+  });
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch artworks");
+  }
+
+  return res.json();
+};
+
+// Delete artwork
+export const deleteArtwork = async (id) => {
+  const res = await fetch(`${baseUrl}/api/artworks/${id}`, {
+    method: "DELETE",
+    credentials: "include",
   });
 
   return res.json();
 };
 
-
-// delete btn
-export const deleteArtwork = async (id) => {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/artworks/${id}`,
-    {
-      method: "DELETE",
-    }
-  );
-
-  return await res.json();
-};
-
-
-// edit btn
-
-
+// Edit artwork
 export const editArtwork = async (id, data) => {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/artWorks/${id}`,
-    {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    }
-  );
+  const res = await fetch(`${baseUrl}/api/artWorks/${id}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+    body: JSON.stringify(data),
+  });
 
   return res.json();
 };
 
-// get admin approval
+// Admin approval
+export const getApproval = async () => {
+  const res = await fetch(`${baseUrl}/api/artWorks`, {
+    credentials: "include",
+    cache: "no-store",
+  });
 
-export const getApproval = async() =>{
-  return serverFetch(`/api/artWorks`)
-}
+  if (!res.ok) {
+    throw new Error("Failed to fetch approvals");
+  }
+
+  return res.json();
+};

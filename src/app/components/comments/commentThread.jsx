@@ -3,7 +3,7 @@
 import { useState } from "react";
 import LikeButton from "./likeBtn";
 import ReplyBox from "./replyBox";
-import { MessageCircle } from "lucide-react";
+import { MessageCircle, Trash2 } from "lucide-react";
 
 function getInitials(name = "") {
   if (typeof name !== "string" || !name.trim()) return "?";
@@ -18,15 +18,19 @@ function getInitials(name = "") {
 
 function timeAgo(date) {
   if (!date) return "";
+
   const now = new Date();
   const then = new Date(date);
   const seconds = Math.floor((now - then) / 1000);
 
   if (seconds < 60) return "just now";
+
   const minutes = Math.floor(seconds / 60);
   if (minutes < 60) return `${minutes}m ago`;
+
   const hours = Math.floor(minutes / 60);
   if (hours < 24) return `${hours}h ago`;
+
   const days = Math.floor(hours / 24);
   if (days < 7) return `${days}d ago`;
 
@@ -47,11 +51,19 @@ const avatarPalette = [
 ];
 
 function avatarColor(name = "") {
-  const code = name.split("").reduce((s, c) => s + c.charCodeAt(0), 0);
+  const code = name
+    .split("")
+    .reduce((sum, char) => sum + char.charCodeAt(0), 0);
+
   return avatarPalette[code % avatarPalette.length];
 }
 
-export default function CommentThread({ comment, user }) {
+export default function CommentThread({
+  comment,
+  user,
+  onDelete,
+  onReplyAdded,
+}) {
   const [showReply, setShowReply] = useState(false);
 
   const initials = getInitials(comment?.userName);
@@ -74,13 +86,18 @@ export default function CommentThread({ comment, user }) {
             fontWeight: 700,
             fontSize: "0.8rem",
             overflow: "hidden",
+            flexShrink: 0,
           }}
         >
           {comment.userImage ? (
             <img
               src={comment.userImage}
               alt=""
-              style={{ width: "100%", height: "100%", objectFit: "cover" }}
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+              }}
             />
           ) : (
             initials || "?"
@@ -89,20 +106,43 @@ export default function CommentThread({ comment, user }) {
 
         {/* Body */}
         <div style={{ flex: 1 }}>
-          <div style={{ display: "flex", gap: 8, alignItems: "baseline" }}>
+          <div
+            style={{
+              display: "flex",
+              gap: 8,
+              alignItems: "center",
+            }}
+          >
             <strong style={{ fontSize: "0.85rem" }}>
               {comment.userName || "Anonymous"}
             </strong>
-            <span style={{ fontSize: "0.75rem", color: "#999" }}>
+
+            <span
+              style={{
+                fontSize: "0.75rem",
+                color: "#999",
+              }}
+            >
               {timeAgo(comment.createdAt)}
             </span>
           </div>
 
-          <p style={{ margin: "4px 0", fontSize: "0.9rem" }}>
+          <p
+            style={{
+              margin: "4px 0",
+              fontSize: "0.9rem",
+            }}
+          >
             {comment.text}
           </p>
 
-          <div style={{ display: "flex", gap: 12 }}>
+          <div
+            style={{
+              display: "flex",
+              gap: 12,
+              alignItems: "center",
+            }}
+          >
             <LikeButton comment={comment} />
 
             <button
@@ -121,21 +161,47 @@ export default function CommentThread({ comment, user }) {
               <MessageCircle size={13} />
               Reply
             </button>
+
+            {/* Delete Button */}
+            {user?._id === comment.userId && (
+              <button
+                onClick={() => onDelete(comment._id)}
+                style={{
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                  color: "#dc2626",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 5,
+                  fontSize: "0.8rem",
+                }}
+              >
+                <Trash2 size={13} />
+                Delete
+              </button>
+            )}
           </div>
 
           {/* Reply Box */}
           {showReply && (
-            <div style={{ marginTop: 10, marginLeft: 45 }}>
+            <div
+              style={{
+                marginTop: 10,
+                marginLeft: 45,
+              }}
+            >
               <ReplyBox
-                parentId={comment._id}
-                artworkId={comment.artworkId}
-                user={user}
-                onClose={() => setShowReply(false)}
+                  parentId={comment._id}
+                  artworkId={comment.artworkId}
+                  user={user}
+                  onClose={() => setShowReply(false)}
+                  onReplyAdded={onReplyAdded}
               />
             </div>
           )}
 
-          {/* Replies */}
+          {/* Nested Replies */}
           {comment.replies?.length > 0 && (
             <div
               style={{
@@ -150,6 +216,8 @@ export default function CommentThread({ comment, user }) {
                   key={reply._id}
                   comment={reply}
                   user={user}
+                  onDelete={onDelete}
+                  onReplyAdded={onReplyAdded}
                 />
               ))}
             </div>

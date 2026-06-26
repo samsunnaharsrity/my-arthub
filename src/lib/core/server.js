@@ -1,4 +1,18 @@
+import { getUserToken } from "./session";
+
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:7000";
+
+
+export const authHeader = async () =>{
+  const token = await getUserToken();
+  const header = {
+    authorization: `Bearer ${token}`
+  }
+
+  return token? header : {};
+}
+
+
 
 export const serverFetch = async (path) => {
   const res = await fetch(`${baseUrl}${path}`, {
@@ -28,6 +42,20 @@ export const serverFetch = async (path) => {
   return result;
 };
 
+
+// protected data 
+ export const protectedDataFetch = async(path) =>{
+  const res = await fetch(`${baseUrl}${path}`,
+    {
+      headers: await authHeader()
+    }
+  )
+
+
+  return res.json()
+ }
+
+
 export const serverMutation = async (path, data , method ='POST') => {
   const url = `${baseUrl}${path}`;
 
@@ -36,6 +64,7 @@ export const serverMutation = async (path, data , method ='POST') => {
       method: method ,
       headers: {
         "Content-Type": "application/json",
+        ... await authHeader()
       },
       body: JSON.stringify(data),
     });
@@ -53,3 +82,5 @@ export const serverMutation = async (path, data , method ='POST') => {
     throw err;
   }
 };
+
+

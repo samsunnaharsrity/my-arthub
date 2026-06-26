@@ -1,4 +1,4 @@
-import { serverFetch } from "../core/server";
+import { protectedDataFetch, serverFetch } from "../core/server";
 import { getUserSession } from "../core/session";
 
 
@@ -30,9 +30,11 @@ export const getArtistById = async (id) => {
   return res.json();
 };
 
+
+
+
 export const getArtworksByArtist = async (artistId) => {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/artworks?artistId=${artistId}`
+  return protectedDataFetch(
+    `/api/artworks?artistId=${artistId}`
   );
-  return res.json();
 };

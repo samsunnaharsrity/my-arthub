@@ -75,7 +75,7 @@ export default function PricingPage() {
 
   return (
     <div className="min-h-screen bg-[#FAF8F4] py-20 px-4">
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-6xl mx-auto mt-20">
 
         {/* Cards */}
         <div className="grid md:grid-cols-3 gap-6">
