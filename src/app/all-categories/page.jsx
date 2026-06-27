@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function CategoriesPage() {
   const categories = [
-    "Digital Art",
+    "Digital",
     "Photography",
     "Illustration",
     "Painting",

@@ -6,7 +6,12 @@ import { getAllArtistProfiles } from "@/lib/api/artistProfile";
 const LIMIT = 6;
 
 export default async function ArtistPage({ searchParams }) {
-  const page = Math.max(Number(searchParams?.page || 1), 1);
+  const params = await searchParams;
+
+  const page = Math.max(
+    Number(params?.page || 1),
+    1
+  );
 
   const data = await getAllArtistProfiles({
     page,

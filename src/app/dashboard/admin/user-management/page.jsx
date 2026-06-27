@@ -3,11 +3,15 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { Users, Shield } from "lucide-react";
+import { authClient } from "@/lib/auth-client";
+import Image from "next/image";
 
 export default function ManageUsersPage() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { data: session } = authClient.useSession();
 
+  // LOAD USERS
   const loadUsers = async () => {
     try {
       setLoading(true);
@@ -15,27 +19,30 @@ export default function ManageUsersPage() {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/users`,
         {
+          method: "GET",
+          credentials: "include", 
           cache: "no-store",
         }
       );
+
+      // const token = await getUserToken();
 
       const data = await res.json();
 
       console.log("Users Response:", data);
 
+      if (!res.ok) {
+        toast.error(data.message || "Failed to load users");
+        return;
+      }
+
       if (Array.isArray(data)) {
         setUsers(data);
-      }
-
-      else if (Array.isArray(data.users)) {
+      } else if (Array.isArray(data.users)) {
         setUsers(data.users);
-      }
-
-      else if (Array.isArray(data.data)) {
+      } else if (Array.isArray(data.data)) {
         setUsers(data.data);
-      }
-
-      else {
+      } else {
         setUsers([]);
       }
     } catch (error) {
@@ -50,23 +57,28 @@ export default function ManageUsersPage() {
     loadUsers();
   }, []);
 
+  // CHANGE ROLE
   const handleRoleChange = async (id, role) => {
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/users/${id}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ role }),
-        }
-      );
+const res = await fetch(
+  `${process.env.NEXT_PUBLIC_BASE_URL}/api/users/${id}`,
+  {
+    method: "PATCH",
+    credentials: "include",
+
+    headers: {
+      "Content-Type": "application/json",
+      "user-email": session?.user?.email || "",
+    },
+
+    body: JSON.stringify({ role }),
+  }
+);
 
       const data = await res.json();
 
       if (data.success) {
-        toast.success("Role updated");
+        toast.success("Role updated successfully");
 
         setUsers((prev) =>
           prev.map((user) =>
@@ -75,6 +87,8 @@ export default function ManageUsersPage() {
               : user
           )
         );
+      } else {
+        toast.error(data.message || "Failed to update role");
       }
     } catch (error) {
       console.log(error);
@@ -146,9 +160,21 @@ export default function ManageUsersPage() {
                     >
                       <td className="p-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-12 h-12 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">
-                            {user.name?.charAt(0)?.toUpperCase() || "U"}
-                          </div>
+                          <div className="w-12 h-12 rounded-full overflow-hidden bg-emerald-100 flex items-center justify-center">
+  {user.image ? (
+    <Image
+      src={user.image}
+      alt={user.name || "User"}
+      width={48}
+      height={48}
+      className="w-full h-full object-cover"
+    />
+  ) : (
+    <span className="text-emerald-700 font-bold">
+      {user.name?.charAt(0)?.toUpperCase() || "U"}
+    </span>
+  )}
+</div>
 
                           <div>
                             <h3 className="font-semibold text-slate-800">

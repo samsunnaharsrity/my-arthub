@@ -1,3 +1,5 @@
+import { authClient } from "../auth-client";
+
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
 export const getBrowseArtwork = async (category) => {
@@ -20,8 +22,6 @@ export const getBrowseArtwork = async (category) => {
 
 // Single artwork
 export const getArtworkById = async (id) => {
-  console.log("Fetching artwork with ID:", id);
-
   const res = await fetch(
     `${baseUrl}/api/artWorks/${id}`,
     {
@@ -30,13 +30,12 @@ export const getArtworkById = async (id) => {
   );
 
   const data = await res.json();
-  console.log("Response:", data);
 
   if (!res.ok) {
     throw new Error(data.message || "Failed to fetch artwork");
   }
 
-  return data;
+  return data.data; 
 };
 
 
@@ -63,33 +62,46 @@ export const getArtWorks = async () => {
 
 
 // Delete artwork
+
 export const deleteArtwork = async (id) => {
-  const token = getToken();
+  const session = await authClient.getSession();
 
-  const res = await fetch(`${baseUrl}/api/artWorks/${id}`, {
-    method: "DELETE",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  const email = session?.data?.user?.email;
 
-  return res.json();
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/artWorks/${id}`,
+    {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        "user-email": email,
+      },
+    }
+  );
+
+  return await res.json();
 };
 
 // Edit artwork
+
 export const editArtwork = async (id, data) => {
-  const token = getToken();
+  const session = await authClient.getSession();
 
-  const res = await fetch(`${baseUrl}/api/artWorks/${id}`, {
-    method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(data),
-  });
+  const email = session?.data?.user?.email;
 
-  return res.json();
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/artWorks/${id}`,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        "user-email": email, 
+      },
+      body: JSON.stringify(data),
+    }
+  );
+
+  return await res.json();
 };
 
 // Admin approval

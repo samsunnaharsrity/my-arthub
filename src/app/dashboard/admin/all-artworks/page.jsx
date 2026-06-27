@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { Trash2, ImageOff, Search } from "lucide-react";
+import { authClient } from "@/lib/auth-client";
 
 export default function AllArtworks() {
   const [arts, setArts] = useState([]);
@@ -10,6 +11,21 @@ export default function AllArtworks() {
   const [hasError, setHasError] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [deletingId, setDeletingId] = useState(null);
+
+
+  const [user, setUser] = useState(null);
+
+useEffect(() => {
+  const getSession = async () => {
+    const session = await authClient.getSession();
+
+    if (session?.data?.user) {
+      setUser(session.data.user);
+    }
+  };
+
+  getSession();
+}, []);
 
   useEffect(() => {
     loadArts();
@@ -39,35 +55,62 @@ export default function AllArtworks() {
     }
   };
 
-  const handleDelete = async (id, title) => {
-    const confirmed = window.confirm(
-      `Delete "${title}"? This action cannot be undone.`
-    );
-    if (!confirmed) return;
 
-    setDeletingId(id);
+const handleDelete = async (id, title) => {
+  const confirmed = window.confirm(
+    `Delete "${title}"? This action cannot be undone.`
+  );
 
-    try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/artworks/${id}`,
-        { method: "DELETE" }
-      );
+  if (!confirmed) return;
 
-      const data = await res.json().catch(() => ({}));
+  setDeletingId(id);
 
-      if (!res.ok || data?.success === false) {
-        throw new Error(data?.message || `Request failed with status ${res.status}`);
+  try {
+    const sessionToken =
+      document.cookie
+        .split("; ")
+        .find((row) =>
+          row.startsWith("better-auth.session_token=")
+        )
+        ?.split("=")[1];
+
+    console.log("TOKEN:", sessionToken);
+    console.log("EMAIL:", user?.email);
+
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/artworks/${id}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${sessionToken}`,
+          "user-email": user?.email,
+        },
       }
+    );
 
-      toast.success("Artwork deleted");
-      setArts((prev) => prev.filter((art) => art._id !== id));
-    } catch (error) {
-      console.error("Failed to delete artwork:", error);
-      toast.error(error.message || "Failed to delete artwork");
-    } finally {
-      setDeletingId(null);
+    const data = await res.json().catch(() => ({}));
+
+    if (!res.ok || data?.success === false) {
+      throw new Error(
+        data?.message ||
+          `Request failed with status ${res.status}`
+      );
     }
-  };
+
+    toast.success("Artwork deleted");
+
+    setArts((prev) =>
+      prev.filter((art) => art._id !== id)
+    );
+  } catch (error) {
+    console.error("Failed to delete artwork:", error);
+    toast.error(
+      error.message || "Failed to delete artwork"
+    );
+  } finally {
+    setDeletingId(null);
+  }
+};
 
   const filteredArts = useMemo(() => {
     const query = searchTerm.trim().toLowerCase();

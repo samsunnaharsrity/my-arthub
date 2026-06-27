@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { createArts } from "@/lib/actions/artWorks";
 import { useRouter } from "next/navigation";
+import { authClient } from "@/lib/auth-client";
 
 const categories = [
   { id: "painting", label: "Painting", icon: Palette },
@@ -166,14 +167,31 @@ console.log("ARTS PROP:", arts);
 
   const router = useRouter();
 
-const handlePublish = async () => {
-  await saveArtwork("pending");
 
-  toast.success(
-    "Artwork submitted successfully. Waiting for admin approval."
+const handlePublish = async () => {
+  const session = await authClient.getSession();
+
+  const email = session?.data?.user?.email;
+
+  const token = document.cookie
+    .split("; ")
+    .find((row) =>
+      row.startsWith("better-auth.session_token=")
+    )
+    ?.split("=")[1];
+
+  const result = await createArts(
+    { ...formData, status: "pending" },
+    email,
+    token
   );
 
-  router.push("/dashboard/artist/artWorks");
+  if (result.success) {
+    toast.success(
+      "Artwork submitted successfully. Waiting for admin approval."
+    );
+    router.push("/dashboard/artist/artWorks");
+  }
 };
 
   return (

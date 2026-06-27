@@ -1,15 +1,22 @@
+"use server";
 
+export const createArts = async (payload, email, token) => {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/artWorks`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+        "user-email": email,
+      },
+      body: JSON.stringify(payload),
+    }
+  );
 
+  return await res.json();
+};
 
-"use server"
-
-import { serverMutation } from "../core/server"
-
-export  const createArts = async (newCompanyData) =>{
-    return await serverMutation('/api/artWorks', newCompanyData)
-}
-
-export  const updateArts = async (id , data) =>{
-    return await serverMutation(`/api/artWorks/${id}`,data, 'PATCH' )
-}
-
+export const updateArts = async (id, data) => {
+  return await serverMutation(`/api/artWorks/${id}`, data, "PATCH");
+};
