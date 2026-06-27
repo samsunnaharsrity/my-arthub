@@ -78,11 +78,6 @@ const [showMobileSidebar, setShowMobileSidebar] = useState(false);
       href: "/dashboard/artist/artistProfile",
       icon: ImagePlus,
     },
-    { label: "Painting", href: "/dashboard/artist/painting", icon: Palette },
-    { label: "Digital Art", href: "/dashboard/artist/digital-art", icon: Monitor },
-    { label: "Sculpture", href: "/dashboard/artist/sculpture", icon: Cuboid },
-    { label: "Photography", href: "/dashboard/artist/photography", icon: Camera },
-    { label: "Illustration", href: "/dashboard/artist/illustration", icon: PenTool },
     {
       label: "Sales History",
       href: "/dashboard/artist/sales-history",

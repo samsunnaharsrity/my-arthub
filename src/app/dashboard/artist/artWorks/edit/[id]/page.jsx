@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import { editArtwork, getArtworkById,  } from "@/lib/api/artWorks";
+import { editArtwork, getArtworkById  } from "@/lib/api/artWorks";
 
 export default function EditArtworkPage() {
   const { id } = useParams();
@@ -19,30 +19,33 @@ export default function EditArtworkPage() {
     status: "draft",
   });
 
-  useEffect(() => {
-    const fetchArtwork = async () => {
-      try {
-        const data = await getArtworkById(id);
+useEffect(() => {
+  if (!id) return;
 
-        setFormData({
-          title: data.title || "",
-          category: data.category || "",
-          price: data.price || "",
-          image: data.image || "",
-          status: data.status || "draft",
-        });
-      } catch (error) {
-        console.log(error);
-        toast.error("Failed to load artwork");
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchArtwork = async () => {
+    try {
+      setLoading(true);
 
-    if (id) {
-      fetchArtwork();
+      const data = await getArtworkById(id);
+
+      setFormData({
+        title: data.title || "",
+        category: data.category || "",
+        price: data.price || "",
+        image: data.image || "",
+        status: data.status || "draft",
+      });
+
+    } catch (error) {
+      console.log("FETCH ERROR:", error);
+      toast.error(error?.message || "Failed to load artwork");
+    } finally {
+      setLoading(false);
     }
-  }, [id]);
+  };
+
+  fetchArtwork();
+}, [id]);
 
   const handleChange = (e) => {
     setFormData({
@@ -51,20 +54,26 @@ export default function EditArtworkPage() {
     });
   };
 
-  const handleUpdate = async (e) => {
-    e.preventDefault();
+const handleUpdate = async (e) => {
+  e.preventDefault();
 
-    try {
-      await editArtwork(id, formData);
+  try {
+    const res = await editArtwork(id, formData);
 
-      toast.success("Artwork updated successfully");
+    console.log("UPDATE RESPONSE:", res);
 
-      router.push("/dashboard/artist/artWorks");
-    } catch (error) {
-      console.log(error);
-      toast.error("Update failed");
+    if (!res.success && res.message) {
+      throw new Error(res.message);
     }
-  };
+
+    toast.success("Artwork updated successfully");
+    router.push("/dashboard/artist/artWorks");
+
+  } catch (error) {
+    console.log("EDIT ERROR:", error);
+    toast.error(error.message || "Update failed");
+  }
+};
 
   if (loading) {
     return (

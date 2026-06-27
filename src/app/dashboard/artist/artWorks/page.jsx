@@ -22,14 +22,15 @@ export default function ManageArtworks() {
 
   const router = useRouter();
 
-  useEffect(() => {
-    const artWorksId = "artWorks_112233";
-
-    getArtWorks(artWorksId)
-      .then((data) => setArtworks(data || []))
-      .catch(() => setArtworks([]))
-      .finally(() => setLoading(false));
-  }, []);
+useEffect(() => {
+  getArtWorks()
+    .then((data) => {
+      console.log("ARTWORKS DATA:", data);
+      setArtworks(data || []);
+    })
+    .catch((err) => console.log("ERROR:", err))
+    .finally(() => setLoading(false));
+}, []);
 
 
     // DELETE FUNCTION
@@ -150,7 +151,7 @@ export default function ManageArtworks() {
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
       `}</style>
 
-      <div className="manage-wrap">
+      <div className="manage-wrap mt-10">
         <div className="manage-inner">
           <div className="manage-header">
             <div>

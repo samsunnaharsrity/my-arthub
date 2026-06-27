@@ -1,6 +1,5 @@
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
-// Browse page (Client Component থেকেও ব্যবহার করা যাবে)
 export const getBrowseArtwork = async (category) => {
   let url = `${baseUrl}/api/artWorks?status=approved`;
 
@@ -21,22 +20,32 @@ export const getBrowseArtwork = async (category) => {
 
 // Single artwork
 export const getArtworkById = async (id) => {
-  const res = await fetch(`${baseUrl}/api/artworks/${id}`, {
-    cache: "no-store",
+  const token = localStorage.getItem("token");
+
+  const res = await fetch(`${baseUrl}/api/artWorks/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
   });
 
-  if (!res.ok) {
-    throw new Error("Artwork not found");
-  }
+  if (!res.ok) throw new Error("Failed Artworks");
 
   return res.json();
 };
 
+
+
+
 // All artworks (Protected)
 export const getArtWorks = async () => {
+  const token = localStorage.getItem("token");
+
   const res = await fetch(`${baseUrl}/api/artWorks`, {
+    method: "GET",
     credentials: "include",
-    cache: "no-store",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
   });
 
   if (!res.ok) {
@@ -46,11 +55,18 @@ export const getArtWorks = async () => {
   return res.json();
 };
 
+
+
+
 // Delete artwork
 export const deleteArtwork = async (id) => {
-  const res = await fetch(`${baseUrl}/api/artworks/${id}`, {
+  const token = getToken();
+
+  const res = await fetch(`${baseUrl}/api/artWorks/${id}`, {
     method: "DELETE",
-    credentials: "include",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
   });
 
   return res.json();
@@ -58,12 +74,14 @@ export const deleteArtwork = async (id) => {
 
 // Edit artwork
 export const editArtwork = async (id, data) => {
+  const token = getToken();
+
   const res = await fetch(`${baseUrl}/api/artWorks/${id}`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
     },
-    credentials: "include",
     body: JSON.stringify(data),
   });
 
@@ -83,3 +101,6 @@ export const getApproval = async () => {
 
   return res.json();
 };
+
+
+
