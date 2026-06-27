@@ -19,10 +19,12 @@ const currencySymbols = { USD: "$", BDT: "৳" };
 const ArtDetailsPage = async ({ params }) => {
   const { id } = await params;
 
-  const [artwork, user] = await Promise.all([
-    getArtworkById(id),
-    getUserSession(),
-  ]);
+const user = await getUserSession();
+
+const token = user?.token;
+
+const artworkRes = await getArtworkById(id, token);
+const artwork = artworkRes?.data || artworkRes;
 
   if (!artwork) {
     return (

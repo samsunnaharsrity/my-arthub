@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { FaInstagram } from "react-icons/fa";
 import { createArtistProfile } from "@/lib/actions/artistProfile";
+import { useRouter } from "next/navigation";
 
 const specializations = [
   "Painting",
@@ -64,6 +65,8 @@ export default function ArtistProfile({ user, artistProfile }) {
     }));
   };
 
+  const router = useRouter();
+
   const handlePhotoChange = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -100,38 +103,47 @@ export default function ArtistProfile({ user, artistProfile }) {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    try {
-      setLoading(true);
+  try {
+    setLoading(true);
 
-      const artistData = {
-        ...formData,
-        photo: photoUrl,
-      };
+    const artistData = {
+      ...formData,
+      photo: photoUrl || formData.photo,
+    };
 
-      console.log("[handleSubmit] sending to createArtistProfile:", artistData);
+    const result = await createArtistProfile(artistData);
 
-      const result = await createArtistProfile(artistData);
-
-      console.log("[handleSubmit] server action result:", result);
-
-      if (result?.error) {
-        console.error("[handleSubmit] save failed:", result.error);
-        alert(result.error);
-        return;
-      }
-
-      setProfile(result?.data || artistData);
-      setIsEditing(false);
-    } catch (error) {
-      console.error("[handleSubmit] caught error:", error);
-      alert(error.message || "Failed to save profile");
-    } finally {
-      setLoading(false);
+    if (result?.error) {
+      alert(result.error);
+      return;
     }
-  };
+
+    setProfile(result?.data || artistData);
+
+    setFormData(result?.data || artistData);
+
+    setImagePreview(
+      (result?.data || artistData).photo
+    );
+
+    setPhotoUrl(
+      (result?.data || artistData).photo
+    );
+
+    setIsEditing(false);
+
+    router.refresh();
+
+  } catch (error) {
+    console.log(error);
+    alert(error.message || "Failed to save profile");
+  } finally {
+    setLoading(false);
+  }
+};
 
 
   // UPDATE PROFILE VIEW MODE 

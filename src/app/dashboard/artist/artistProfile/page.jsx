@@ -1,19 +1,22 @@
-import React from 'react';
-import ArtistProfile from './artistProfile';
-import { getUserSession } from '@/lib/core/session';
-import { getArtistProfile } from '@/lib/api/artistProfile';
+import React from "react";
+import ArtistProfile from "./artistProfile";
 
-const ArtistProfilePage = async() => {
+import { getUserSession } from "@/lib/core/session";
 
-const user =await getUserSession()
-const artistProfile = await getArtistProfile(user?.id)
+import { getArtistProfile } from "@/lib/api/artistProfile";
 
+const ArtistProfilePage = async () => {
+  const user = await getUserSession();
 
-    return (
-        <div>
-            <ArtistProfile user={user} artistProfile={artistProfile}></ArtistProfile>
-        </div>
-    );
-}
+  const artistProfile =
+    await getArtistProfile(user?.email);
+
+  return (
+    <ArtistProfile
+      user={user}
+      artistProfile={artistProfile}
+    />
+  );
+};
 
 export default ArtistProfilePage;

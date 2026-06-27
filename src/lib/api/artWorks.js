@@ -19,20 +19,24 @@ export const getBrowseArtwork = async (category) => {
 };
 
 // Single artwork
-export const getArtworkById = async (id) => {
-  const token = localStorage.getItem("token");
+export const getArtworkById = async (id, token) => {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/artWorks/${id}`,
+    {
+      cache: "no-store",
+      headers: token
+        ? { Authorization: `Bearer ${token}` }
+        : {},
+    }
+  );
 
-  const res = await fetch(`${baseUrl}/api/artWorks/${id}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  if (!res.ok) throw new Error("Failed Artworks");
+  if (!res.ok) {
+    console.error("API Error:", await res.text());
+    return null;
+  }
 
   return res.json();
 };
-
 
 
 

@@ -25,7 +25,7 @@ export default function SalesHistoryPage() {
   }
 
   return (
-    <div className="py-24 px-6">
+    <div className="py-28 px-6">
 
       {/* Header */}
       <div className="mb-8">
@@ -81,7 +81,7 @@ export default function SalesHistoryPage() {
                     className="border-b hover:bg-emerald-50 transition"
                   >
                     <td className="px-6 py-5 font-medium">
-                      {sale.artworkTitle || "Untitled"}
+                      {sale.title || "Untitled"}
                     </td>
 
                     <td className="px-6 py-5">
@@ -97,7 +97,7 @@ export default function SalesHistoryPage() {
                     </td>
 
                     <td className="px-6 py-5 font-bold text-emerald-700">
-                      ${sale.amount || 0}
+                      ${sale.price || 0}
                     </td>
                   </tr>
                 ))

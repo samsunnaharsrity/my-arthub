@@ -2,10 +2,13 @@ import { protectedDataFetch, serverFetch } from "../core/server";
 import { getUserSession } from "../core/session";
 
 
-export const getArtistProfile = async (userId) => {
-
-  return serverFetch(`/api/artistProfile?userId=${userId}`);
-}
+export const getArtistProfile = async (
+  email
+) => {
+  return serverFetch(
+    `/api/artistProfile?email=${email}`
+  );
+};
 
 export const getLoggedInArtistData = async () =>{
   const user = await getUserSession();
