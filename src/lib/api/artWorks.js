@@ -19,25 +19,25 @@ export const getBrowseArtwork = async (category) => {
 };
 
 // Single artwork
-export const getArtworkById = async (id, token) => {
+export const getArtworkById = async (id) => {
+  console.log("Fetching artwork with ID:", id);
+
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/artWorks/${id}`,
+    `${baseUrl}/api/artWorks/${id}`,
     {
       cache: "no-store",
-      headers: token
-        ? { Authorization: `Bearer ${token}` }
-        : {},
     }
   );
 
+  const data = await res.json();
+  console.log("Response:", data);
+
   if (!res.ok) {
-    console.error("API Error:", await res.text());
-    return null;
+    throw new Error(data.message || "Failed to fetch artwork");
   }
 
-  return res.json();
+  return data;
 };
-
 
 
 // All artworks (Protected)

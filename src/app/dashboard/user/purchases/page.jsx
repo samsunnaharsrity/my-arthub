@@ -136,10 +136,10 @@ export default async function PurchasesPage({
                   >
                     {/* Image */}
                     <td className="px-5 py-4">
-                      {item.artwork ? (
+                      {item.artwork?.image ? (
                         <Image
-                          src={item.artwork.image}
-                          alt={item.artwork.title}
+                          src={item.artwork?.image}
+                          alt={item.artwork?.title}
                           width={70}
                           height={70}
                           className="rounded-lg object-cover"

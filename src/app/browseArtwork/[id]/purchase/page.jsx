@@ -21,6 +21,8 @@ const PurchasePage = async ({ params }) => {
 
 console.log("USER SESSION:", user);
 
+
+
 let plan = null;
 
 try {
