@@ -8,6 +8,7 @@ import {
   CalendarDays,
   Mail,
 } from "lucide-react";
+import { authClient } from "@/lib/auth-client";
 
 const TYPE_BADGE_STYLES = {
   purchase:
@@ -42,11 +43,22 @@ export default function TransactionsPage() {
 
       if (typeFilter) params.append("type", typeFilter);
 
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/transactions?${params}`
-      );
+      const user = await authClient.getSession();
+
+const res = await fetch(
+  `${process.env.NEXT_PUBLIC_BASE_URL}/api/transactions?${params}`,
+  {
+    headers: {
+      "user-email": user?.data?.user?.email || "",
+    },
+  }
+);
+
+      console.log("Status:", res.status);
 
       const json = await res.json();
+
+      console.log("Transactions Response:", json);
 
       setData(json.items || []);
       setTotal(json.total || 0);

@@ -236,7 +236,7 @@ return (
             {/* Artist */}
             <td className="px-6 py-5">
               <span className="inline-flex px-3 py-1 rounded-full bg-green-100 text-green-700 text-sm font-medium">
-                {art.artist}
+                {art.artistName || art.artist}
               </span>
             </td>
 

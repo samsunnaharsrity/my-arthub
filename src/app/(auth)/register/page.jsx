@@ -33,7 +33,7 @@ const RegisterPage = () => {
     return "strong";
   };
 
-  const plan = role === 'user' ? 'user_free' : 'artist';
+  const planId = role === 'user' ? 'user_free' : 'artist';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -48,7 +48,16 @@ const RegisterPage = () => {
 
     try {
       setLoading(true);
-      const result = await signUp.email({ name, email, password: passwordValue, role, plan, callbackURL: "/" });
+const result = await signUp.email({
+  name,
+  email,
+  password: passwordValue,
+  callbackURL: "/",
+  data: {
+    role,
+    planId,
+  },
+});
       if (result?.error) { toast.error(result.error.message || "Signup failed"); return; }
       toast.success("Account created successfully");
       router.push("/");

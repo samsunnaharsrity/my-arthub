@@ -8,7 +8,7 @@ export default function CommentBox({ artworkId, user }) {
   const router = useRouter();
 
   const sendComment = async () => {
-    const res = await fetch("http://localhost:7000/api/comments", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/comments`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -26,6 +26,7 @@ export default function CommentBox({ artworkId, user }) {
       router.refresh();
     }
   };
+
 
   return (
     <div style={{ marginBottom: "1rem" }}>

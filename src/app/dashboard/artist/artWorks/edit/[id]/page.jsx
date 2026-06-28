@@ -67,7 +67,13 @@ const handleUpdate = async (e) => {
     }
 
     toast.success("Artwork updated successfully");
-    router.push("/dashboard/artist/artWorks");
+
+    // Redirect 
+    if (formData.status === "draft") {
+      router.push("/dashboard/artist/drafts");
+    } else if (formData.status === "published") {
+      router.push("/dashboard/artist/artWorks");
+    }
 
   } catch (error) {
     console.log("EDIT ERROR:", error);
@@ -176,11 +182,17 @@ const handleUpdate = async (e) => {
             </button>
 
             <button
-                type="button"
-                onClick={() => router.push("/dashboard/artist/artWorks")}
-                className="px-6 py-2 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-200 transition cursor-pointer"
+              type="button"
+              onClick={() => {
+                if (formData.status === "draft") {
+                  router.push("/dashboard/artist/drafts");
+                } else {
+                  router.push("/dashboard/artist/artWorks");
+                }
+              }}
+              className="px-6 py-2 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-200 transition cursor-pointer"
             >
-                Cancel
+              Cancel
             </button>
           </div>
 

@@ -3,14 +3,22 @@ import { authClient } from "../auth-client";
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
 export const getBrowseArtwork = async (category) => {
-  let url = `${baseUrl}/api/artWorks?status=approved`;
+  let url = `${baseUrl}/api/artWorks?status=approved&_t=${Date.now()}`;
 
   if (category && category !== "All") {
     url += `&category=${encodeURIComponent(category)}`;
   }
 
   const res = await fetch(url, {
-    cache: "no-store",
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    // 🔥 ক্যাশ বন্ধ করার সঠিক এবং নিরাপদ নিয়ম
+    cache: "no-store", 
+    next: { 
+      revalidate: 0 // এখানে কোনো ফাংশন বসানো যাবে না, শুধু ০ থাকবে
+    },
   });
 
   if (!res.ok) {
@@ -104,16 +112,47 @@ export const editArtwork = async (id, data) => {
   return await res.json();
 };
 
-// Admin approval
-export const getApproval = async () => {
-  const res = await fetch(`${baseUrl}/api/artWorks`, {
-    credentials: "include",
-    cache: "no-store",
-  });
 
-  if (!res.ok) {
-    throw new Error("Failed to fetch approvals");
-  }
+// Draft artworks
+export const getAllArtworks = async (status = "") => {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/artWorks?status=${status}`,
+    {
+      cache: "no-store",
+    }
+  );
+
+  return await res.json();
+};
+
+// Admin approval
+
+export const approveArtwork = async (id, email) => {
+  const res = await fetch(
+    `${baseUrl}/api/artWorks/approve/${id}`,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        "user-email": email,
+      },
+    }
+  );
+
+  return res.json();
+};
+
+export const rejectArtwork = async (id, email) => {
+  const res = await fetch(
+    `${baseUrl}/api/artWorks/reject/${id}`,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        "user-email": email,
+      },
+    }
+  );
 
   return res.json();
 };

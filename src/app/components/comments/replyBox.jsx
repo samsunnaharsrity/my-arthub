@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { getSocket } from "@/lib/socket";
 
 export default function ReplyBox({
   parentId,
@@ -9,67 +10,66 @@ export default function ReplyBox({
   onClose,
   onReplyAdded,
 }) {
+  const socket = getSocket();
   const [text, setText] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const sendReply = async () => {
-    if (!text.trim()) return;
+    if (!text.trim() || loading) return;
+
+    setLoading(true);
+
+    const payload = {
+      artworkId,
+      parentId,
+      text,
+      userId: user?._id,
+      userName: user?.name,
+      userAvatar: user?.avatar,
+    };
 
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/comments`,
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            artworkId,
-            parentId,
-            text,
-            userId: user?._id,
-            userName: user?.name,
-            userAvatar: user?.avatar,
-          }),
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
         }
       );
 
       const data = await res.json();
 
       if (data.success) {
-        onReplyAdded?.(data.comment);
-
+        onReplyAdded?.(data.comment); // instant UI update
+        socket.emit("newReply", data.comment); // realtime
         setText("");
         onClose?.();
       }
-    } catch (err) {
-      console.log(err);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div>
+    <div className="mt-2">
       <textarea
         value={text}
         onChange={(e) => setText(e.target.value)}
+        className="w-full border p-2 rounded"
         placeholder="Write a reply..."
-        className="w-full border rounded p-2"
       />
 
       <div className="flex gap-2 mt-2">
         <button
           onClick={sendReply}
-          className="bg-green-700 text-white px-4 py-2 rounded"
+          disabled={loading}
+          className="bg-green-700 text-white px-3 py-1 rounded"
         >
-          Reply
+          {loading ? "Sending..." : "Reply"}
         </button>
 
-        <button
-          onClick={() => {
-            setText("");
-            onClose?.();
-          }}
-          className="border px-4 py-2 rounded"
-        >
+        <button onClick={onClose} className="border px-3 py-1 rounded">
           Cancel
         </button>
       </div>

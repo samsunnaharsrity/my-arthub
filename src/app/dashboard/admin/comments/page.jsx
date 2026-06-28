@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Search, Trash2, MessageSquare } from "lucide-react";
 import toast from "react-hot-toast";
+import { authClient } from "@/lib/auth-client";
 
 export default function CommentsModerationPage() {
   const [comments, setComments] = useState([]);
@@ -13,29 +14,38 @@ export default function CommentsModerationPage() {
     fetchComments();
   }, []);
 
-const fetchComments = async () => {
-  try {
-    setLoading(true);
+  const { data: session } = authClient.useSession();
 
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/comments`
-    );
+  const fetchComments = async () => {
+    try {
+      setLoading(true);
 
-    const data = await res.json();
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/comments`,
+        {
+          headers: {
+            "user-email": session?.user?.email,
+          },
+        }
+      );
 
-    if (Array.isArray(data)) {
-      setComments(data);
-    } else {
-      setComments([]);
-      toast.error(data.message || "Failed to load comments");
+      const data = await res.json();
+
+      console.log("COMMENTS RESPONSE:", data);
+
+      if (Array.isArray(data)) {
+        setComments(data);
+      } else {
+        setComments([]);
+        toast.error(data.message || "Failed to load comments");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to load comments");
+    } finally {
+      setLoading(false);
     }
-  } catch (error) {
-    console.log(error);
-    toast.error("Failed to load comments");
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   const filteredComments = comments.filter(
     (comment) =>
@@ -47,33 +57,36 @@ const fetchComments = async () => {
         .includes(search.toLowerCase())
   );
 
-const handleDelete = async (id) => {
-  if (!confirm("Delete this comment?")) return;
+ const handleDelete = async (id) => {
+    if (!confirm("Delete this comment?")) return;
 
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/comments/${id}`,
-      {
-        method: "DELETE",
-      }
-    );
-
-    const data = await res.json();
-
-    if (data.success) {
-      setComments((prev) =>
-        prev.filter(
-          (c) => (c._id?.$oid || c._id) !== id
-        )
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/comments/${id}`,
+        {
+          method: "DELETE",
+          headers: {
+            "user-email": session?.user?.email,
+          },
+        }
       );
 
-      toast.success("Comment deleted");
+      const data = await res.json();
+
+      if (data.success) {
+        setComments((prev) =>
+          prev.filter((c) => c._id !== id)
+        );
+
+        toast.success("Comment deleted");
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Delete failed");
     }
-  } catch (error) {
-    console.log(error);
-    toast.error("Delete failed");
-  }
-};
+  };
 
   return (
     <section className="p-6 mt-28 py-20">

@@ -12,8 +12,11 @@ import {
   Brush,
   Shapes,
   Check,
+  Box,
+  Type,
+  Sparkles,
+  Trees,
   Loader2,
-  Router,
 } from "lucide-react";
 import { createArts } from "@/lib/actions/artWorks";
 import { useRouter } from "next/navigation";
@@ -23,8 +26,11 @@ const categories = [
   { id: "painting", label: "Painting", icon: Palette },
   { id: "digital", label: "Digital Art", icon: ImageIcon },
   { id: "photography", label: "Photography", icon: Camera },
-  { id: "sculpture", label: "Sculpture", icon: Brush },
   { id: "illustration", label: "Illustration", icon: Shapes },
+  { id: "3d-art", label: "3D Art", icon: Box },
+  { id: "typography", label: "Typography", icon: Type },
+  { id: "abstract", label: "Abstract", icon: Sparkles },
+  { id: "nature", label: "Nature", icon: Trees },
 ];
 
 
@@ -41,7 +47,7 @@ console.log("ARTS PROP:", arts);
   const [uploading, setUploading] = useState(false);
   const [errors, setErrors] = useState({});
 
-  const [formData, setFormData] = useState({
+const [formData, setFormData] = useState({
   title: "",
   description: "",
   price: "",
@@ -49,9 +55,10 @@ console.log("ARTS PROP:", arts);
   category: "painting",
   image: "",
   status: "pending",
-  artist: "", 
+  // artist: user.email,      
+  // artistName: profile.name,
   createdAt: new Date(),
-  });
+});
 
   const currencySymbols = { USD: "$", BDT: "৳" };
 
@@ -123,77 +130,124 @@ console.log("ARTS PROP:", arts);
     return Object.keys(next).length === 0;
   };
 
-  const saveArtwork = async (status) => {
-    console.log("[saveArtwork] called with status:", status);
-    console.log("[saveArtwork] current formData:", formData);
+const saveArtwork = async (status) => {
+  if (status === "published" && !validate()) {
+    toast.error("Fill in the highlighted fields to publish");
+    return;
+  }
 
-    if (status === "published" && !validate()) {
-      console.log("[saveArtwork] validation failed — see [validate] log above for details");
-      toast.error("Fill in the highlighted fields to publish");
-      return;
-    }
+  try {
+    setLoading(true);
 
-    console.log("[saveArtwork] validation passed, sending request...");
+    const session = await authClient.getSession();
+    const email = session?.data?.user?.email;
 
-    try {
-      setLoading(true);
+    const token = document.cookie
+      .split("; ")
+      .find((row) =>
+        row.startsWith("better-auth.session_token=")
+      )
+      ?.split("=")[1];
 
-      const payload = { ...formData, status };
-      console.log("[saveArtwork] payload:", payload);
+    const payload = {
+      ...formData,
+      status,
+      artist: email,
+    };
 
-      const result = await createArts(payload);
-      console.log("[saveArtwork] server action result:", result);
-
-      if (result?.error) {
-        console.error("[saveArtwork] server action returned an error:", result.error);
-        throw new Error(result.error);
-      }
-
-      if (result?.success === false) {
-        console.error("[saveArtwork] server action reported failure:", result.message);
-        throw new Error(result.message || "Failed to save artwork");
-      }
-
-      console.log("[saveArtwork] success!");
-      toast.success(status === "published" ? "Artwork published" : "Draft saved");
-      resetForm();
-    } catch (error) {
-      console.error("[saveArtwork] caught error:", error);
-      toast.error(error.message || "Something went wrong");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const router = useRouter();
-
-
-const handlePublish = async () => {
-  const session = await authClient.getSession();
-
-  const email = session?.data?.user?.email;
-
-  const token = document.cookie
-    .split("; ")
-    .find((row) =>
-      row.startsWith("better-auth.session_token=")
-    )
-    ?.split("=")[1];
-
-  const result = await createArts(
-    { ...formData, status: "pending" },
-    email,
-    token
-  );
-
-  if (result.success) {
-    toast.success(
-      "Artwork submitted successfully. Waiting for admin approval."
+    const result = await createArts(
+      payload,
+      email,
+      token
     );
-    router.push("/dashboard/artist/artWorks");
+
+    if (!result?.success) {
+      throw new Error(result?.message || "Failed to save");
+    }
+
+    toast.success(
+      status === "draft"
+        ? "Draft saved successfully"
+        : "Artwork published successfully"
+    );
+
+    resetForm();
+
+    // Redirect
+    if (status === "draft") {
+      router.push("/dashboard/artist/drafts");
+    } else {
+      router.push("/dashboard/artist/artWorks");
+    }
+  } catch (error) {
+    toast.error(error.message || "Something went wrong");
+  } finally {
+    setLoading(false);
   }
 };
 
+
+
+const router = useRouter();
+
+
+const handlePublish = async () => {
+  if (!validate()) {
+    toast.error("Please fill all required fields");
+    return;
+  }
+
+  try {
+    setLoading(true);
+
+    const session = await authClient.getSession();
+    const email = session?.data?.user?.email;
+
+    if (!email) {
+      toast.error("Please login first");
+      return;
+    }
+
+    const token = document.cookie
+      .split("; ")
+      .find((row) =>
+        row.startsWith("better-auth.session_token=")
+      )
+      ?.split("=")[1];
+
+    const payload = {
+      ...formData,
+      status: "pending",
+      artist: email,
+      createdAt: new Date(),
+    };
+
+    console.log("Sending:", payload);
+
+    const result = await createArts(
+      payload,
+      email,
+      token
+    );
+
+    if (!result?.success) {
+      throw new Error(result?.message);
+    }
+
+    toast.success(
+      "Artwork submitted successfully. Waiting for admin approval."
+    );
+
+    resetForm();
+    router.push("/dashboard/artist/artWorks");
+
+  } catch (error) {
+    console.log(error);
+    toast.error(error.message || "Something went wrong");
+  } finally {
+    setLoading(false);
+  }
+};
   return (
     <>
       <style>{`

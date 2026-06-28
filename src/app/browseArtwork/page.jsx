@@ -12,13 +12,15 @@ import { motion, AnimatePresence } from "framer-motion";
 import { getBrowseArtwork } from "@/lib/api/artWorks";
 
 const categories = [
-  "All",
-  "Painting",
-  "Digital",
-  "Photography",
-  "Illustration",
-  "Sculpture",
-  "Abstract"
+    "All",
+    "Digital",
+    "Photography",
+    "Illustration",
+    "Painting",
+    "3D Art",
+    "Typography",
+    "Abstract",
+    "Nature",
 ];
 
 export default function BrowseArtworkPage() {

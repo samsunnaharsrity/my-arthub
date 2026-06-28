@@ -26,6 +26,7 @@ import {
   Shield,
   Settings,
   MessageSquare,
+  FilePenLine
 } from "lucide-react";
 
 import {
@@ -72,6 +73,11 @@ const [showMobileSidebar, setShowMobileSidebar] = useState(false);
       label: "Add New Art Works",
       href: "/dashboard/artist/artWorks/create",
       icon: ImagePlus,
+    },
+    {
+    label: "Draft Artworks",
+    href: "/dashboard/artist/drafts",
+    icon: FilePenLine,
     },
     {
       label: "Artist Profile",
