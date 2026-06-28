@@ -38,6 +38,6 @@ user: {
   },
 },
 
-plugins: [admin()]
+plugins: [admin]
 
 });

@@ -1,7 +1,7 @@
 "use client";
 
-import { createPurchase } from "@/lib/actions/purchase";
 import { useState } from "react";
+import { createPurchase } from "@/lib/actions/purchase";
 import { createCheckoutSession } from "./action";
 import toast from "react-hot-toast";
 
@@ -17,17 +17,27 @@ export default function PurchaseForm({
     postalCode: "",
   });
 
-  const [paymentMethod, setPaymentMethod] = useState("free");
+  const [paymentMethod, setPaymentMethod] =
+    useState("free");
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  // PRO USER CHECK
+  const isProUser =
+    user?.plan === "user_pro" ||
+    user?.planId === "user_pro";
+
   const updateField = (field, value) => {
-    setShipping((prev) => ({ ...prev, [field]: value }));
+    setShipping((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
 
     if (error) setError(null);
   };
 
-  // Role validation
+  // ROLE VALIDATION
   const validateUserRole = () => {
     if (!user) {
       toast.error("Please login first");
@@ -36,7 +46,7 @@ export default function PurchaseForm({
 
     if (user.role !== "user") {
       toast.error(
-        "Only users can purchase artworks. Artists and admins are not allowed."
+        "Only users can purchase artworks."
       );
       return false;
     }
@@ -44,9 +54,8 @@ export default function PurchaseForm({
     return true;
   };
 
-  // FREE PURCHASE
+  // DIRECT PURCHASE
   const handleFreePurchase = async () => {
-    // Role check
     if (!validateUserRole()) return;
 
     try {
@@ -63,21 +72,24 @@ export default function PurchaseForm({
         shipping,
       });
 
-      if (res?.error) {
-        setError(res.error);
-        toast.error(res.error);
-        return;
+      if (!res.ok) {
+        return {
+          error: result?.message || "Something went wrong",
+        };
       }
 
-      toast.success("Artwork purchased successfully!");
+      toast.success(
+        "Artwork purchased successfully!"
+      );
 
       setTimeout(() => {
-        window.location.href = "/dashboard/user";
+        window.location.href =
+          "/dashboard/user/purchases";
       }, 1200);
     } catch (err) {
       console.log(err);
-      setError("Free purchase failed");
-      toast.error("Free purchase failed");
+      setError("Purchase failed");
+      toast.error("Purchase failed");
     } finally {
       setLoading(false);
     }
@@ -85,7 +97,6 @@ export default function PurchaseForm({
 
   // STRIPE PURCHASE
   const handleStripePurchase = async () => {
-    // Role check
     if (!validateUserRole()) return;
 
     if (
@@ -93,8 +104,14 @@ export default function PurchaseForm({
       !shipping.address.trim() ||
       !shipping.city.trim()
     ) {
-      setError("Please fill in your shipping details");
-      toast.error("Please fill in your shipping details");
+      setError(
+        "Please fill in your shipping details"
+      );
+
+      toast.error(
+        "Please fill in your shipping details"
+      );
+
       return;
     }
 
@@ -102,20 +119,19 @@ export default function PurchaseForm({
       setLoading(true);
       setError(null);
 
-      const result = await createCheckoutSession(
-        artwork._id,
-        shipping
-      );
+      const result =
+        await createCheckoutSession(
+          artwork._id,
+          shipping
+        );
 
       if (result?.url) {
         window.location.href = result.url;
       } else {
-        setError("Stripe checkout failed");
         toast.error("Stripe checkout failed");
       }
     } catch (err) {
       console.log(err);
-      setError("Something went wrong");
       toast.error("Something went wrong");
     } finally {
       setLoading(false);
@@ -124,12 +140,28 @@ export default function PurchaseForm({
 
   return (
     <>
+      {/* PRO NOTICE */}
+      {isProUser && (
+        <div className="mb-6 rounded-2xl border border-emerald-200 bg-emerald-50 p-5">
+          <h3 className="text-lg font-semibold text-emerald-700">
+            ✨ Pro Membership Active
+          </h3>
+
+          <p className="mt-1 text-sm text-emerald-600">
+            You can purchase artworks instantly
+            without Stripe checkout.
+          </p>
+        </div>
+      )}
+
       {/* SHIPPING */}
       <div className="pp-section">
-        <p className="pp-section-label">Shipping details</p>
+        <p className="pp-section-label">
+          Shipping Details
+        </p>
 
         <div className="pp-field">
-          <label>Full name</label>
+          <label>Full Name</label>
 
           <input
             type="text"
@@ -149,16 +181,16 @@ export default function PurchaseForm({
             placeholder="Street address"
             value={shipping.address}
             onChange={(e) =>
-              updateField("address", e.target.value)
+              updateField(
+                "address",
+                e.target.value
+              )
             }
           />
         </div>
 
         <div className="pp-field-row">
-          <div
-            className="pp-field"
-            style={{ marginBottom: 0 }}
-          >
+          <div className="pp-field">
             <label>City</label>
 
             <input
@@ -171,15 +203,12 @@ export default function PurchaseForm({
             />
           </div>
 
-          <div
-            className="pp-field"
-            style={{ marginBottom: 0 }}
-          >
-            <label>Postal code</label>
+          <div className="pp-field">
+            <label>Postal Code</label>
 
             <input
               type="text"
-              placeholder="ZIP / Postal code"
+              placeholder="ZIP Code"
               value={shipping.postalCode}
               onChange={(e) =>
                 updateField(
@@ -193,57 +222,61 @@ export default function PurchaseForm({
       </div>
 
       {/* PAYMENT METHOD */}
-      <div className="pp-section">
-        <p className="pp-section-label">
-          Payment method
-        </p>
+      {!isProUser && (
+        <div className="pp-section">
+          <p className="pp-section-label">
+            Payment Method
+          </p>
 
-        <div
-          className={`pay-option mb-3 ${
-            paymentMethod === "free"
-              ? "selected"
-              : ""
-          }`}
-          onClick={() => setPaymentMethod("free")}
-        >
-          <span className="pay-radio" />
+          <div
+            className={`pay-option mb-3 ${
+              paymentMethod === "free"
+                ? "selected"
+                : ""
+            }`}
+            onClick={() =>
+              setPaymentMethod("free")
+            }
+          >
+            <span className="pay-radio" />
 
-          <div>
-            <p className="pay-label">
-              Free Purchase
-            </p>
+            <div>
+              <p className="pay-label">
+                Free Purchase
+              </p>
 
-            <p className="pay-desc">
-              Use your 3 free purchases (if
-              available)
-            </p>
+              <p className="pay-desc">
+                Use your free purchase quota
+              </p>
+            </div>
+          </div>
+
+          <div
+            className={`pay-option ${
+              paymentMethod === "stripe"
+                ? "selected"
+                : ""
+            }`}
+            onClick={() =>
+              setPaymentMethod("stripe")
+            }
+          >
+            <span className="pay-radio" />
+
+            <div>
+              <p className="pay-label">
+                Pay with Stripe
+              </p>
+
+              <p className="pay-desc">
+                Secure payment using Stripe
+              </p>
+            </div>
           </div>
         </div>
+      )}
 
-        <div
-          className={`pay-option ${
-            paymentMethod === "stripe"
-              ? "selected"
-              : ""
-          }`}
-          onClick={() =>
-            setPaymentMethod("stripe")
-          }
-        >
-          <span className="pay-radio" />
-
-          <div>
-            <p className="pay-label">
-              Pay with Card (Stripe)
-            </p>
-
-            <p className="pay-desc">
-              Secure checkout with Stripe
-            </p>
-          </div>
-        </div>
-      </div>
-
+      {/* ERROR */}
       {error && (
         <p className="pp-error">{error}</p>
       )}
@@ -253,6 +286,13 @@ export default function PurchaseForm({
         className="btn-confirm"
         disabled={loading}
         onClick={() => {
+          // PRO USER -> Direct Purchase
+          if (isProUser) {
+            handleFreePurchase();
+            return;
+          }
+
+          // NORMAL USER
           if (paymentMethod === "free") {
             handleFreePurchase();
           } else {
@@ -262,6 +302,8 @@ export default function PurchaseForm({
       >
         {loading
           ? "Processing..."
+          : isProUser
+          ? "Confirm Purchase"
           : paymentMethod === "free"
           ? "Confirm Free Purchase"
           : "Proceed to Stripe"}

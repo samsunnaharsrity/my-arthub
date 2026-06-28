@@ -26,7 +26,8 @@ import {
   Shield,
   Settings,
   MessageSquare,
-  FilePenLine
+  FilePenLine,
+  Receipt
 } from "lucide-react";
 
 import {
@@ -142,7 +143,7 @@ const [showMobileSidebar, setShowMobileSidebar] = useState(false);
   const userCategories = [
     { label: "My Profile", href: "/dashboard/user/profile", icon: User },
     { label: "Purchased Art", href: "/dashboard/user/purchases", icon: ShoppingBag },
-    { label: "Transaction History", href: "/dashboard/user/transactions", icon: Images },
+    { label: "Transaction History", href: "/dashboard/user/transactions", icon: Receipt },
   
   ];
 

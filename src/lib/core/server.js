@@ -1,4 +1,4 @@
-import { getUserToken } from "./session";
+import { getUserSession, getUserToken } from "./session";
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:7000";
 
@@ -56,31 +56,38 @@ export const serverFetch = async (path) => {
  }
 
 
-export const serverMutation = async (path, data , method ='POST') => {
-  const url = `${baseUrl}${path}`;
 
-  try {
-    const res = await fetch(url, {
-      method: method ,
-      headers: {
-        "Content-Type": "application/json",
-        ... await authHeader()
-      },
-      body: JSON.stringify(data),
-    });
+//  serverMutation
 
-    const text = await res.text();
-    const result = text ? JSON.parse(text) : {};
 
-    if (!res.ok) {
-      throw new Error(result?.message || `Request failed ${res.status}`);
-    }
+export const serverMutation = async (
+  path,
+  data,
+  method = "POST"
+) => {
+  const token = await getUserToken();
+  const user = await getUserSession();
 
-    return result;
-  } catch (err) {
-    console.error("Fetch error:", url, err.message);
-    throw err;
-  }
+  const res = await fetch(`${baseUrl}${path}`, {
+    method,
+    headers: {
+      "Content-Type": "application/json",
+      authorization: `Bearer ${token}`,
+      "user-email": user?.email,
+    },
+    body: JSON.stringify(data),
+  });
+
+  const result = await res.json();
+
+  if (!res.ok) {
+  return {
+    success: false,
+    message: result?.message,
+  };
+}
+
+  return result;
 };
 
 

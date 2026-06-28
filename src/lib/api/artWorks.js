@@ -3,22 +3,14 @@ import { authClient } from "../auth-client";
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
 export const getBrowseArtwork = async (category) => {
-  let url = `${baseUrl}/api/artWorks?status=approved&_t=${Date.now()}`;
+  let url = `${baseUrl}/api/artWorks?status=approved`;
 
   if (category && category !== "All") {
     url += `&category=${encodeURIComponent(category)}`;
   }
 
   const res = await fetch(url, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    // 🔥 ক্যাশ বন্ধ করার সঠিক এবং নিরাপদ নিয়ম
-    cache: "no-store", 
-    next: { 
-      revalidate: 0 // এখানে কোনো ফাংশন বসানো যাবে না, শুধু ০ থাকবে
-    },
+    cache: "no-store",
   });
 
   if (!res.ok) {

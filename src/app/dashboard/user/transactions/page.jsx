@@ -1,5 +1,7 @@
-import { getUserSession } from "@/lib/core/session";
+import TransactionTable from "@/app/components/TransactionTable";
 import { getPurchaseArt } from "@/lib/api/purchase";
+import { getUserSession } from "@/lib/core/session";
+import { CreditCard, Wallet } from "lucide-react";
 
 export default async function UserTransactionsPage() {
   const user = await getUserSession();
@@ -7,9 +9,15 @@ export default async function UserTransactionsPage() {
   if (!user) {
     return (
       <div className="flex h-screen items-center justify-center">
-        <h2 className="text-xl font-semibold">
-          Please login first
-        </h2>
+        <div className="rounded-3xl bg-white p-10 text-center shadow-xl">
+          <h2 className="text-2xl font-bold">
+            Please login first
+          </h2>
+
+          <p className="mt-2 text-gray-500">
+            You need to sign in to view transactions.
+          </p>
+        </div>
       </div>
     );
   }
@@ -17,103 +25,85 @@ export default async function UserTransactionsPage() {
   const { items: transactions = [] } =
     await getPurchaseArt(user.email);
 
+  const totalSpent = transactions.reduce(
+    (sum, item) => sum + Number(item.price || 0),
+    0
+  );
+
   return (
-    <section className="min-h-screen px-6 py-28 md:px-10">
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold">
-          Transaction History
-        </h1>
+<section className="min-h-screen bg-gray-50 px-4 py-20 md:px-8">
 
-        <p className="mt-2 text-gray-500">
-          Total Transactions:{" "}
-          <span className="font-semibold text-green-600">
-            {transactions.length}
-          </span>
-        </p>
-      </div>
+  {/* HEADER */}
+  <div className="mb-8 mt-8 rounded-3xl bg-gradient-to-r from-emerald-600 to-teal-500 p-6 text-white shadow-xl">
+    <h1 className="text-3xl font-bold">
+      Transaction History
+    </h1>
 
-      {/* Empty State */}
-      {transactions.length === 0 ? (
-        <div className="rounded-2xl border border-dashed py-20 text-center">
-          <h2 className="text-2xl font-semibold">
-            No Transactions Found
-          </h2>
+    <p className="mt-2 text-sm text-white/80">
+      Manage and track all your purchases.
+    </p>
+  </div>
 
-          <p className="mt-2 text-gray-500">
-            You haven't purchased any artwork yet.
+  {/* STATS */}
+  <div className="mb-8 grid gap-4 md:grid-cols-2">
+
+    {/* TOTAL TRANSACTIONS */}
+    <div className="rounded-2xl bg-white p-5 shadow-md transition hover:shadow-lg">
+      <div className="flex items-center gap-4">
+
+        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-green-100">
+          <CreditCard className="text-green-600" size={22} />
+        </div>
+
+        <div>
+          <p className="text-sm text-gray-500">
+            Total Transactions
           </p>
+
+          <h2 className="text-2xl font-bold">
+            {transactions.length}
+          </h2>
         </div>
-      ) : (
-        <div className="overflow-x-auto rounded-2xl bg-white shadow">
-          <table className="w-full">
-            <thead className="bg-gray-100">
-              <tr>
-                <th className="p-4 text-left">
-                  Transaction ID
-                </th>
+      </div>
+    </div>
 
-                <th className="p-4 text-left">
-                  Artwork
-                </th>
+    {/* TOTAL SPENT */}
+    <div className="rounded-2xl bg-white p-5 shadow-md transition hover:shadow-lg">
+      <div className="flex items-center gap-4">
 
-                <th className="p-4 text-left">
-                  Amount
-                </th>
-
-                <th className="p-4 text-left">
-                  Payment Method
-                </th>
-
-                <th className="p-4 text-left">
-                  Date
-                </th>
-
-                <th className="p-4 text-left">
-                  Status
-                </th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {transactions.map((tx) => (
-                <tr
-                  key={tx._id}
-                  className="border-t hover:bg-gray-50"
-                >
-                  <td className="p-4 text-sm">
-                    {tx.transactionId || tx._id}
-                  </td>
-
-                  <td className="p-4">
-                    {tx.title || "Artwork"}
-                  </td>
-
-                  <td className="p-4 font-semibold text-green-600">
-                    ${tx.price}
-                  </td>
-
-                  <td className="p-4">
-                    {tx.paymentMethod || "Stripe"}
-                  </td>
-
-                  <td className="p-4">
-                    {new Date(
-                      tx.createdAt
-                    ).toLocaleDateString()}
-                  </td>
-
-                  <td className="p-4">
-                    <span className="rounded-full bg-green-100 px-3 py-1 text-sm text-green-700">
-                      Completed
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-100">
+          <Wallet className="text-blue-600" size={22} />
         </div>
-      )}
-    </section>
+
+        <div>
+          <p className="text-sm text-gray-500">
+            Total Spent
+          </p>
+
+          <h2 className="text-2xl font-bold text-green-600">
+            ${totalSpent}
+          </h2>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {/* TABLE */}
+  {transactions.length === 0 ? (
+    <div className="rounded-2xl bg-white py-16 text-center shadow">
+      <h2 className="text-xl font-semibold">
+        No Transactions Yet
+      </h2>
+
+      <p className="mt-2 text-gray-500">
+        You haven't purchased any artwork yet.
+      </p>
+    </div>
+  ) : (
+    <TransactionTable
+      initialTransactions={transactions}
+    />
+  )}
+</section>
   );
 }

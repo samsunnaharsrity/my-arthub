@@ -56,7 +56,7 @@ const [formData, setFormData] = useState({
   image: "",
   status: "pending",
   // artist: user.email,      
-  // artistName: profile.name,
+  artistName: "",
   createdAt: new Date(),
 });
 

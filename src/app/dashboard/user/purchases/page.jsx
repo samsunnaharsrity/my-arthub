@@ -4,6 +4,7 @@ import Link from "next/link";
 import { getUserSession } from "@/lib/core/session";
 import { getPurchaseArt } from "@/lib/api/purchase";
 import { getArtworkById } from "@/lib/api/artWorks";
+import Pagination from "./pagination";
 
 const LIMIT = 6;
 
@@ -187,28 +188,13 @@ export default async function PurchasesPage({
           </div>
 
           {/* Pagination */}
-          {totalPages > 1 && (
-            <div className="mt-8 flex justify-center gap-2">
-              {Array.from({
-                length: totalPages,
-              }).map((_, idx) => {
-                const pageNum = idx + 1;
-
-                return (
-                  <Link
-                    key={pageNum}
-                    href={`?page=${pageNum}`}
-                    className={`rounded-lg border px-4 py-2 ${
-                      pageNum === page
-                        ? "bg-black text-white"
-                        : "hover:bg-gray-100"
-                    }`}
-                  >
-                    {pageNum}
-                  </Link>
-                );
-              })}
-            </div>
+{totalPages > 1 && (
+  <div className="mt-8 flex justify-center gap-2">
+    <Pagination
+      totalPages={totalPages}
+      currentPage={page}
+    />
+  </div>
           )}
         </>
       )}

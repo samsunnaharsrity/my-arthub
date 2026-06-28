@@ -90,7 +90,7 @@ console.log(purchases);
 
 const purchaseItems = purchases?.items || [];
 
-const purchaseCount = purchaseItems?.length
+const purchaseCount = purchases?.total || 0; 
 
 
 // DETERMINE LIMIT
@@ -317,9 +317,9 @@ const isUnlimited = maxPurchases === Infinity;
       {/* SUB TEXT */}
       <p className="mt-1 text-gray-400">
         {user?.planId === "user_premium"
-          ? `You’ve purchased ${purchaseCount} artworks`
-          : user?.planId === "user_pro"
           ? "Unlimited purchases unlocked."
+          : user?.planId === "user_pro"
+          ? `You’ve purchased ${purchaseCount} artworks`
           : `You’ve used ${purchaseCount} of 3 free purchases`}
       </p>
     </div>

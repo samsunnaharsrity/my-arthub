@@ -10,10 +10,15 @@ export const getArtistProfile = async (
   );
 };
 
-export const getLoggedInArtistData = async () =>{
+export const getLoggedInArtistData = async () => {
   const user = await getUserSession();
-  return getArtistProfile(user?.id);
-}
+
+  if (!user?.id) {
+    return null;
+  }
+
+  return await getArtistProfile(user.id);
+};
 
 
 // All artists
@@ -38,6 +43,6 @@ export const getArtistById = async (id) => {
 
 export const getArtworksByArtist = async (artistId) => {
   return protectedDataFetch(
-    `/api/artworks?artistId=${artistId}`
+    `/api/artWorks?artistId=${artistId}`
   );
 };
