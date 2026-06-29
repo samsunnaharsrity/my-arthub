@@ -7,7 +7,7 @@ ArtHub is a modern online artwork marketplace built with Next.js, MongoDB, and H
 
 ## 🚀 Live Demo
 
-🔗 https://your-live-site-url.com
+🔗  https://my-arthub.vercel.app
 
 ---
 
@@ -132,7 +132,7 @@ Building a modern marketplace for artists and collectors worldwide.
 
 Email: support@arthub.com
 
-Website: https://your-live-site-url.com
+Website:  https://my-arthub.vercel.app
 
 ---
 
