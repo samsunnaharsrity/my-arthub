@@ -10,6 +10,7 @@ import {
 } from "@gravity-ui/icons";
 import { motion, AnimatePresence } from "framer-motion";
 import { getBrowseArtwork } from "@/lib/api/artWorks";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const categories = [
     "All",
@@ -311,90 +312,106 @@ const paginatedArtworks =
               
               /* Responsive Art Card Framework Execution Group */
               <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
-<AnimatePresence mode="popLayout">
-  {paginatedArtworks.map((art) => (
-    <motion.div
-      key={art._id}
-      layout
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.9 }}
-      transition={{ duration: 0.2 }}
-      whileHover={{ y: -6 }}
-      className="h-full"
-    >
-      <Link href={`/browseArtwork/${art._id}`}>
-        <Card className="overflow-hidden rounded-3xl border border-slate-200/60 bg-white shadow-sm hover:shadow-xl hover:border-emerald-500/20 transition-all cursor-pointer h-full flex flex-col justify-between">
+              <AnimatePresence mode="popLayout">
+                {paginatedArtworks.map((art) => (
+                  <motion.div
+                    key={art._id}
+                    layout
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9 }}
+                    transition={{ duration: 0.2 }}
+                    whileHover={{ y: -6 }}
+                    className="h-full"
+                  >
+                    <Link href={`/browseArtwork/${art._id}`}>
+                      <Card className="overflow-hidden rounded-3xl border border-slate-200/60 bg-white shadow-sm hover:shadow-xl hover:border-emerald-500/20 transition-all cursor-pointer h-full flex flex-col justify-between">
 
-          <div className="relative overflow-hidden aspect-[4/3] bg-slate-50">
-            <img
-              src={art.image}
-              alt={art.title}
-              className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-              loading="lazy"
-            />
+                        <div className="relative overflow-hidden aspect-[4/3] bg-slate-50">
+                          <img
+                            src={art.image}
+                            alt={art.title}
+                            className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                            loading="lazy"
+                          />
 
-            <div className="absolute top-2.5 left-2.5">
-              <span className="px-2.5 py-0.5 rounded-lg bg-white/90 backdrop-blur-md text-slate-800 text-[10px] font-bold uppercase border border-slate-200/40 shadow-sm tracking-wider">
-                {art.category || "Artwork"}
-              </span>
-            </div>
+                          <div className="absolute top-2.5 left-2.5">
+                            <span className="px-2.5 py-0.5 rounded-lg bg-white/90 backdrop-blur-md text-slate-800 text-[10px] font-bold uppercase border border-slate-200/40 shadow-sm tracking-wider">
+                              {art.category || "Artwork"}
+                            </span>
+                          </div>
 
-            <Button
-              isIconOnly
-              radius="full"
-              size="sm"
-              className="absolute top-2.5 right-2.5 bg-white/80 backdrop-blur-sm rounded-md text-slate-400 hover:text-amber-500 shadow-sm transition-colors"
-              onClick={(e) => e.preventDefault()}
-            >
-              <StarFill width={16} height={16} />
-            </Button>
-          </div>
+                          <Button
+                            isIconOnly
+                            radius="full"
+                            size="sm"
+                            className="absolute top-2.5 right-2.5 bg-white/80 backdrop-blur-sm rounded-md text-slate-400 hover:text-amber-500 shadow-sm transition-colors"
+                            onClick={(e) => e.preventDefault()}
+                          >
+                            <StarFill width={16} height={16} />
+                          </Button>
+                        </div>
 
-          <div className="p-4 flex-grow flex flex-col justify-between">
-            <div>
-              <h4 className="font-bold text-base text-[#16352E] line-clamp-1 tracking-tight">
-                {art.title}
-              </h4>
+                        <div className="p-4 flex-grow flex flex-col justify-between">
+                          <div>
+                            <h4 className="font-bold text-base text-[#16352E] line-clamp-1 tracking-tight">
+                              {art.title}
+                            </h4>
 
-              <p className="text-slate-400 text-xs mt-0.5 font-medium truncate">
-                by{" "}
-                <span className="text-slate-600 font-semibold">
-                  {art.artistName ||
-                    art.artist ||
-                    "Unknown Artist"}
-                </span>
-              </p>
-            </div>
+                            <p className="text-slate-400 text-xs mt-0.5 font-medium truncate">
+                              by{" "}
+                              <span className="text-slate-600 font-semibold">
+                                {art.artistName ||
+                                  art.artist ||
+                                  "Unknown Artist"}
+                              </span>
+                            </p>
+                          </div>
 
-            <div className="mt-4 pt-3 border-t border-slate-100 flex justify-between items-center">
-              <span className="text-base font-extrabold text-emerald-600">
-                {art.currency === "USD"
-                  ? "$"
-                  : art.currency || "$"}
-                {art.price}
-              </span>
+                          <div className="mt-4 pt-3 border-t border-slate-100 flex justify-between items-center">
+                            <span className="text-base font-extrabold text-emerald-600">
+                              {art.currency === "USD"
+                                ? "$"
+                                : art.currency || "$"}
+                              {art.price}
+                            </span>
 
-              <Button
-                size="sm"
-                className="bg-[#16352E] text-white text-xs font-semibold px-3 rounded-lg min-w-max h-8"
-              >
-                View
-              </Button>
-            </div>
-          </div>
-        </Card>
-      </Link>
-    </motion.div>
-  ))}
-</AnimatePresence>
+                            <Button
+                              size="sm"
+                              className="bg-[#16352E] text-white text-xs font-semibold px-3 rounded-lg min-w-max h-8"
+                            >
+                              View
+                            </Button>
+                          </div>
+                        </div>
+                      </Card>
+                    </Link>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
               </div>
               
             )}
           </div>
-          {totalPages > 1 && (
-  <div className="flex justify-center gap-2 mt-10">
-    {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+{totalPages > 1 && (
+  <div className="flex justify-center items-center gap-2 mt-10">
+
+    {/* Previous Button */}
+    <button
+      onClick={() =>
+        setCurrentPage((prev) => Math.max(prev - 1, 1))
+      }
+      disabled={currentPage === 1}
+      className="h-10 w-10 rounded-full bg-gray-100 hover:bg-gray-200 disabled:opacity-40 disabled:cursor-not-allowed"
+    >
+    <ChevronLeft size={18} />    
+    </button>
+
+    {/* Page Numbers */}
+    {Array.from(
+      { length: totalPages },
+      (_, i) => i + 1
+    ).map((page) => (
       <button
         key={page}
         onClick={() => setCurrentPage(page)}
@@ -407,6 +424,20 @@ const paginatedArtworks =
         {page}
       </button>
     ))}
+
+    {/* Next Button */}
+    <button
+      onClick={() =>
+        setCurrentPage((prev) =>
+          Math.min(prev + 1, totalPages)
+        )
+      }
+      disabled={currentPage === totalPages}
+      className="h-10 w-10 rounded-full bg-gray-100 hover:bg-gray-200 disabled:opacity-40 disabled:cursor-not-allowed"
+    >
+    <ChevronRight size={18} />
+    </button>
+
   </div>
 )}
         </div>
