@@ -4,20 +4,26 @@
 //   return await serverFetch("/api/settings");
 // };
 
+import { serverFetch } from "../core/server";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 // GET SETTINGS
+
 export const getSettings = async () => {
-  const res = await fetch(`${BASE_URL}/api/settings`, {
-    cache: "no-store",
-  });
+  try {
+    return await serverFetch("/api/settings");
+  } catch (error) {
+    console.log("SETTINGS ERROR:", error);
 
-  if (!res.ok) {
-    throw new Error("Failed to load settings");
+    return {
+      siteName: "ArtHub",
+      contactEmail: "admin@arthub.com",
+      currency: "USD",
+      maintenanceMode: false,
+      autoApproveArtwork: false,
+    };
   }
-
-  return res.json();
 };
 
 
