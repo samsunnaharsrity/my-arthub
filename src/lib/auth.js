@@ -22,6 +22,10 @@ export const auth = betterAuth({
     // Optional: if you don't provide a client, database transactions won't be enabled.
     client
   }),
+    session: {
+    expiresIn: 60 * 60 * 24 * 7, 
+    updateAge: 60 * 60 * 24,
+  },
 
 user: {
   additionalFields: {

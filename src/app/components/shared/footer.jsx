@@ -35,17 +35,39 @@ const Footer = ({settings}) => {
             </p>
 
             {/* Social */}
-            <div className="flex gap-3 mt-6">
-              {[FaFacebookF, FaLinkedinIn, FaTwitter, FaGithub].map((Icon, i) => (
-                <a
-                  key={i}
-                  href="#"
-                  className="w-10 h-10 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center transition"
-                >
-                  <Icon />
-                </a>
-              ))}
-            </div>
+          <div className="flex gap-3 mt-6">
+            <a
+              href="https://facebook.com"
+              target="_blank"
+              className="w-10 h-10 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center transition"
+            >
+              <FaFacebookF />
+            </a>
+
+            <a
+              href="https://linkedin.com"
+              target="_blank"
+              className="w-10 h-10 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center transition"
+            >
+              <FaLinkedinIn />
+            </a>
+
+            <a
+              href="https://twitter.com"
+              target="_blank"
+              className="w-10 h-10 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center transition"
+            >
+              <FaTwitter />
+            </a>
+
+            <a
+              href="https://github.com"
+              target="_blank"
+              className="w-10 h-10 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center transition"
+            >
+              <FaGithub />
+            </a>
+          </div>
           </div>
 
           {/* Explore */}
@@ -55,10 +77,10 @@ const Footer = ({settings}) => {
             </h3>
 
             <ul className="space-y-3 text-white/60">
-              <li><Link href="/artworks" className="hover:text-white">Browse Art</Link></li>
-              <li><Link href="/artists" className="hover:text-white">Artists</Link></li>
-              <li><Link href="/categories" className="hover:text-white">Categories</Link></li>
-              <li><Link href="/dashboard" className="hover:text-white">Dashboard</Link></li>
+              <li><Link href="/browseArtwork" className="hover:text-white">Browse Art</Link></li>
+              <li><Link href="/artist" className="hover:text-white">Artists</Link></li>
+              <li><Link href="/all-categories" className="hover:text-white">Categories</Link></li>
+              <li><Link href="/pricing" className="hover:text-white">Pricing</Link></li>
             </ul>
           </div>
 

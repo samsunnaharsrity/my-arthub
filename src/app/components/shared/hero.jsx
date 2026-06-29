@@ -32,7 +32,6 @@ export default function HeroSection() {
   return (
     <section className="relative overflow-hidden bg-gradient-to-br from-[#f6f8f7] via-white to-[#eef5f2] dark:from-[#07130F] dark:via-[#0B1B15] dark:to-[#07130F]">
 
-      {/* Glow background — pointer-events-none so it never blocks clicks on content above it */}
       <div className="absolute top-0 right-0 h-[500px] w-[500px] bg-green-500/10 blur-[150px] pointer-events-none z-0" />
       <div className="absolute bottom-0 left-0 h-[400px] w-[400px] bg-emerald-500/10 blur-[130px] pointer-events-none z-0" />
 
