@@ -6,17 +6,26 @@ import { useEffect, useState } from "react";
 export default function SalesChartPage() {
   const [salesData, setSalesData] = useState([]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/analytics/sales`
-      );
-      const data = await res.json();
-      setSalesData(data);
-    };
+const [loading, setLoading] = useState(true);
 
-    fetchData();
-  }, []);
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/analytics/sales`);
+      const json = await res.json();
+
+      setSalesData(Array.isArray(json?.data) ? json.data : []);
+    } catch (err) {
+      setSalesData([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchData();
+}, []);
 
   return (
     <div className="pt-28 dark:text-white/70 dark:bg-black/70">
