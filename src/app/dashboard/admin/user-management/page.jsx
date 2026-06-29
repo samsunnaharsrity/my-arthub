@@ -97,9 +97,9 @@ const res = await fetch(
   };
 
   return (
-    <section className="min-h-screen bg-slate-50 p-8 pt-28">
-      <div className="max-w-7xl mx-auto">
-        <div className="mb-8">
+    <section className="min-h-screen bg-slate-50 p-8 pt-28 dark:text-white/70 dark:bg-black">
+      <div className="max-w-7xl mx-auto dark:text-white/70 dark:bg-black">
+        <div className="mb-8 dark:text-white/70 dark:bg-black">
           <h1 className="text-4xl font-bold flex items-center gap-3 text-slate-800">
             <Users className="text-emerald-600" />
             Manage Users
@@ -110,27 +110,27 @@ const res = await fetch(
           </p>
         </div>
 
-        <div className="bg-white rounded-3xl shadow-sm border p-6 mb-8">
+        <div className="bg-white rounded-3xl shadow-sm border p-6 mb-8 dark:text-white/70 dark:bg-black">
           <h3 className="text-lg font-semibold text-slate-700">
             Total Users
           </h3>
 
-          <p className="text-4xl font-bold text-emerald-600 mt-2">
+          <p className="text-4xl font-bold text-emerald-600 mt-2 dark:text-white/70 dark:bg-black">
             {users.length}
           </p>
         </div>
 
         <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
-          <div className="p-6 border-b">
-            <h2 className="text-xl font-semibold flex items-center gap-2">
+          <div className="p-6 border-b dark:text-white/70 dark:bg-black">
+            <h2 className="text-xl font-semibold flex items-center gap-2 dark:text-white/70 dark:bg-black ">
               <Shield size={20} />
               User Management
             </h2>
           </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-slate-100">
+          <div className="overflow-x-auto dark:text-white/70 dark:bg-black">
+            <table className="w-full dark:text-white/70 dark:bg-black">
+              <thead className="bg-slate-100 dark:text-white/70 dark:bg-black">
                 <tr className="text-left">
                   <th className="p-4">User</th>
                   <th className="p-4">Email</th>
@@ -160,7 +160,7 @@ const res = await fetch(
                     >
                       <td className="p-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-12 h-12 rounded-full overflow-hidden bg-emerald-100 flex items-center justify-center">
+                          <div className="w-12 h-12 rounded-full overflow-hidden bg-emerald-100 flex items-center justify-center dark:text-white/70 dark:bg-black">
   {user.image ? (
     <Image
       src={user.image}
@@ -188,7 +188,7 @@ const res = await fetch(
                         {user.email}
                       </td>
 
-                      <td className="p-4">
+                      <td className="p-4 ">
                         <span
                           className={`px-3 py-1 rounded-full text-sm font-medium ${
                             user.role === "admin"

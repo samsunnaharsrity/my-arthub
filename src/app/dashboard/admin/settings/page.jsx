@@ -69,12 +69,12 @@ const handleSave = async () => {
 };
 
   return (
-    <section className="p-8 pt-28 bg-slate-50 min-h-screen">
+    <section className="p-8 pt-28 bg-slate-50 min-h-screen dark:text-white/70 dark:bg-black/70">
       <div className="max-w-4xl mx-auto">
 
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold flex items-center gap-3 text-slate-800">
+        <div className="mb-8 dark:text-white/70 dark:bg-black">
+          <h1 className="text-4xl font-bold flex items-center gap-3 text-slate-800 ">
             <Settings className="text-emerald-600" />
             Admin Settings
           </h1>
@@ -84,10 +84,10 @@ const handleSave = async () => {
           </p>
         </div>
 
-        <div className="space-y-6">
+        <div className="space-y-6 dark:text-white/70 dark:bg-black">
 
           {/* General Settings */}
-          <div className="bg-white rounded-3xl shadow-sm border p-6">
+          <div className="bg-white rounded-3xl shadow-sm border p-6 dark:text-white/70 dark:bg-black/70">
             <h2 className="text-xl font-semibold mb-6">
               General Settings
             </h2>
@@ -150,7 +150,7 @@ const handleSave = async () => {
           </div>
 
           {/* System Settings */}
-          <div className="bg-white rounded-3xl shadow-sm border p-6">
+          <div className="bg-white rounded-3xl shadow-sm border p-6 dark:text-white/70 dark:bg-black">
             <h2 className="text-xl font-semibold mb-6 flex items-center gap-2">
               <Shield size={20} />
               System Controls

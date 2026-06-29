@@ -13,7 +13,7 @@ export default function FeaturedCategories() {
   ];
 
   return (
-    <section className="bg-gradient-to-b from-emerald-50 via-white to-emerald-50 px-6 py-20">
+    <section className="bg-gradient-to-b from-emerald-50 via-white to-emerald-50 px-6 py-20 dark:text-white/70 dark:bg-black">
       <div className="mx-auto max-w-7xl">
 
         {/* HEADER */}

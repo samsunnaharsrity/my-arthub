@@ -41,7 +41,7 @@ const handleUpdate = async () => {
 };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4 dark:text-white/70 dark:bg-black">
       <div className="w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl">
         {/* Header */}
         <div className="mb-6 text-center">

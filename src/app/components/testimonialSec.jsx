@@ -10,7 +10,7 @@ export default async function TestimonialsSection() {
   const artists = data?.items || [];
 
   return (
-    <section className="relative overflow-hidden py-10 bg-gradient-to-b from-white via-emerald-50/40 to-white">
+    <section className="relative overflow-hidden py-10 bg-gradient-to-b from-white via-emerald-50/40 to-white dark:text-white/70 dark:bg-black">
       {/* Background */}
       <div className="absolute -top-32 left-0 h-72 w-72 rounded-full bg-emerald-200/30 blur-3xl" />
       <div className="absolute bottom-0 right-0 h-72 w-72 rounded-full bg-emerald-300/20 blur-3xl" />

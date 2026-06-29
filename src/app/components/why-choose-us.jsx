@@ -27,7 +27,7 @@ const features = [
 
 const WhyChooseUs = () => {
   return (
-    <section className="bg-slate-50 py-16">
+    <section className="bg-slate-50 py-16 dark:text-white/70 dark:bg-black">
       <div className="max-w-6xl mx-auto px-4">
         {/* Heading */}
         <div className="max-w-2xl mx-auto text-center mb-12">

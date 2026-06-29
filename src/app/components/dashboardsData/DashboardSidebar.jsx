@@ -193,7 +193,8 @@ const [showMobileSidebar, setShowMobileSidebar] = useState(false);
   };
 
   const SidebarContent = () => (
-    <div className="space-y-7 ">
+    
+    <div className="space-y-7 dark:bg-black dark:text-white/70 ">
       {/* Heading */}
       <div className="flex items-center gap-2.5">
         <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-green-900/10">

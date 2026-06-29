@@ -22,18 +22,18 @@ export default function CategoryChart({ categoryData = [] }) {
   const safeData = Array.isArray(categoryData) ? categoryData : [];
 
   return (
-    <div className="bg-white p-6 rounded-2xl shadow border">
-      <h2 className="text-2xl font-bold mb-5">
+    <div className="bg-white p-6 rounded-2xl shadow border dark:text-white/70 dark:bg-black/70">
+      <h2 className="text-2xl font-bold mb-5 dark:text-white/70 dark:bg-black">
         Artworks by Category
       </h2>
 
       {safeData.length === 0 ? (
-        <div className="h-[350px] flex items-center justify-center text-gray-500">
+        <div className="h-[350px] flex items-center justify-center text-gray-500 dark:text-white/70 dark:bg-black/70">
           No Data Found
         </div>
       ) : (
         <ResponsiveContainer width="100%" height={350}>
-          <PieChart>
+          <PieChart className="dark:text-white/70 dark:bg-black/70">
             <Pie
               data={safeData}
               dataKey="count"

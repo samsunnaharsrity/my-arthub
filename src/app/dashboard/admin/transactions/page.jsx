@@ -73,9 +73,9 @@ const res = await fetch(
   const totalPages = Math.ceil(total / LIMIT);
 
   return (
-    <section className="mt-28 p-6">
+    <section className="mt-28 p-6 dark:text-white/70 dark:bg-black/70">
       {/* HEADER */}
-      <div className="flex flex-col md:flex-row justify-between gap-4 mb-8">
+      <div className="flex flex-col md:flex-row justify-between gap-4 mb-8 dark:text-white/70 dark:bg-black">
         <div>
           <h1 className="text-3xl font-bold text-[#16352E]">
             Transactions
@@ -113,7 +113,7 @@ const res = await fetch(
       </div>
 
       {/* TABLE */}
-      <div className="bg-white rounded-3xl border shadow overflow-hidden">
+      <div className="bg-white rounded-3xl border shadow overflow-hidden dark:text-white/70 dark:bg-black">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="bg-slate-100 sticky top-0 z-10">
@@ -223,7 +223,7 @@ const res = await fetch(
 
       {/* PAGINATION */}
       {!isLoading && totalPages > 1 && (
-        <div className="flex justify-between items-center mt-6">
+        <div className="flex justify-between items-center mt-6 dark:text-white/70 dark:bg-black">
           <p className="text-sm text-slate-500">
             Page {page} of {totalPages}
           </p>

@@ -150,7 +150,7 @@ const artwork = artworkRes?.data || artworkRes;
         .owner-actions { display: flex; gap: 10px; margin-top: 0.9rem; }
       `}</style>
 
-      <section className="ad-wrap">
+      <section className="ad-wrap dark:text-white/70 dark:bg-black">
         <div className="ad-inner">
           <Link href="/browseArtwork" className="ad-breadcrumb">
             <ArrowLeft size={14} />

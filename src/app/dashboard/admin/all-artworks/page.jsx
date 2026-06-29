@@ -132,7 +132,7 @@ const handleDelete = async (id, title) => {
     }).format(price ?? 0);
 
 return (
-  <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-indigo-50 p-6 mt-20">
+  <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-indigo-50 p-6 mt-20 dark:text-white/70 dark:bg-black">
     <div className="bg-white/80 backdrop-blur-md rounded-[32px] shadow-2xl border border-white p-8">
 
       {/* Header */}

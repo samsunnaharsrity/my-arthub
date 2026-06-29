@@ -1,7 +1,7 @@
 export default function HelpCenterPage() {
   return (
     <section className="max-w-5xl mx-auto px-4 py-16">
-      <h1 className="text-4xl font-bold mb-10 text-center pt-20">
+      <h1 className="text-4xl font-bold mb-10 text-center pt-20 dark:text-white/70 dark:bg-black">
         Help Center
       </h1>
 

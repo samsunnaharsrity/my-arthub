@@ -29,7 +29,7 @@ export default function BrowseArtworkPage() {
 
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
-  const [maxPrice, setMaxPrice] = useState(1000);
+  const [maxPrice, setMaxPrice] = useState(10000);
   const [sortBy, setSortBy] = useState("newest");
 
 useEffect(() => {
@@ -103,7 +103,7 @@ useEffect(() => {
   }, [artworks, search, selectedCategory, maxPrice, sortBy]);
 
   return (
-    <section className="min-h-screen bg-gradient-to-b from-white via-green-50/30 to-white pt-28 text-slate-800">
+    <section className="min-h-screen bg-gradient-to-b from-white via-green-50/30 to-white pt-28 text-slate-800 dark:text-white/70 dark:bg-black">
       <div className="max-w-6xl mx-auto px-4 py-6">
         
         {/* Top Intro Section */}
@@ -205,7 +205,7 @@ useEffect(() => {
                   <input
                     type="range"
                     min="0"
-                    max="1000"
+                    max="10000"
                     step="10"
                     value={maxPrice}
                     onChange={(e) => setMaxPrice(e.target.value)}
@@ -215,6 +215,7 @@ useEffect(() => {
                     <span>$0</span>
                     <span>$500</span>
                     <span>$1000+</span>
+                    <span>$10000+</span>
                   </div>
                 </div>
 
@@ -279,7 +280,7 @@ useEffect(() => {
                   onClick={() => {
                     setSearch("");
                     setSelectedCategory("All");
-                    setMaxPrice(1000);
+                    setMaxPrice(100000);
                     setSortBy("newest");
                   }}
                   className="mt-5 text-xs bg-[#16352E] hover:bg-emerald-800 text-white font-semibold px-4 py-2.5 rounded-xl transition"

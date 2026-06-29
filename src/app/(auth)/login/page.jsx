@@ -63,7 +63,7 @@ const SigninPage = () => {
   };
 
   return (
-    <section className="min-h-screen flex items-center justify-center px-4 py-30 bg-gradient-to-br from-slate-50 via-white to-slate-100 dark:from-[#020617] dark:via-[#0f172a] dark:to-[#111827] transition-colors duration-300">
+    <section className="min-h-screen flex items-center justify-center px-4 py-30 bg-gradient-to-br from-slate-50 via-white to-slate-100 dark:from-[#020617] dark:via-[#0f172a] dark:to-[#111827] transition-colors duration-300 dark:text-white/70 dark:bg-black">
 
       <div className="w-full max-w-md rounded-3xl border border-slate-200 dark:border-slate-700 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl p-8 shadow-xl dark:shadow-black/40">
 

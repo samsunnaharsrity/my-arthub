@@ -23,7 +23,7 @@ export default function ProfileClient({ user }) {
 
   return (
     <>
-      <div className="mx-auto w-full max-w-5xl px-4 py-20">
+      <div className="mx-auto w-full max-w-5xl px-4 py-20 dark:text-white/70 dark:bg-black dark:text-white/70 dark:bg-black">
 
         {/* HERO SECTION */}
         <div className="relative overflow-hidden rounded-[32px] bg-gradient-to-br from-emerald-600 via-green-600 to-teal-500 p-8 text-white shadow-2xl">

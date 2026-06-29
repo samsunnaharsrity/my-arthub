@@ -32,7 +32,7 @@ export default function AnalyticsChartPage() {
   return (
     <div className="p-6 mt-28">
       {loading ? (
-        <div className="h-[300px] flex items-center justify-center">
+        <div className="h-[300px] flex items-center justify-center dark:text-white/70 dark:bg-black">
           Loading...
         </div>
       ) : (

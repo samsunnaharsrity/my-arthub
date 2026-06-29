@@ -95,20 +95,20 @@ const fetchAnalytics = async () => {
 
   if (loading) {
     return (
-      <div className="mt-28 text-center">
+      <div className="mt-28 text-center dark:text-white/70 dark:bg-black/70">
         Loading Dashboard...
       </div>
     );
   }
 
   return (
-    <div className="space-y-4 mt-28 mb-10 p-10">
+    <div className="space-y-4 mt-28 mb-10 p-10 dark:text-white/70 dark:bg-black/70">
 
       {/* STATS */}
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 dark:text-white/70 dark:bg-black/70">
 
-        <div className="bg-white p-6 rounded-3xl shadow border">
-          <div className="flex justify-between items-center">
+        <div className="bg-white p-6 rounded-3xl shadow border dark:text-white/70 dark:bg-black/70">
+          <div className="flex justify-between items-center dark:text-white/70 dark:bg-black/70">
             <div>
               <p className="text-slate-500">
                 Total Users
@@ -126,7 +126,7 @@ const fetchAnalytics = async () => {
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-3xl shadow border">
+        <div className="bg-white p-6 rounded-3xl shadow border dark:text-white/70 dark:bg-black/70">
           <div className="flex justify-between items-center">
             <div>
               <p className="text-slate-500">
@@ -145,7 +145,7 @@ const fetchAnalytics = async () => {
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-3xl shadow border">
+        <div className="bg-white p-6 rounded-3xl shadow border dark:text-white/70 dark:bg-black/70">
           <div className="flex justify-between items-center">
             <div>
               <p className="text-slate-500">
@@ -164,7 +164,7 @@ const fetchAnalytics = async () => {
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-3xl shadow border">
+        <div className="bg-white p-6 rounded-3xl shadow border dark:text-white/70 dark:bg-black/70">
           <div className="flex justify-between items-center">
             <div>
               <p className="text-slate-500">
@@ -187,7 +187,7 @@ const fetchAnalytics = async () => {
       {/* Analytics */}
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
 
-        <div className="xl:col-span-2 bg-white rounded-3xl p-6 shadow-lg border">
+        <div className="xl:col-span-2 bg-white rounded-3xl p-6 shadow-lg border dark:text-white/70 dark:bg-black/70">
           <h2 className="text-2xl font-bold mb-5">
             Sales Analytics
           </h2>
@@ -195,9 +195,9 @@ const fetchAnalytics = async () => {
           <SalesChart salesData={salesData} />
         </div>
 
-        <div className="space-y-6">
+        <div className="space-y-6 dark:text-white/70 dark:bg-black/70">
 
-          <div className="bg-white rounded-3xl p-6 shadow-lg border">
+          <div className="bg-white rounded-3xl p-6 shadow-lg border dark:text-white/70 dark:bg-black/70">
             <h2 className="text-xl font-bold mb-4">
               Artwork Categories
             </h2>
@@ -207,7 +207,7 @@ const fetchAnalytics = async () => {
             />
           </div>
 
-          <div className="bg-gradient-to-br from-[#16352E] to-[#285547] text-white rounded-3xl p-6">
+          <div className="bg-gradient-to-br from-[#16352E] to-[#285547] text-white rounded-3xl p-6 dark:text-white/70 dark:bg-black/70">
             <h3 className="text-xl font-bold mb-4">
               Platform Overview
             </h3>
@@ -232,7 +232,7 @@ const fetchAnalytics = async () => {
             </div>
           </div>
 
-          <div className="bg-white rounded-3xl p-6 shadow-lg border">
+          <div className="bg-white rounded-3xl p-6 shadow-lg border dark:text-white/70 dark:bg-black/70">
             <div className="flex items-center gap-2 mb-5">
               <Activity size={22} />
               <h3 className="text-xl font-bold">
@@ -240,7 +240,7 @@ const fetchAnalytics = async () => {
               </h3>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-4 dark:text-white/70 dark:bg-black/70">
               {recentActivities.map(
                 (activity) => {
                   const Icon =
@@ -252,7 +252,7 @@ const fetchAnalytics = async () => {
                       className="flex gap-3"
                     >
                       <div
-                        className={`w-10 h-10 rounded-full ${activity.color} flex items-center justify-center text-white`}
+                        className={`w-10 h-10 rounded-full ${activity.color} flex items-center justify-center text-white dark:text-white/70 dark:bg-black/70`}
                       >
                         <Icon size={18} />
                       </div>

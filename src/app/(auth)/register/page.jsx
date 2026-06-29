@@ -313,7 +313,7 @@ const RegisterPage = () => {
         .card-footer a:hover { color: #047857; }
       `}</style>
 
-      <section className="reg-bg ">
+      <section className="reg-bg dark:text-white/70 dark:bg-black">
         <div className="reg-card mt-20">
           <div className="card-header">
             <div className="logo-mark">

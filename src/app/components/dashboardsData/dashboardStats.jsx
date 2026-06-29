@@ -8,7 +8,7 @@ export default function DashboardStats({
 }) {
   
   return (
-    <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4 ">
+    <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4 dark:text-white/70 dark:bg-black">
       {stats.map((item) => (
         <DashboardStatCard
           key={item.title}

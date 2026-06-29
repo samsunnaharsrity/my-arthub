@@ -28,8 +28,8 @@ export default function GalleryPage() {
   }, [category]);
 
   return (
-    <section className="min-h-screen bg-gradient-to-b from-emerald-50 via-white to-emerald-50 px-6 py-28">
-      <div className="max-w-7xl mx-auto">
+    <section className="min-h-screen bg-gradient-to-b from-emerald-50 via-white to-emerald-50 px-6 py-28 dark:text-white/70 dark:bg-black">
+      <div className="max-w-7xl mx-auto ">
 
         {/* HEADER */}
         <div className="text-center mb-10">

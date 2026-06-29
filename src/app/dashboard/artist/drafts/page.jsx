@@ -58,8 +58,8 @@ export default function ArtistDraftPage() {
   }
 
 return (
-  <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-emerald-50 py-12 px-4">
-    <div className="max-w-7xl mx-auto">
+  <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-emerald-50 py-12 mt-20 px-4">
+    <div className="max-w-5xl mx-auto">
       {/* Header */}
       <div className="mb-10">
         <span className="text-emerald-700 font-semibold uppercase tracking-widest text-sm">

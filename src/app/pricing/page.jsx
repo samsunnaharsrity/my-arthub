@@ -74,7 +74,7 @@ export default function PricingPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#FAF8F4] py-20 px-4">
+    <div className="min-h-screen bg-[#FAF8F4] py-20 px-4 dark:text-white/70 dark:bg-black">
       <div className="max-w-6xl mx-auto mt-20">
 
         {/* Cards */}

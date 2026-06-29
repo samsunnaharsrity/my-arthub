@@ -19,7 +19,7 @@ export default async function ArtistDetailsPage({ params }) {
   }
 
   return (
-    <section className="min-h-screen bg-gradient-to-b from-green-50 via-white to-green-50 px-6 py-24">
+    <section className="min-h-screen bg-gradient-to-b from-green-50 via-white to-green-50 px-6 py-24 dark:text-white/70 dark:bg-black">
       <div className="mx-auto max-w-6xl py-10">
 
         {/* HERO */}

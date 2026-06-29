@@ -11,7 +11,7 @@ import { approveArtwork, rejectArtwork } from "@/lib/api/artWorks";
 export default function ApprovalPage({ permission }) {
   console.log("PERMISSION:", permission);
 
-  const router = useRouter(); // 🔥 ২. রাউটার ইনিশিয়ালাইজ করা হয়েছে
+  const router = useRouter(); 
   const [artworks, setArtworks] = useState(permission || []);
   const getId = (art) => art._id?.$oid || art._id || art.id;
 
@@ -23,7 +23,6 @@ export default function ApprovalPage({ permission }) {
       const data = await approveArtwork(id, email);
 
       if (data.success) {
-        // লোকাল স্টেট আপডেট
         setArtworks((prev) =>
           prev.map((art) =>
             String(getId(art)) === String(id)
@@ -34,7 +33,7 @@ export default function ApprovalPage({ permission }) {
 
         toast.success("Artwork approved");
         
-        // 🔥 ৩. এটি অত্যন্ত গুরুত্বপূর্ণ! এটি Next.js-এর ডেটা ক্যাশ সম্পূর্ণ ক্লিয়ার করে সার্ভার থেকে ফ্রেশ ডেটা নিয়ে আসবে।
+
         router.refresh(); 
       } else {
         toast.error(data.message);
@@ -63,7 +62,6 @@ export default function ApprovalPage({ permission }) {
 
         toast.success("Artwork rejected");
         
-        // 🔥 ৪. রিজেক্ট করার পরও ক্যাশ ক্লিয়ার করবে
         router.refresh();
       }
     } catch (error) {
@@ -73,7 +71,7 @@ export default function ApprovalPage({ permission }) {
   };
 
   return (
-    <section className="pt-28 px-6 pb-10 bg-slate-50 min-h-screen">
+    <section className="pt-28 px-6 pb-10 bg-slate-50 min-h-screen dark:text-white/70 dark:bg-black/70">
       <div className="max-w-7xl mx-auto">
 
         {/* Header */}

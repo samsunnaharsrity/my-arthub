@@ -22,7 +22,7 @@ export default function ArtworkCard({ art }) {
       }}
       className="h-full"
     >
-      <Card className="overflow-hidden rounded-3xl border border-slate-200/60 bg-white shadow-sm hover:shadow-xl transition-all h-full flex flex-col">
+      <Card className="overflow-hidden rounded-3xl border border-slate-200/60 bg-white shadow-sm hover:shadow-xl transition-all h-full flex flex-col dark:text-white/70 dark:bg-black">
 
         {/* IMAGE SECTION */}
         <div className="relative overflow-hidden aspect-[4/3] bg-slate-50">

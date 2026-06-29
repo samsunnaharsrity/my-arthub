@@ -11,7 +11,7 @@ import {
 
 export default function SuccessContent({ customerEmail }) {
   return (
-    <div className="min-h-screen bg-[#FAF8F4] flex items-center justify-center px-2 py-28">
+    <div className="min-h-screen bg-[#FAF8F4] flex items-center justify-center px-2 py-28 dark:text-white/70 dark:bg-black">
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}

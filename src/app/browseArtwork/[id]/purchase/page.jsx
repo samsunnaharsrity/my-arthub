@@ -297,7 +297,7 @@ const isUnlimited = maxPurchases === Infinity;
       `}</style>
 
 
-<div className="max-w-4xl mx-auto mt-28 rounded-2xl border border-emerald-500/20 bg-gradient-to-r from-emerald-500/10 to-green-500/5 p-6">
+<div className="max-w-4xl mx-auto mt-28 rounded-2xl border border-emerald-500/20 bg-gradient-to-r from-emerald-500/10 to-green-500/5 p-6 dark:text-white/70 dark:bg-black">
 
   <div className="flex items-center justify-between">
     <div>

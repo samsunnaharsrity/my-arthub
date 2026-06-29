@@ -89,8 +89,8 @@ export default function CommentsModerationPage() {
   };
 
   return (
-    <section className="p-6 mt-28 py-20">
-      <div className="flex flex-col md:flex-row justify-between gap-4 mb-8">
+    <section className="p-6 mt-28 py-20 dark:text-white/70 dark:bg-black">
+      <div className="flex flex-col md:flex-row justify-between gap-4 mb-8 dark:text-white/70 dark:bg-black/70">
         <div>
           <h1 className="text-3xl font-bold text-[#16352E]">
             Comments Moderation
@@ -101,7 +101,7 @@ export default function CommentsModerationPage() {
           </p>
         </div>
 
-        <div className="relative w-full md:w-96">
+        <div className="relative w-full md:w-96 dark:text-white/70 dark:bg-black/70">
           <Search
             className="absolute left-4 top-3 text-slate-400"
             size={18}
@@ -110,17 +110,17 @@ export default function CommentsModerationPage() {
           <input
             type="text"
             placeholder="Search comments..."
-            className="w-full border rounded-xl pl-11 pr-4 py-3"
+            className="w-full border rounded-xl pl-11 pr-4 py-3 dark:text-white/70 dark:bg-black/70"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
       </div>
 
-      <div className="bg-white rounded-3xl shadow border overflow-hidden">
+      <div className="bg-white rounded-3xl shadow border overflow-hidden dark:text-white/70 dark:bg-black/70">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-slate-100">
+            <thead className="bg-slate-100 dark:text-white/70 dark:bg-black/70">
               <tr>
                 <th className="px-6 py-4">User</th>
                 <th className="px-6 py-4">Comment</th>
@@ -160,7 +160,7 @@ export default function CommentsModerationPage() {
                 filteredComments.map((comment) => (
                   <tr
                     key={comment._id?.$oid || comment._id}
-                    className="border-t hover:bg-slate-50"
+                    className="border-t hover:dark:text-white/70 dark:bg-black/70 hover:bg-slate-50 dark:text-white/70 dark:bg-black/70"
                   >
                     <td className="px-6 py-5">
                       <div>
@@ -169,17 +169,17 @@ export default function CommentsModerationPage() {
                             "Anonymous"}
                         </h3>
 
-                        <p className="text-sm text-slate-500">
+                        <p className="text-sm text-slate-500 dark:text-white/70 ">
                           {comment.userId || "N/A"}
                         </p>
                       </div>
                     </td>
 
-                    <td className="px-6 py-5 max-w-md">
+                    <td className="px-6 py-5 max-w-md dark:text-white/70 ">
                       {comment.text}
                     </td>
 
-                    <td className="px-6 py-5 text-slate-500">
+                    <td className="px-6 py-5 text-slate-500 dark:text-white/70 ">
                       {comment.createdAt
                         ? new Date(
                             comment.createdAt
@@ -187,7 +187,7 @@ export default function CommentsModerationPage() {
                         : "N/A"}
                     </td>
 
-                    <td className="px-6 py-5 text-center">
+                    <td className="px-6 py-5 text-center dark:text-white/70 dark:bg-black/70">
                       <button
                         onClick={() =>
                           handleDelete(

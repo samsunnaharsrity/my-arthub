@@ -51,7 +51,7 @@ const handleDelete = async (id) => {
 };
 
   return (
-    <div className="overflow-x-auto rounded-3xl bg-white shadow-xl">
+    <div className="overflow-x-auto rounded-3xl bg-white shadow-xl dark:text-white/70 dark:bg-black">
       <table className="w-full">
         <thead className="bg-gray-100">
           <tr>

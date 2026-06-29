@@ -19,7 +19,7 @@ const NewsLetter = () => {
   };
 
   return (
-    <section className="relative overflow-hidden py-16 px-4">
+    <section className="relative overflow-hidden py-16 px-4 dark:text-white/70 dark:bg-black">
       <div className="absolute inset-0 bg-gradient-to-r from-[#16352E] via-emerald-900 to-[#16352E]" />
 
       <div className="relative mx-auto max-w-3xl">

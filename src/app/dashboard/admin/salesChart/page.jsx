@@ -19,7 +19,7 @@ export default function SalesChartPage() {
   }, []);
 
   return (
-    <div className="pt-28">
+    <div className="pt-28 dark:text-white/70 dark:bg-black/70">
       <SalesChart salesData={salesData} />
     </div>
   )

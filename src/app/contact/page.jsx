@@ -6,7 +6,7 @@ import {
 
 export default function ContactPage() {
   return (
-    <section className="max-w-5xl mx-auto px-4 py-16 pt-30">
+    <section className="max-w-5xl mx-auto px-4 py-16 pt-30 dark:text-white/70 dark:bg-black">
       <div className="text-center mb-12">
         <h1 className="text-4xl font-bold">
           Support Center

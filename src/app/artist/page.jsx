@@ -26,7 +26,7 @@ export default async function ArtistPage({ searchParams }) {
   const hasArtists = artists.length > 0;
 
   return (
-    <section className="min-h-screen bg-gray-50 px-6 py-28">
+    <section className="min-h-screen bg-gray-50 px-6 py-28 dark:text-white/70 dark:bg-black">
       <div className="mx-auto max-w-6xl">
 
         {/* HEADER */}
