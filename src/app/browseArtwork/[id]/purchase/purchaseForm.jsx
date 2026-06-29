@@ -75,6 +75,16 @@ const res = await createPurchase({
 console.log("Purchase response:", res);
 
 if (!res.success) {
+
+  if (
+    res.code === "ALREADY_PURCHASED"
+  ) {
+    toast.error(
+      "You already purchased this artwork"
+    );
+    return;
+  }
+
   throw new Error(
     res.message || "Purchase failed"
   );
@@ -88,6 +98,8 @@ setTimeout(() => {
   window.location.href =
     "/dashboard/user/purchases";
 }, 1200);
+
+
     } catch (err) {
       console.log(err);
       setError("Purchase failed");
