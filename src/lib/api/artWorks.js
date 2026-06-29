@@ -3,22 +3,34 @@ import { authClient } from "../auth-client";
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
 export const getBrowseArtwork = async (category) => {
-  let url = `${baseUrl}/api/artWorks?status=approved`;
+  console.log(
+    "BASE URL:",
+    process.env.NEXT_PUBLIC_BASE_URL
+  );
 
-  if (category && category !== "All") {
-    url += `&category=${encodeURIComponent(category)}`;
-  }
+  let url = `${process.env.NEXT_PUBLIC_BASE_URL}/api/artWorks?status=approved`;
+
+  console.log("FETCH URL:", url);
 
   const res = await fetch(url, {
     cache: "no-store",
   });
 
+  console.log("STATUS:", res.status);
+
   if (!res.ok) {
-    throw new Error("Failed to fetch artworks");
+    const text = await res.text();
+
+    console.log("ERROR:", text);
+
+    throw new Error(
+      `Failed: ${res.status} ${text}`
+    );
   }
 
   return res.json();
 };
+
 
 // Single artwork
 export const getArtworkById = async (id) => {
