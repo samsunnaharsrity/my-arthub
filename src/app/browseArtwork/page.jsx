@@ -187,7 +187,7 @@ const paginatedArtworks =
         </div>
 
         {/*  Filters Side vs Content */}
-        <div className="grid lg:grid-cols-12 gap-8 w-full">
+        <div className="grid lg:grid-cols-12 gap-8">
           
           {/* Controls & Range Filters Sidebar */}
           <div className="lg:col-span-3">
@@ -393,53 +393,51 @@ const paginatedArtworks =
               
             )}
           </div>
-{totalPages > 1 && (
-  <div className="w-full flex justify-center items-center gap-2 mt-10 ">
-
-    {/* Previous Button */}
-    <button
-      onClick={() =>
-        setCurrentPage((prev) => Math.max(prev - 1, 1))
-      }
-      disabled={currentPage === 1}
-      className="h-10 w-12 rounded-full bg-gray-100 hover:bg-gray-200 disabled:opacity-40 disabled:cursor-not-allowed"
-    >
-    <ChevronLeft size={18} />    
-    </button>
-
-    {/* Page Numbers */}
-    {Array.from(
-      { length: totalPages },
-      (_, i) => i + 1
-    ).map((page) => (
+{/* Pagination WRAPPER - FIXED CENTER */}
+<div className="lg:col-span-12 flex justify-center mt-10">
+  {totalPages > 1 && (
+    <div className="flex items-center gap-2">
+      
+      {/* Prev */}
       <button
-        key={page}
-        onClick={() => setCurrentPage(page)}
-        className={`h-10 w-12 rounded-full font-medium transition ${
-          currentPage === page
-            ? "bg-[#16352E] text-white"
-            : "bg-gray-100 hover:bg-gray-200"
-        }`}
+        onClick={() =>
+          setCurrentPage((prev) => Math.max(prev - 1, 1))
+        }
+        disabled={currentPage === 1}
+        className="h-10 w-10 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 disabled:opacity-40"
       >
-        {page}
+        <ChevronLeft size={18} />
       </button>
-    ))}
 
-    {/* Next Button */}
-    <button
-      onClick={() =>
-        setCurrentPage((prev) =>
-          Math.min(prev + 1, totalPages)
-        )
-      }
-      disabled={currentPage === totalPages}
-      className="h-10 w-20 rounded-full bg-gray-100 hover:bg-gray-200 disabled:opacity-40 disabled:cursor-not-allowed"
-    >
-    <ChevronRight size={18} />
-    </button>
+      {/* Pages */}
+      {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+        <button
+          key={page}
+          onClick={() => setCurrentPage(page)}
+          className={`h-10 w-10 rounded-full font-medium transition ${
+            currentPage === page
+              ? "bg-[#16352E] text-white"
+              : "bg-gray-100 hover:bg-gray-200"
+          }`}
+        >
+          {page}
+        </button>
+      ))}
 
-  </div>
-)}
+      {/* Next */}
+      <button
+        onClick={() =>
+          setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+        }
+        disabled={currentPage === totalPages}
+        className="h-10 w-10 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 disabled:opacity-40"
+      >
+        <ChevronRight size={18} />
+      </button>
+
+    </div>
+  )}
+</div>
         </div>
       </div>
     </section>
