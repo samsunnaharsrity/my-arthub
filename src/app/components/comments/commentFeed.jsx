@@ -39,6 +39,21 @@ export default function CommentFeed({
     });
   };
 
+
+const removeComment = (comments, id) => {
+  return comments
+    .filter((comment) => comment._id !== id)
+    .map((comment) => ({
+      ...comment,
+      replies: removeComment(
+        comment.replies || [],
+        id
+      ),
+    }));
+};
+
+
+
   useEffect(() => {
     const socket = getSocket();
 
@@ -68,18 +83,14 @@ export default function CommentFeed({
     });
 
     // Delete comment
-    socket.on(
-      "commentDeleted",
-      (commentId) => {
-        setComments((prev) =>
-          prev.filter(
-            (c) =>
-              c._id !== commentId &&
-              c.parentId !== commentId
-          )
-        );
-      }
+socket.on(
+  "commentDeleted",
+  (commentId) => {
+    setComments((prev) =>
+      removeComment(prev, commentId)
     );
+  }
+);
 
     return () => {
       socket.off("commentAdded");
@@ -101,14 +112,10 @@ export default function CommentFeed({
       const data = await res.json();
 
       if (data.success) {
-        setComments((prev) =>
-          prev.filter(
-            (c) =>
-              c._id !== id &&
-              c.parentId !== id
-          )
-        );
-      }
+  setComments((prev) =>
+    removeComment(prev, id)
+  );
+}
     } catch (error) {
       console.log(error);
     }
