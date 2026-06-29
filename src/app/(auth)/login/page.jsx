@@ -16,53 +16,40 @@ const SigninPage = () => {
 
     const redirectTo = searchParams.get("redirect") || "/";
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-    
-const handleSubmit = async (e) => {
-  e.preventDefault();
+    const form = new FormData(e.target);
+    const email = form.get("email");
+    const password = form.get("password");
 
-  const form = new FormData(e.target);
-  const email = form.get("email");
-  const password = form.get("password");
 
-  try {
-    setLoading(true);
+    try {
+      setLoading(true);
 
-    const result = await authClient.signIn.email({
-      email,
-      password,
-      rememberMe: true,
-    });
+      const result = await authClient.signIn.email({
+        email,
+        password,
+        rememberMe:true,
+        callbackURL: redirectTo,
+      });
 
-    if (result?.error) {
-      toast.error(result.error.message || "Login failed");
-      return;
-    }
-
-    // session fetch
-    const session = await authClient.getSession();
-
-    const role = session?.data?.user?.role;
-
-    toast.success("Login successful");
-
-    setTimeout(() => {
-      if (role === "admin") {
-        router.push("/dashboard/admin");
-      } else if (role === "artist") {
-        router.push("/dashboard/artist");
-      } else {
-        router.push("/");
+      if (result?.error) {
+        toast.error(result.error.message || "Login failed");
+        return;
       }
-    }, 500);
 
-  } catch (error) {
-    console.log(error);
-    toast.error("Invalid credentials");
-  } finally {
-    setLoading(false);
-  }
-};
+      toast.success("Login successful");
+
+      setTimeout(() => {
+      router.push(redirectTo);
+    }, 500);
+    } catch {
+      toast.error("Invalid credentials");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleGoogleLogin = async () => {
     try {
