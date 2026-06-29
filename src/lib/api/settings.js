@@ -8,10 +8,16 @@
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 // GET SETTINGS
-import { serverFetch } from "../core/server";
-
 export const getSettings = async () => {
-  return await serverFetch("/api/settings");
+  const res = await fetch(`${BASE_URL}/api/settings`, {
+    cache: "no-store",
+  });
+
+  if (!res.ok) {
+    throw new Error("Failed to load settings");
+  }
+
+  return res.json();
 };
 
 
