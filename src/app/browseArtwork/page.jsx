@@ -187,7 +187,7 @@ const paginatedArtworks =
         </div>
 
         {/*  Filters Side vs Content */}
-        <div className="grid lg:grid-cols-12 gap-8">
+        <div className="grid lg:grid-cols-12 gap-8 w-full">
           
           {/* Controls & Range Filters Sidebar */}
           <div className="lg:col-span-3">
@@ -394,7 +394,7 @@ const paginatedArtworks =
             )}
           </div>
 {totalPages > 1 && (
-  <div className="flex justify-center items-center gap-2 mt-10 w-full">
+  <div className="w-full flex justify-center items-center gap-2 mt-10 ">
 
     {/* Previous Button */}
     <button
