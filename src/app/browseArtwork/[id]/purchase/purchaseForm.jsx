@@ -62,30 +62,32 @@ export default function PurchaseForm({
       setLoading(true);
       setError(null);
 
-      const res = await createPurchase({
-        artworkId: artwork._id,
-        title: artwork.title,
-        price: artwork.price,
-        artistName: artwork.artist,
-        buyerId: user.id,
-        buyerEmail: user.email,
-        shipping,
-      });
+const res = await createPurchase({
+  artworkId: artwork._id,
+  title: artwork.title,
+  price: artwork.price,
+  artistName: artwork.artist,
+  buyerId: user.id,
+  buyerEmail: user.email,
+  shipping,
+});
 
-      if (!res.ok) {
-        return {
-          error: result?.message || "Something went wrong",
-        };
-      }
+console.log("Purchase response:", res);
 
-      toast.success(
-        "Artwork purchased successfully!"
-      );
+if (!res.success) {
+  throw new Error(
+    res.message || "Purchase failed"
+  );
+}
 
-      setTimeout(() => {
-        window.location.href =
-          "/dashboard/user/purchases";
-      }, 1200);
+toast.success(
+  "Artwork purchased successfully!"
+);
+
+setTimeout(() => {
+  window.location.href =
+    "/dashboard/user/purchases";
+}, 1200);
     } catch (err) {
       console.log(err);
       setError("Purchase failed");
