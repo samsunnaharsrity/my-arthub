@@ -32,27 +32,38 @@ export default async function PurchasesPage({
       limit: LIMIT,
     });
 
-  const purchasedArts = await Promise.all(
-    purchases.map(async (purchase) => {
-      try {
-        const artwork = await getArtworkById(
-          purchase.artworkId?._id ||
-            purchase.artworkId?.$oid ||
-            purchase.artworkId
-        );
+const purchasedArts = await Promise.all(
+  purchases.map(async (purchase) => {
+    try {
+      console.log(
+        "Fetching artwork:",
+        purchase.artworkId
+      );
 
-        return {
-          ...purchase,
-          artwork,
-        };
-      } catch (error) {
-        return {
-          ...purchase,
-          artwork: null,
-        };
-      }
-    })
-  );
+      const artwork = await getArtworkById(
+        purchase.artworkId
+      );
+
+      console.log("Artwork Found:", artwork);
+
+      return {
+        ...purchase,
+        artwork,
+      };
+    } catch (error) {
+      console.log(
+        "Artwork Fetch Error:",
+        purchase.artworkId,
+        error.message
+      );
+
+      return {
+        ...purchase,
+        artwork: null,
+      };
+    }
+  })
+);
 
   const totalPages = Math.ceil(total / LIMIT);
 

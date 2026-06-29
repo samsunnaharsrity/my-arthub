@@ -4,11 +4,11 @@ const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
 
 export const getPurchaseArt = async (
-  userId,
+  email,
   { page = 1, limit = 6 } = {}
 ) => {
   return serverFetch(
-    `/api/purchase?userId=${userId}&page=${page}&limit=${limit}`
+    `/api/purchase?buyerEmail=${email}&page=${page}&limit=${limit}`
   );
 };
 
