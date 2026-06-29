@@ -9,48 +9,38 @@ import {
   DollarSign,
   Shield,
   Save,
-  ImageIcon,
 } from "lucide-react";
 import { createSettings } from "@/lib/actions/settings";
 import { getSettings } from "@/lib/api/settings";
 import { useRouter } from "next/navigation";
-import { uploadToImgBB } from "@/lib/uploadImgBB";
 
 export default function SettingsPage() {
-  const router = useRouter();
-
   const [settings, setSettings] = useState({
     siteName: "",
     contactEmail: "",
     currency: "",
     maintenanceMode: false,
     autoApproveArtwork: false,
-    logo: "",
-    banner: "",
   });
 
-  // NEW: file states
-  const [logoFile, setLogoFile] = useState(null);
-  const [bannerFile, setBannerFile] = useState(null);
+const loadSettings = async () => {
+  try {
+    const data = await getSettings();
 
-  const loadSettings = async () => {
-    try {
-      const data = await getSettings();
-
-      setSettings({
-        siteName: data.siteName || "ArtHub",
-        contactEmail: data.contactEmail || "admin@arthub.com",
-        currency: data.currency || "USD",
-        maintenanceMode: data.maintenanceMode || false,
-        autoApproveArtwork: data.autoApproveArtwork || false,
-        logo: data.logo || "",
-        banner: data.banner || "",
-      });
-    } catch (error) {
-      console.log(error);
-      toast.error("Failed to load settings");
-    }
-  };
+    setSettings({
+      siteName: data.siteName || "ArtHub",
+      contactEmail:
+        data.contactEmail || "admin@arthub.com",
+      currency: data.currency || "USD",
+      maintenanceMode: data.maintenanceMode || false,
+      autoApproveArtwork:
+        data.autoApproveArtwork || false,
+    });
+  } catch (error) {
+    console.log(error);
+    toast.error("Failed to load settings");
+  }
+};
 
   useEffect(() => {
     loadSettings();
@@ -63,170 +53,122 @@ export default function SettingsPage() {
     }));
   };
 
-  // ✅ SAVE WITH IMGBB UPLOAD
-  const handleSave = async () => {
-    try {
-      let logoUrl = settings.logo;
-      let bannerUrl = settings.banner;
+  const router = useRouter();
 
-      // upload logo if new file
-      if (logoFile) {
-        logoUrl = await uploadToImgBB(logoFile);
-      }
+const handleSave = async () => {
+  try {
+    await createSettings(settings);
+    await loadSettings();
+        router.refresh();
 
-      // upload banner if new file
-      if (bannerFile) {
-        bannerUrl = await uploadToImgBB(bannerFile);
-      }
-
-      const finalData = {
-        ...settings,
-        logo: logoUrl,
-        banner: bannerUrl,
-      };
-
-      await createSettings(finalData);
-      await loadSettings();
-
-      router.refresh();
-
-      toast.success("Settings updated successfully");
-
-      // reset files
-      setLogoFile(null);
-      setBannerFile(null);
-    } catch (error) {
-      console.log(error);
-      toast.error("Failed to save settings");
-    }
-  };
+    toast.success("Settings updated successfully");
+  } catch (error) {
+    console.log(error);
+    toast.error("Failed to save settings");
+  }
+};
 
   return (
-    <section className="min-h-screen bg-slate-50 p-8 pt-28 dark:bg-black/70 dark:text-white/70">
-      <div className="mx-auto max-w-5xl">
+    <section className="p-8 pt-28 bg-slate-50 min-h-screen dark:text-white/70 dark:bg-black/70">
+      <div className="max-w-4xl mx-auto">
 
-        {/* HEADER */}
-        <div className="mb-10">
-          <h1 className="flex items-center gap-3 text-4xl font-bold text-slate-800 dark:text-white">
+        {/* Header */}
+        <div className="mb-8 dark:text-white/70 dark:bg-black">
+          <h1 className="text-4xl font-bold flex items-center gap-3 text-slate-800 ">
             <Settings className="text-emerald-600" />
             Admin Settings
           </h1>
-          <p className="mt-3 text-slate-500">
-            Configure and customize your ArtHub marketplace.
+
+          <p className="text-slate-500 mt-2">
+            Configure and manage your marketplace settings.
           </p>
         </div>
 
-        <div className="space-y-8">
+        <div className="space-y-6 dark:text-white/70 dark:bg-black">
 
-          {/* GENERAL */}
-          <div className="rounded-3xl border bg-white p-8 shadow-sm dark:bg-black">
-            <h2 className="mb-8 text-2xl font-semibold">
+          {/* General Settings */}
+          <div className="bg-white rounded-3xl shadow-sm border p-6 dark:text-white/70 dark:bg-black/70">
+            <h2 className="text-xl font-semibold mb-6">
               General Settings
             </h2>
 
-            <div className="space-y-6">
+            <div className="space-y-5">
 
-              <input
-                type="text"
-                value={settings.siteName}
-                onChange={(e) =>
-                  handleChange("siteName", e.target.value)
-                }
-                className="w-full rounded-xl border p-3"
-                placeholder="Site Name"
-              />
-
-              <input
-                type="email"
-                value={settings.contactEmail}
-                onChange={(e) =>
-                  handleChange("contactEmail", e.target.value)
-                }
-                className="w-full rounded-xl border p-3"
-                placeholder="Contact Email"
-              />
-
-              <select
-                value={settings.currency}
-                onChange={(e) =>
-                  handleChange("currency", e.target.value)
-                }
-                className="w-full rounded-xl border p-3"
-              >
-                <option value="USD">USD ($)</option>
-                <option value="BDT">BDT (৳)</option>
-              </select>
-            </div>
-          </div>
-
-          {/* BRANDING */}
-          <div className="rounded-3xl border bg-white p-8 shadow-sm dark:bg-black">
-            <h2 className="mb-8 flex items-center gap-2 text-2xl font-semibold">
-              <ImageIcon />
-              Branding
-            </h2>
-
-            <div className="grid gap-8 lg:grid-cols-2">
-
-              {/* LOGO */}
+              {/* Site Name */}
               <div>
-                <label className="mb-2 block font-medium">
-                  Site Logo
+                <label className="flex items-center gap-2 mb-2 font-medium">
+                  <Globe size={18} />
+                  Site Name
                 </label>
 
                 <input
-                  type="file"
-                  accept="image/*"
+                  type="text"
+                  value={settings.siteName}
                   onChange={(e) =>
-                    setLogoFile(e.target.files[0])
+                    handleChange("siteName", e.target.value)
                   }
-                  className="w-full rounded-xl border p-3"
+                  className="w-full border border-slate-200 p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 />
-
-                {settings.logo && (
-                  <img
-                    src={settings.logo}
-                    className="mt-4 h-24 object-contain"
-                  />
-                )}
               </div>
 
-              {/* BANNER */}
+              {/* Contact Email */}
               <div>
-                <label className="mb-2 block font-medium">
-                  Site Banner
+                <label className="flex items-center gap-2 mb-2 font-medium">
+                  <Mail size={18} />
+                  Contact Email
                 </label>
 
                 <input
-                  type="file"
-                  accept="image/*"
+                  type="email"
+                  value={settings.contactEmail}
                   onChange={(e) =>
-                    setBannerFile(e.target.files[0])
+                    handleChange("contactEmail", e.target.value)
                   }
-                  className="w-full rounded-xl border p-3"
+                  className="w-full border border-slate-200 p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 />
-
-                {settings.banner && (
-                  <img
-                    src={settings.banner}
-                    className="mt-4 h-40 w-full object-cover"
-                  />
-                )}
               </div>
 
+              {/* Currency */}
+              <div>
+                <label className="flex items-center gap-2 mb-2 font-medium">
+                  <DollarSign size={18} />
+                  Default Currency
+                </label>
+
+                <select
+                  value={settings.currency}
+                  onChange={(e) =>
+                    handleChange("currency", e.target.value)
+                  }
+                  className="w-full border border-slate-200 p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                >
+                  <option value="USD">USD ($)</option>
+                  <option value="BDT">BDT (৳)</option>
+                </select>
+              </div>
             </div>
           </div>
 
-          {/* SYSTEM */}
-          <div className="rounded-3xl border bg-white p-8 shadow-sm dark:bg-black">
-            <h2 className="mb-8 text-2xl font-semibold">
+          {/* System Settings */}
+          <div className="bg-white rounded-3xl shadow-sm border p-6 dark:text-white/70 dark:bg-black">
+            <h2 className="text-xl font-semibold mb-6 flex items-center gap-2">
+              <Shield size={20} />
               System Controls
             </h2>
 
-            <div className="space-y-6">
+            <div className="space-y-5">
 
-              <label className="flex items-center justify-between">
-                <span>Maintenance Mode</span>
+              {/* Maintenance Mode */}
+              <div className="flex items-center justify-between border-b pb-4">
+                <div>
+                  <h3 className="font-medium">
+                    Maintenance Mode
+                  </h3>
+                  <p className="text-sm text-slate-500">
+                    Temporarily disable public access.
+                  </p>
+                </div>
+
                 <input
                   type="checkbox"
                   checked={settings.maintenanceMode}
@@ -236,11 +178,21 @@ export default function SettingsPage() {
                       e.target.checked
                     )
                   }
+                  className="w-5 h-5"
                 />
-              </label>
+              </div>
 
-              <label className="flex items-center justify-between">
-                <span>Auto Approve Artworks</span>
+              {/* Auto Approve */}
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="font-medium">
+                    Auto Approve Artworks
+                  </h3>
+                  <p className="text-sm text-slate-500">
+                    Automatically approve newly submitted artworks.
+                  </p>
+                </div>
+
                 <input
                   type="checkbox"
                   checked={settings.autoApproveArtwork}
@@ -250,17 +202,18 @@ export default function SettingsPage() {
                       e.target.checked
                     )
                   }
+                  className="w-5 h-5"
                 />
-              </label>
+              </div>
 
             </div>
           </div>
 
-          {/* SAVE */}
+          {/* Save Button */}
           <div className="flex justify-end">
             <button
               onClick={handleSave}
-              className="flex items-center gap-2 rounded-xl bg-emerald-600 px-8 py-3 text-white hover:bg-emerald-700"
+              className="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-xl font-medium flex items-center gap-2"
             >
               <Save size={18} />
               Save Settings
