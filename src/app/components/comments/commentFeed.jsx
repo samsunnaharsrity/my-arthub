@@ -9,46 +9,86 @@ export default function CommentFeed({
   artworkId,
   user,
 }) {
-  const [comments, setComments] = useState(initialComments);
+  const [comments, setComments] =
+    useState(initialComments);
 
   useEffect(() => {
     setComments(initialComments);
   }, [initialComments]);
+
+  // Reply insert helper
+  const insertReply = (comments, reply) => {
+    return comments.map((comment) => {
+      if (comment._id === reply.parentId) {
+        return {
+          ...comment,
+          replies: [
+            ...(comment.replies || []),
+            reply,
+          ],
+        };
+      }
+
+      return {
+        ...comment,
+        replies: insertReply(
+          comment.replies || [],
+          reply
+        ),
+      };
+    });
+  };
 
   useEffect(() => {
     const socket = getSocket();
 
     socket.emit("joinArtwork", artworkId);
 
-    socket.on("commentAdded", (newComment) => {
-      setComments((prev) => {
-        const exists = prev.find(
-          (c) => c._id === newComment._id
-        );
+    // New comment
+    socket.on(
+      "commentAdded",
+      (newComment) => {
+        setComments((prev) => {
+          const exists = prev.find(
+            (c) => c._id === newComment._id
+          );
 
-        if (exists) return prev;
+          if (exists) return prev;
 
-        return [newComment, ...prev];
-      });
-    });
+          return [newComment, ...prev];
+        });
+      }
+    );
 
-    socket.on("commentDeleted", (commentId) => {
+    // New reply
+    socket.on("newReply", (reply) => {
       setComments((prev) =>
-        prev.filter(
-          (c) =>
-            c._id !== commentId &&
-            c.parentId !== commentId
-        )
+        insertReply(prev, reply)
       );
     });
 
+    // Delete comment
+    socket.on(
+      "commentDeleted",
+      (commentId) => {
+        setComments((prev) =>
+          prev.filter(
+            (c) =>
+              c._id !== commentId &&
+              c.parentId !== commentId
+          )
+        );
+      }
+    );
+
     return () => {
       socket.off("commentAdded");
+      socket.off("newReply");
       socket.off("commentDeleted");
     };
   }, [artworkId]);
 
-  // delete instantly from UI
+  // Delete instantly from UI
   const handleDelete = async (id) => {
     try {
       const res = await fetch(
@@ -74,9 +114,11 @@ export default function CommentFeed({
     }
   };
 
-  // add reply/comment instantly
+  // Add reply instantly
   const handleReplyAdded = (reply) => {
-    setComments((prev) => [reply, ...prev]);
+    setComments((prev) =>
+      insertReply(prev, reply)
+    );
   };
 
   return (
@@ -87,10 +129,11 @@ export default function CommentFeed({
           <CommentThread
             key={comment._id}
             comment={comment}
-            comments={comments}
             user={user}
             onDelete={handleDelete}
-            onReplyAdded={handleReplyAdded}
+            onReplyAdded={
+              handleReplyAdded
+            }
           />
         ))}
     </div>
