@@ -32,6 +32,10 @@ export default function BrowseArtworkPage() {
   const [maxPrice, setMaxPrice] = useState(10000);
   const [sortBy, setSortBy] = useState("newest");
 
+
+const [currentPage, setCurrentPage] = useState(1);
+const itemsPerPage = 8;
+
 useEffect(() => {
   const fetchArtworks = async () => {
     try {
@@ -101,6 +105,19 @@ useEffect(() => {
 
     return filtered;
   }, [artworks, search, selectedCategory, maxPrice, sortBy]);
+
+  const totalPages = Math.ceil(
+  filteredArtworks.length / itemsPerPage
+);
+
+const startIndex =
+  (currentPage - 1) * itemsPerPage;
+
+const paginatedArtworks =
+  filteredArtworks.slice(
+    startIndex,
+    startIndex + itemsPerPage
+  );
 
   return (
     <section className="min-h-screen bg-gradient-to-b from-white via-green-50/30 to-white pt-28 text-slate-800 dark:text-white/70 dark:bg-black">
@@ -248,7 +265,7 @@ useEffect(() => {
             
             {/* Loading Grid View Layout */}
             {loading ? (
-              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
+              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3  gap-6">
                 {[...Array(8)].map((_, i) => (
                   <Card key={i} className="p-3 rounded-3xl bg-white border border-slate-100">
                     <Skeleton className="rounded-2xl h-52 w-full" />
@@ -263,6 +280,7 @@ useEffect(() => {
                   </Card>
                 ))}
               </div>
+              
             ) : filteredArtworks.length === 0 ? (
               
               /* No matching elements Alert Layout */
@@ -288,87 +306,109 @@ useEffect(() => {
                   Reset Parameters
                 </button>
               </div>
+              
             ) : (
               
               /* Responsive Art Card Framework Execution Group */
               <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
-                <AnimatePresence mode="popLayout">
-                  {filteredArtworks.map((art) => (
-                    <motion.div
-                      key={art._id}
-                      layout
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.9 }}
-                      transition={{ duration: 0.2 }}
-                      whileHover={{ y: -6 }}
-                      className="h-full"
-                    >
-                      <Link href={`/browseArtwork/${art._id}`}>
-                        <Card className="overflow-hidden rounded-3xl border border-slate-200/60 bg-white shadow-sm hover:shadow-xl hover:border-emerald-500/20 transition-all cursor-pointer h-full flex flex-col justify-between">
-                          
-                          {/* Top Image Box */}
-                          <div className="relative overflow-hidden aspect-[4/3] bg-slate-50">
-                            <img
-                              src={art.image}
-                              alt={art.title}
-                              className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-                              loading="lazy"
-                            />
+<AnimatePresence mode="popLayout">
+  {paginatedArtworks.map((art) => (
+    <motion.div
+      key={art._id}
+      layout
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.9 }}
+      transition={{ duration: 0.2 }}
+      whileHover={{ y: -6 }}
+      className="h-full"
+    >
+      <Link href={`/browseArtwork/${art._id}`}>
+        <Card className="overflow-hidden rounded-3xl border border-slate-200/60 bg-white shadow-sm hover:shadow-xl hover:border-emerald-500/20 transition-all cursor-pointer h-full flex flex-col justify-between">
 
-                            {/* Badge Label inside Thumbnail container */}
-                            <div className="absolute top-2.5 left-2.5">
-                              <span className="px-2.5 py-0.5 rounded-lg bg-white/90 backdrop-blur-md text-slate-800 text-[10px] font-bold uppercase border border-slate-200/40 shadow-sm tracking-wider">
-                                {art.category || "Artwork"}
-                              </span>
-                            </div>
+          <div className="relative overflow-hidden aspect-[4/3] bg-slate-50">
+            <img
+              src={art.image}
+              alt={art.title}
+              className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+              loading="lazy"
+            />
 
-                            {/* Bookmark Star Toggle Button */}
-                            <Button
-                              isIconOnly
-                              radius="full"
-                              size="sm"
-                              className="absolute top-2.5 right-2.5 bg-white/80 backdrop-blur-sm rounded-md text-slate-400 hover:text-amber-500 shadow-sm transition-colors"
-                              onClick={(e) => {
-                                e.preventDefault();
-                              }}
-                            >
-                              <StarFill width={16} height={16} />
-                            </Button>
-                          </div>
+            <div className="absolute top-2.5 left-2.5">
+              <span className="px-2.5 py-0.5 rounded-lg bg-white/90 backdrop-blur-md text-slate-800 text-[10px] font-bold uppercase border border-slate-200/40 shadow-sm tracking-wider">
+                {art.category || "Artwork"}
+              </span>
+            </div>
 
-                          {/* Detail Descriptive Data Meta Box */}
-                          <div className="p-4 flex-grow flex flex-col justify-between">
-                            <div>
-                              <h4 className="font-bold text-base text-[#16352E] line-clamp-1 tracking-tight">
-                                {art.title}
-                              </h4>
-                              <p className="text-slate-400 text-xs mt-0.5 font-medium truncate">
-                                by <span className="text-slate-600 font-semibold">{art.artistName || art.artist || "Unknown Artist"}</span>
-                              </p>
-                            </div>
+            <Button
+              isIconOnly
+              radius="full"
+              size="sm"
+              className="absolute top-2.5 right-2.5 bg-white/80 backdrop-blur-sm rounded-md text-slate-400 hover:text-amber-500 shadow-sm transition-colors"
+              onClick={(e) => e.preventDefault()}
+            >
+              <StarFill width={16} height={16} />
+            </Button>
+          </div>
 
-                            {/* Lower Pricing / Routing Row */}
-                            <div className="mt-4 pt-3 border-t border-slate-100 flex justify-between items-center">
-                              <span className="text-base font-extrabold text-emerald-600">
-                                {art.currency === "USD" ? "$" : art.currency || "$"}{art.price}
-                              </span>
-                              <Button
-                                size="sm"
-                                className="bg-[#16352E] text-white text-xs font-semibold px-3 rounded-lg min-w-max h-8 shadow-sm group-hover:bg-emerald-700 cursor-pointer"
-                              >
-                                View
-                              </Button>
-                            </div>
-                          </div>
-                        </Card>
-                      </Link>
-                    </motion.div>
-                  ))}
-                </AnimatePresence>
+          <div className="p-4 flex-grow flex flex-col justify-between">
+            <div>
+              <h4 className="font-bold text-base text-[#16352E] line-clamp-1 tracking-tight">
+                {art.title}
+              </h4>
+
+              <p className="text-slate-400 text-xs mt-0.5 font-medium truncate">
+                by{" "}
+                <span className="text-slate-600 font-semibold">
+                  {art.artistName ||
+                    art.artist ||
+                    "Unknown Artist"}
+                </span>
+              </p>
+            </div>
+
+            <div className="mt-4 pt-3 border-t border-slate-100 flex justify-between items-center">
+              <span className="text-base font-extrabold text-emerald-600">
+                {art.currency === "USD"
+                  ? "$"
+                  : art.currency || "$"}
+                {art.price}
+              </span>
+
+              <Button
+                size="sm"
+                className="bg-[#16352E] text-white text-xs font-semibold px-3 rounded-lg min-w-max h-8"
+              >
+                View
+              </Button>
+            </div>
+          </div>
+        </Card>
+      </Link>
+    </motion.div>
+  ))}
+</AnimatePresence>
               </div>
+              
             )}
           </div>
+          {totalPages > 1 && (
+  <div className="flex justify-center gap-2 mt-10">
+    {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+      <button
+        key={page}
+        onClick={() => setCurrentPage(page)}
+        className={`h-10 w-10 rounded-full font-medium transition ${
+          currentPage === page
+            ? "bg-[#16352E] text-white"
+            : "bg-gray-100 hover:bg-gray-200"
+        }`}
+      >
+        {page}
+      </button>
+    ))}
+  </div>
+)}
         </div>
       </div>
     </section>
