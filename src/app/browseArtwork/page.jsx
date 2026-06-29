@@ -402,7 +402,7 @@ const paginatedArtworks =
         setCurrentPage((prev) => Math.max(prev - 1, 1))
       }
       disabled={currentPage === 1}
-      className="h-10 w-10 rounded-full bg-gray-100 hover:bg-gray-200 disabled:opacity-40 disabled:cursor-not-allowed"
+      className="h-10 w-20 rounded-full bg-gray-100 hover:bg-gray-200 disabled:opacity-40 disabled:cursor-not-allowed"
     >
     <ChevronLeft size={18} />    
     </button>
@@ -415,7 +415,7 @@ const paginatedArtworks =
       <button
         key={page}
         onClick={() => setCurrentPage(page)}
-        className={`h-10 w-10 rounded-full font-medium transition ${
+        className={`h-10 w-20 rounded-full font-medium transition ${
           currentPage === page
             ? "bg-[#16352E] text-white"
             : "bg-gray-100 hover:bg-gray-200"
@@ -433,7 +433,7 @@ const paginatedArtworks =
         )
       }
       disabled={currentPage === totalPages}
-      className="h-10 w-10 rounded-full bg-gray-100 hover:bg-gray-200 disabled:opacity-40 disabled:cursor-not-allowed"
+      className="h-10 w-20 rounded-full bg-gray-100 hover:bg-gray-200 disabled:opacity-40 disabled:cursor-not-allowed"
     >
     <ChevronRight size={18} />
     </button>
