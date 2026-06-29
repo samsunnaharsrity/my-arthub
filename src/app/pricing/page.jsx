@@ -78,7 +78,7 @@ export default function PricingPage() {
       <div className="max-w-6xl mx-auto mt-20">
 
         {/* Cards */}
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-3 gap-6 dark:text-white/70 dark:bg-black">
           {plans.map((plan) => (
             <motion.div
               key={plan.id}
@@ -91,25 +91,25 @@ export default function PricingPage() {
             >
               {/* Badge */}
               {plan.popular && (
-                <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-green-700 text-white px-4 py-1 rounded-full text-xs font-medium">
+                <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-green-700 text-white px-4 py-1 rounded-full text-xs font-medium dark:text-white/70 dark:bg-black">
                   Most Popular
                 </span>
               )}
 
               {/* Title */}
-              <h2 className="text-2xl font-bold">{plan.name}</h2>
+              <h2 className="text-2xl font-bold dark:text-white/70 dark:bg-black">{plan.name}</h2>
 
               <div className="mt-3">
-                <span className="text-4xl font-bold">{plan.price}</span>
-                <span className="text-stone-500 ml-1 text-sm">/ month</span>
+                <span className="text-4xl font-bold dark:text-white/70 dark:bg-black">{plan.price}</span>
+                <span className="text-stone-500 ml-1 text-sm dark:text-white/70 dark:bg-black">/ month</span>
               </div>
 
-              <p className="text-stone-500 mt-3 text-sm">
+              <p className="text-stone-500 mt-3 text-sm dark:text-white/70 dark:bg-black">
                 {plan.description}
               </p>
 
               {/* Features */}
-              <ul className="space-y-3 my-6">
+              <ul className="space-y-3 my-6 dark:text-white/70 dark:bg-black">
                 {plan.features.map((feature) => (
                   <li key={feature} className="flex items-start gap-2">
                     <Check className="w-4 h-4 text-green-700 mt-1" />
