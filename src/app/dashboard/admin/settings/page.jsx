@@ -14,6 +14,7 @@ import {
 import { createSettings } from "@/lib/actions/settings";
 import { getSettings } from "@/lib/api/settings";
 import { useRouter } from "next/navigation";
+import { uploadToImgBB } from "@/lib/uploadImgBB";
 
 export default function SettingsPage() {
   const router = useRouter();
@@ -28,19 +29,20 @@ export default function SettingsPage() {
     banner: "",
   });
 
+  // NEW: file states
+  const [logoFile, setLogoFile] = useState(null);
+  const [bannerFile, setBannerFile] = useState(null);
+
   const loadSettings = async () => {
     try {
       const data = await getSettings();
 
       setSettings({
         siteName: data.siteName || "ArtHub",
-        contactEmail:
-          data.contactEmail || "admin@arthub.com",
+        contactEmail: data.contactEmail || "admin@arthub.com",
         currency: data.currency || "USD",
-        maintenanceMode:
-          data.maintenanceMode || false,
-        autoApproveArtwork:
-          data.autoApproveArtwork || false,
+        maintenanceMode: data.maintenanceMode || false,
+        autoApproveArtwork: data.autoApproveArtwork || false,
         logo: data.logo || "",
         banner: data.banner || "",
       });
@@ -61,16 +63,38 @@ export default function SettingsPage() {
     }));
   };
 
+  // ✅ SAVE WITH IMGBB UPLOAD
   const handleSave = async () => {
     try {
-      await createSettings(settings);
+      let logoUrl = settings.logo;
+      let bannerUrl = settings.banner;
+
+      // upload logo if new file
+      if (logoFile) {
+        logoUrl = await uploadToImgBB(logoFile);
+      }
+
+      // upload banner if new file
+      if (bannerFile) {
+        bannerUrl = await uploadToImgBB(bannerFile);
+      }
+
+      const finalData = {
+        ...settings,
+        logo: logoUrl,
+        banner: bannerUrl,
+      };
+
+      await createSettings(finalData);
       await loadSettings();
 
       router.refresh();
 
-      toast.success(
-        "Settings updated successfully"
-      );
+      toast.success("Settings updated successfully");
+
+      // reset files
+      setLogoFile(null);
+      setBannerFile(null);
     } catch (error) {
       console.log(error);
       toast.error("Failed to save settings");
@@ -79,24 +103,22 @@ export default function SettingsPage() {
 
   return (
     <section className="min-h-screen bg-slate-50 p-8 pt-28 dark:bg-black/70 dark:text-white/70">
-      <div className="max-w-5xl mx-auto">
+      <div className="mx-auto max-w-5xl">
 
-        {/* Header */}
+        {/* HEADER */}
         <div className="mb-10">
           <h1 className="flex items-center gap-3 text-4xl font-bold text-slate-800 dark:text-white">
             <Settings className="text-emerald-600" />
             Admin Settings
           </h1>
-
           <p className="mt-3 text-slate-500">
-            Configure and customize your ArtHub
-            marketplace.
+            Configure and customize your ArtHub marketplace.
           </p>
         </div>
 
         <div className="space-y-8">
 
-          {/* General Settings */}
+          {/* GENERAL */}
           <div className="rounded-3xl border bg-white p-8 shadow-sm dark:bg-black">
             <h2 className="mb-8 text-2xl font-semibold">
               General Settings
@@ -104,76 +126,40 @@ export default function SettingsPage() {
 
             <div className="space-y-6">
 
-              {/* Site Name */}
-              <div>
-                <label className="mb-2 flex items-center gap-2 font-medium">
-                  <Globe size={18} />
-                  Site Name
-                </label>
+              <input
+                type="text"
+                value={settings.siteName}
+                onChange={(e) =>
+                  handleChange("siteName", e.target.value)
+                }
+                className="w-full rounded-xl border p-3"
+                placeholder="Site Name"
+              />
 
-                <input
-                  type="text"
-                  value={settings.siteName}
-                  onChange={(e) =>
-                    handleChange(
-                      "siteName",
-                      e.target.value
-                    )
-                  }
-                  className="w-full rounded-xl border p-3 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                />
-              </div>
+              <input
+                type="email"
+                value={settings.contactEmail}
+                onChange={(e) =>
+                  handleChange("contactEmail", e.target.value)
+                }
+                className="w-full rounded-xl border p-3"
+                placeholder="Contact Email"
+              />
 
-              {/* Contact Email */}
-              <div>
-                <label className="mb-2 flex items-center gap-2 font-medium">
-                  <Mail size={18} />
-                  Contact Email
-                </label>
-
-                <input
-                  type="email"
-                  value={settings.contactEmail}
-                  onChange={(e) =>
-                    handleChange(
-                      "contactEmail",
-                      e.target.value
-                    )
-                  }
-                  className="w-full rounded-xl border p-3 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                />
-              </div>
-
-              {/* Currency */}
-              <div>
-                <label className="mb-2 flex items-center gap-2 font-medium">
-                  <DollarSign size={18} />
-                  Default Currency
-                </label>
-
-                <select
-                  value={settings.currency}
-                  onChange={(e) =>
-                    handleChange(
-                      "currency",
-                      e.target.value
-                    )
-                  }
-                  className="w-full rounded-xl border p-3 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                >
-                  <option value="USD">
-                    USD ($)
-                  </option>
-
-                  <option value="BDT">
-                    BDT (৳)
-                  </option>
-                </select>
-              </div>
+              <select
+                value={settings.currency}
+                onChange={(e) =>
+                  handleChange("currency", e.target.value)
+                }
+                className="w-full rounded-xl border p-3"
+              >
+                <option value="USD">USD ($)</option>
+                <option value="BDT">BDT (৳)</option>
+              </select>
             </div>
           </div>
 
-          {/* Branding Section */}
+          {/* BRANDING */}
           <div className="rounded-3xl border bg-white p-8 shadow-sm dark:bg-black">
             <h2 className="mb-8 flex items-center gap-2 text-2xl font-semibold">
               <ImageIcon />
@@ -182,142 +168,99 @@ export default function SettingsPage() {
 
             <div className="grid gap-8 lg:grid-cols-2">
 
-              {/* Logo */}
+              {/* LOGO */}
               <div>
                 <label className="mb-2 block font-medium">
-                  Site Logo URL
+                  Site Logo
                 </label>
 
                 <input
-                  type="text"
-                  placeholder="https://example.com/logo.png"
-                  value={settings.logo}
+                  type="file"
+                  accept="image/*"
                   onChange={(e) =>
-                    handleChange(
-                      "logo",
-                      e.target.value
-                    )
+                    setLogoFile(e.target.files[0])
                   }
-                  className="w-full rounded-xl border p-3 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  className="w-full rounded-xl border p-3"
                 />
 
                 {settings.logo && (
-                  <div className="mt-4 rounded-2xl border bg-slate-100 p-4">
-                    <img
-                      src={settings.logo}
-                      alt="Logo Preview"
-                      className="h-24 object-contain"
-                    />
-                  </div>
+                  <img
+                    src={settings.logo}
+                    className="mt-4 h-24 object-contain"
+                  />
                 )}
               </div>
 
-              {/* Banner */}
+              {/* BANNER */}
               <div>
                 <label className="mb-2 block font-medium">
-                  Site Banner URL
+                  Site Banner
                 </label>
 
                 <input
-                  type="text"
-                  placeholder="https://example.com/banner.jpg"
-                  value={settings.banner}
+                  type="file"
+                  accept="image/*"
                   onChange={(e) =>
-                    handleChange(
-                      "banner",
-                      e.target.value
-                    )
+                    setBannerFile(e.target.files[0])
                   }
-                  className="w-full rounded-xl border p-3 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  className="w-full rounded-xl border p-3"
                 />
 
                 {settings.banner && (
-                  <div className="mt-4 overflow-hidden rounded-2xl border bg-slate-100">
-                    <img
-                      src={settings.banner}
-                      alt="Banner Preview"
-                      className="h-40 w-full object-cover"
-                    />
-                  </div>
+                  <img
+                    src={settings.banner}
+                    className="mt-4 h-40 w-full object-cover"
+                  />
                 )}
               </div>
 
             </div>
           </div>
 
-          {/* System Controls */}
+          {/* SYSTEM */}
           <div className="rounded-3xl border bg-white p-8 shadow-sm dark:bg-black">
-            <h2 className="mb-8 flex items-center gap-2 text-2xl font-semibold">
-              <Shield size={20} />
+            <h2 className="mb-8 text-2xl font-semibold">
               System Controls
             </h2>
 
             <div className="space-y-6">
 
-              {/* Maintenance */}
-              <div className="flex items-center justify-between border-b pb-5">
-                <div>
-                  <h3 className="font-medium">
-                    Maintenance Mode
-                  </h3>
-
-                  <p className="text-sm text-slate-500">
-                    Temporarily disable public
-                    access.
-                  </p>
-                </div>
-
+              <label className="flex items-center justify-between">
+                <span>Maintenance Mode</span>
                 <input
                   type="checkbox"
-                  checked={
-                    settings.maintenanceMode
-                  }
+                  checked={settings.maintenanceMode}
                   onChange={(e) =>
                     handleChange(
                       "maintenanceMode",
                       e.target.checked
                     )
                   }
-                  className="h-5 w-5"
                 />
-              </div>
+              </label>
 
-              {/* Auto Approve */}
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="font-medium">
-                    Auto Approve Artworks
-                  </h3>
-
-                  <p className="text-sm text-slate-500">
-                    Automatically approve all
-                    submitted artworks.
-                  </p>
-                </div>
-
+              <label className="flex items-center justify-between">
+                <span>Auto Approve Artworks</span>
                 <input
                   type="checkbox"
-                  checked={
-                    settings.autoApproveArtwork
-                  }
+                  checked={settings.autoApproveArtwork}
                   onChange={(e) =>
                     handleChange(
                       "autoApproveArtwork",
                       e.target.checked
                     )
                   }
-                  className="h-5 w-5"
                 />
-              </div>
+              </label>
 
             </div>
           </div>
 
-          {/* Save Button */}
+          {/* SAVE */}
           <div className="flex justify-end">
             <button
               onClick={handleSave}
-              className="flex items-center gap-2 rounded-xl bg-emerald-600 px-8 py-3 font-medium text-white transition hover:bg-emerald-700"
+              className="flex items-center gap-2 rounded-xl bg-emerald-600 px-8 py-3 text-white hover:bg-emerald-700"
             >
               <Save size={18} />
               Save Settings
