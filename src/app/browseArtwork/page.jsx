@@ -34,7 +34,7 @@ export default function BrowseArtworkPage() {
 
 
 const [currentPage, setCurrentPage] = useState(1);
-const itemsPerPage = 8;
+const itemsPerPage = 9;
 
 useEffect(() => {
   const fetchArtworks = async () => {
